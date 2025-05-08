@@ -1,0 +1,13 @@
+package leets.leenk;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LeenkApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(LeenkApplication.class, args);
+	}
+
+}

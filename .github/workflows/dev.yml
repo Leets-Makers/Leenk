@@ -54,15 +54,6 @@ jobs:
     # if: github.event_name == 'push'
 
     steps:
-      - name: Copy code to EC2
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.DEV_HOST }}
-          username: ${{ secrets.DEV_EC2_USER }}
-          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
-          source: "."               # GitHub 코드 전체
-          target: "/home/ubuntu/leenk"
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -71,7 +62,7 @@ jobs:
           key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/leenk
+            cd /home/ubuntu/compose
             
             EXIST_BLUE=$(docker-compose ps | grep "spring-blue" | grep Up)
             

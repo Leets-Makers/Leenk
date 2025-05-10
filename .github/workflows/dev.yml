@@ -103,7 +103,8 @@ jobs:
             echo "===== Caddy 설정 변경 ====="
             docker exec -it caddy sh -c \
             "sed -i 's/spring-${BEFORE_COLOR}/spring-${AFTER_COLOR}/g' /etc/caddy/Caddyfile"
-            docker restart caddy
+            
+            sudo systemctl restart caddy
   
             echo "$BEFORE_COLOR server down(port:${BEFORE_PORT})"
             docker-compose stop spring-${BEFORE_COLOR}

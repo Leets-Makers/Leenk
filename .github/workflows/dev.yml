@@ -100,11 +100,6 @@ jobs:
               exit 1
             fi
             
-            
-            echo "===== Nginx 설정 변경 ====="
-            docker exec -it nginx /bin/bash -c \
-            "sed -i 's/${BEFORE_PORT}/${AFTER_PORT}/' /etc/nginx/conf.d/default.conf && nginx -t && nginx -s reload"
-            
             echo "===== Caddy 설정 변경 ====="
             docker exec -it caddy sh -c \
             "sed -i 's/spring-${BEFORE_COLOR}/spring-${AFTER_COLOR}/g' /etc/caddy/Caddyfile"

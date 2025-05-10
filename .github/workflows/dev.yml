@@ -67,13 +67,13 @@ jobs:
             EXIST_BLUE=$(docker-compose ps | grep "spring-blue" | grep Up)
             
             if [ -z "$EXIST_BLUE" ]; then
-              docker-compose up -d spring-blue
+              docker-compose up -d spring-blue nginx caddy
               BEFORE_COLOR="green"
               AFTER_COLOR="blue"
               BEFORE_PORT=8081
               AFTER_PORT=8080
             else
-              docker-compose up -d spring-green
+              docker-compose up -d spring-green nginx caddy
               BEFORE_COLOR="blue"
               AFTER_COLOR="green"
               BEFORE_PORT=8080

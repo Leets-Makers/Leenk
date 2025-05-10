@@ -101,8 +101,8 @@ jobs:
             fi
             
             echo "===== Caddy 설정 변경 ====="
-            docker exec -it caddy sh -c \
-            "sed -i 's/spring-${BEFORE_COLOR}/spring-${AFTER_COLOR}/g' /etc/caddy/Caddyfile"
+            sed -i "s/spring-${BEFORE_COLOR}/spring-${AFTER_COLOR}/g" /home/ubuntu/compose/Caddyfile
+            sed -i "s/${BEFORE_PORT}/${AFTER_PORT}/g" /home/ubuntu/compose/Caddyfile
             
             sudo systemctl restart caddy
   

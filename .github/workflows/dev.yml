@@ -112,5 +112,6 @@ jobs:
   
             echo "$BEFORE_COLOR server down(port:${BEFORE_PORT})"
             docker-compose stop spring-${BEFORE_COLOR}
+            docker-compose rm -f spring-${BEFORE_COLOR}
 
           debug: true

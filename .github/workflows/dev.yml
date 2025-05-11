@@ -86,8 +86,7 @@ jobs:
             do
               echo "===== 서버 응답 확인중(${cnt}/10) =====";
               UP=$(curl -s http://localhost:${AFTER_PORT}/health-check)
-              if [ -z "${UP}" ]
-                then
+              if [ "$UP" != "OK" ]; then
                   sleep 10
                   continue
                 else

@@ -45,7 +45,7 @@ jobs:
 
       - name: Docker build & push
         run: |
-          docker build -t ${{ secrets.DOCKER_USER_NAME }}/leenk-dev .
+          docker build -t ${{ secrets.DOCKER_USER_NAME }}/leenk-dev -f ./Dockerfile-dev .
           docker push ${{ secrets.DOCKER_USER_NAME }}/leenk-dev
 
   deploy:

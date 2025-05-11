@@ -41,7 +41,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USER_NAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          password: ${{ secrets.DOCKER_USER_TOKEN }}
 
       - name: Docker build & push
         run: |

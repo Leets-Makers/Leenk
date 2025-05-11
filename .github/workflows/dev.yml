@@ -100,8 +100,7 @@ jobs:
             fi
             
             echo "===== Caddy 설정 변경 ====="
-            sed -i "s/spring-${BEFORE_COLOR}/spring-${AFTER_COLOR}/g" /etc/caddy/Caddyfile
-            sed -i "s/${BEFORE_PORT}/${AFTER_PORT}/g" /etc/caddy/Caddyfile
+            sudo sed -i "s/${BEFORE_PORT}/${AFTER_PORT}/g" /etc/caddy/Caddyfile
             
             sudo caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
   

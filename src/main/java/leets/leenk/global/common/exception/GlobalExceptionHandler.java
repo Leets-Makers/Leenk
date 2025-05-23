@@ -58,11 +58,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodNotAllowed() {
+    public ResponseEntity<ExceptionResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
         ErrorCode errorCode = ErrorCode.METHOD_NOT_ALLOWED;
         ExceptionResponse body = ExceptionResponse.of(errorCode);
         return ResponseEntity
-                .status(errorCode.getStatus())
+                .status(e.getStatusCode().value())
                 .body(body);
     }
 

@@ -1,18 +1,27 @@
 package leets.leenk.global.common.exception.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import leets.leenk.global.common.exception.ErrorCode;
 
-public record ExceptionResponse (
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record ExceptionResponse<T> (
         int code,
-        int status,
-        String message
+        String message,
+        T data
 )
 {
-    public static ExceptionResponse of(ErrorCode errorCode) {
-        return new ExceptionResponse(
+    public static ExceptionResponse<Void> of(ErrorCode errorCode) {
+        return new ExceptionResponse<>(
                 errorCode.getCode(),
-                errorCode.getStatus().value(),
-                errorCode.getMessage()
+                errorCode.getMessage(),
+                null
+        );
+    }
+    public static <T> ExceptionResponse<T> of(ErrorCode errorCode, T data) {
+        return new ExceptionResponse<>(
+                errorCode.getCode(),
+                errorCode.getMessage(),
+                data
         );
     }
 }

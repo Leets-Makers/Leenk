@@ -15,16 +15,17 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ExceptionResponse> handleException(BaseException e) {
+    public ResponseEntity<ExceptionResponse<Void>> handleException(BaseException e) {
         ErrorCode errorCode = e.getErrorCode();
-        ExceptionResponse body = ExceptionResponse.of(errorCode);
+        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(body);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ValidErrorResponse>> handleValidation(MethodArgumentNotValidException e) {
+    public ResponseEntity<ExceptionResponse<List<ValidErrorResponse>>> handleValidation(MethodArgumentNotValidException e) {
         ErrorCode errorCode = ErrorCode.INVALID_ARGUMENT;
         List<ValidErrorResponse> errors = e.getBindingResult()
                 .getFieldErrors().stream()
@@ -34,60 +35,69 @@ public class GlobalExceptionHandler {
                         fe.getRejectedValue()
                 ))
                 .toList();
+        ExceptionResponse<List<ValidErrorResponse>> body =
+                ExceptionResponse.of(errorCode, errors);
+
         return ResponseEntity
                 .status(errorCode.getStatus())
-                .body(errors);
+                .body(body);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handleIllegalArgument() {
+    public ResponseEntity<ExceptionResponse<Void>> handleIllegalArgument() {
         ErrorCode errorCode = ErrorCode.INVALID_ARGUMENT;
-        ExceptionResponse body = ExceptionResponse.of(errorCode);
+        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(body);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleNoResourceFound() {
+    public ResponseEntity<ExceptionResponse<Void>> handleNoResourceFound() {
         ErrorCode errorCode = ErrorCode.RESOURCE_NOT_FOUND;
-        ExceptionResponse body = ExceptionResponse.of(errorCode);
+        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(body);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
+    public ResponseEntity<ExceptionResponse<Void>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
         ErrorCode errorCode = ErrorCode.METHOD_NOT_ALLOWED;
-        ExceptionResponse body = ExceptionResponse.of(errorCode);
+        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+
         return ResponseEntity
                 .status(e.getStatusCode().value())
                 .body(body);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ExceptionResponse> handleMessageNotReadable(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ExceptionResponse<Void>> handleMessageNotReadable(HttpMessageNotReadableException ex) {
         Throwable cause = ex.getMostSpecificCause();
         if (cause instanceof BaseException be) {
             ErrorCode errorCode = be.getErrorCode();
-            ExceptionResponse body = ExceptionResponse.of(errorCode);
+            ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+
             return ResponseEntity
                     .status(errorCode.getStatus())
                     .body(body);
         }
 
         ErrorCode errorCode = ErrorCode.JSON_PARSE_ERROR;
-        ExceptionResponse body = ExceptionResponse.of(errorCode);
+        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(body);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleAll() {
+    public ResponseEntity<ExceptionResponse<Void>> handleAll() {
         ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-        ExceptionResponse body = ExceptionResponse.of(errorCode);
+        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(body);

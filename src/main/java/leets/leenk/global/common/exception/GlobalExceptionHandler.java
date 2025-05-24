@@ -1,7 +1,7 @@
 package leets.leenk.global.common.exception;
 
 import java.util.List;
-import leets.leenk.global.common.exception.response.ExceptionResponse;
+import leets.leenk.global.common.response.CommonResponse;
 import leets.leenk.global.common.exception.response.ValidErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,9 +15,9 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ExceptionResponse<Void>> handleException(BaseException e) {
+    public ResponseEntity<CommonResponse<Void>> handleException(BaseException e) {
         ErrorCode errorCode = e.getErrorCode();
-        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode);
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse<List<ValidErrorResponse>>> handleValidation(MethodArgumentNotValidException e) {
+    public ResponseEntity<CommonResponse<List<ValidErrorResponse>>> handleValidation(MethodArgumentNotValidException e) {
         ErrorCode errorCode = ErrorCode.INVALID_ARGUMENT;
         List<ValidErrorResponse> errors = e.getBindingResult()
                 .getFieldErrors().stream()
@@ -35,8 +35,8 @@ public class GlobalExceptionHandler {
                         fe.getRejectedValue()
                 ))
                 .toList();
-        ExceptionResponse<List<ValidErrorResponse>> body =
-                ExceptionResponse.of(errorCode, errors);
+        CommonResponse<List<ValidErrorResponse>> body =
+                CommonResponse.error(errorCode, errors);
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -44,9 +44,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse<Void>> handleIllegalArgument() {
+    public ResponseEntity<CommonResponse<Void>> handleIllegalArgument() {
         ErrorCode errorCode = ErrorCode.INVALID_ARGUMENT;
-        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode);
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -54,9 +54,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ExceptionResponse<Void>> handleNoResourceFound() {
+    public ResponseEntity<CommonResponse<Void>> handleNoResourceFound() {
         ErrorCode errorCode = ErrorCode.RESOURCE_NOT_FOUND;
-        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode);
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -64,9 +64,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ExceptionResponse<Void>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
+    public ResponseEntity<CommonResponse<Void>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
         ErrorCode errorCode = ErrorCode.METHOD_NOT_ALLOWED;
-        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode);
 
         return ResponseEntity
                 .status(e.getStatusCode().value())
@@ -74,11 +74,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ExceptionResponse<Void>> handleMessageNotReadable(HttpMessageNotReadableException ex) {
+    public ResponseEntity<CommonResponse<Void>> handleMessageNotReadable(HttpMessageNotReadableException ex) {
         Throwable cause = ex.getMostSpecificCause();
         if (cause instanceof BaseException be) {
             ErrorCode errorCode = be.getErrorCode();
-            ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+            CommonResponse<Void> body = CommonResponse.error(errorCode);
 
             return ResponseEntity
                     .status(errorCode.getStatus())
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
         }
 
         ErrorCode errorCode = ErrorCode.JSON_PARSE_ERROR;
-        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode);
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -94,9 +94,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse<Void>> handleAll() {
+    public ResponseEntity<CommonResponse<Void>> handleAll() {
         ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-        ExceptionResponse<Void> body = ExceptionResponse.of(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode);
 
         return ResponseEntity
                 .status(errorCode.getStatus())

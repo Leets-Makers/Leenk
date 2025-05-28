@@ -65,7 +65,7 @@ jobs:
             cd /home/ubuntu/compose
             
             echo "===== 최신 Docker 이미지 가져오는 중 ====="
-            docker-compose pull
+            docker pull ${{ secrets.DOCKER_USER_NAME }}/leenk-dev
             
             EXIST_BLUE=$(docker inspect -f '{{.State.Running}}' spring-blue 2>/dev/null)
             

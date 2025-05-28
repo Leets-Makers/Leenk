@@ -1,6 +1,6 @@
 package leets.leenk.global.common.response;
 
-import leets.leenk.global.common.exception.ErrorCode;
+import leets.leenk.global.common.exception.ErrorCodeInterface;
 
 public record CommonResponse<T> (
         int code,
@@ -8,28 +8,28 @@ public record CommonResponse<T> (
         T data
 )
 {
-    public static CommonResponse<Void> success(String message) {
+    public static CommonResponse<Void> success(ResponseCodeInterface responseCode) {
         return new CommonResponse<>(
-                200,
-                message,
+                responseCode.getCode(),
+                responseCode.getMessage(),
                 null
         );
     }
-    public static <T> CommonResponse<T> success(String message, T data) {
+    public static <T> CommonResponse<T> success(ResponseCodeInterface responseCode, T data) {
         return new CommonResponse<>(
-                200,
-                message,
+                responseCode.getCode(),
+                responseCode.getMessage(),
                 data
         );
     }
-    public static CommonResponse<Void> error(ErrorCode errorCode) {
+    public static CommonResponse<Void> error(ErrorCodeInterface errorCode) {
         return new CommonResponse<>(
                 errorCode.getCode(),
                 errorCode.getMessage(),
                 null
         );
     }
-    public static <T> CommonResponse<T> error(ErrorCode errorCode, T data) {
+    public static <T> CommonResponse<T> error(ErrorCodeInterface errorCode, T data) {
         return new CommonResponse<>(
                 errorCode.getCode(),
                 errorCode.getMessage(),

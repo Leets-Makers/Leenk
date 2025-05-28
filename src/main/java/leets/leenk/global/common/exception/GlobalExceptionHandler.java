@@ -1,8 +1,7 @@
 package leets.leenk.global.common.exception;
 
-import java.util.List;
-import leets.leenk.global.common.response.CommonResponse;
 import leets.leenk.global.common.exception.response.ValidErrorResponse;
+import leets.leenk.global.common.response.CommonResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -11,12 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.List;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<CommonResponse<Void>> handleException(BaseException e) {
-        ErrorCode errorCode = e.getErrorCode();
+        ErrorCodeInterface errorCode = e.getErrorCode();
         CommonResponse<Void> body = CommonResponse.error(errorCode);
 
         return ResponseEntity
@@ -77,7 +78,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonResponse<Void>> handleMessageNotReadable(HttpMessageNotReadableException ex) {
         Throwable cause = ex.getMostSpecificCause();
         if (cause instanceof BaseException be) {
-            ErrorCode errorCode = be.getErrorCode();
+            ErrorCodeInterface errorCode = be.getErrorCode();
             CommonResponse<Void> body = CommonResponse.error(errorCode);
 
             return ResponseEntity

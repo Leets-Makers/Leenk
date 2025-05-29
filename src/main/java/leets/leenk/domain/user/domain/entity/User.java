@@ -47,5 +47,8 @@ public class User extends BaseEntity {
     @Column(length = 20)
     private String kakaoTalkId;
 
+    @Column(nullable = false)
+    private long totalReactionCount;
+
     private LocalDateTime deleteDate;
 }

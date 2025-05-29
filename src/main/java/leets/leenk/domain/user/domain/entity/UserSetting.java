@@ -6,10 +6,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @Entity
 @SuperBuilder
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSetting extends BaseEntity {
 

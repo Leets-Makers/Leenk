@@ -2,6 +2,8 @@ package leets.leenk.domain.leenk.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 public class Leenks extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "leenk_id")
     private Long id;
 

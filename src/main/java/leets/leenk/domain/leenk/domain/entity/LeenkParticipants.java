@@ -3,11 +3,15 @@ package leets.leenk.domain.leenk.domain.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import leets.leenk.domain.leenk.domain.entity.enums.ParticipantStatus;
+import leets.leenk.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +23,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(name = "leenk_participants")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LeenkParticipants {
+public class LeenkParticipants extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "leenk_participant_id")
     private Long id;
 
@@ -37,7 +42,7 @@ public class LeenkParticipants {
     private LocalDateTime joinedAt;
 
     @Column(nullable = false)
-    private String status;
+    private ParticipantStatus status;
 
     @Builder.Default
     @Column(name = "is_host", nullable = false)

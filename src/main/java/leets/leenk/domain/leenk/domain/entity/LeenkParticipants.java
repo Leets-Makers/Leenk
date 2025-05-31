@@ -2,6 +2,8 @@ package leets.leenk.domain.leenk.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,6 +44,7 @@ public class LeenkParticipants extends BaseEntity {
     private LocalDateTime joinedAt;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ParticipantStatus status;
 
     @Builder.Default

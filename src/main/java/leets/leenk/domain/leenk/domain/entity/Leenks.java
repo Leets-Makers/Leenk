@@ -45,6 +45,9 @@ public class Leenks extends BaseEntity {
     @Column(name = "max_participants", nullable = false)
     private Long maxParticipants;
 
+    @Column(name = "current_participants", nullable = false)
+    private Long currentParticipants;
+
 //    @Column(columnDefinition = "TEXT")
 //    private String imageUrls;
 }

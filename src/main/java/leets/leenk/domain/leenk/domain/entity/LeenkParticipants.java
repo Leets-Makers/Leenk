@@ -47,7 +47,4 @@ public class LeenkParticipants extends BaseEntity {
     @Builder.Default
     @Column(name = "is_host", nullable = false)
     private Boolean isHost = false;
-
-    @Column(name = "current_participants", nullable = false)
-    private Long currentParticipants;
 }

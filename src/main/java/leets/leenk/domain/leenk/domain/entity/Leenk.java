@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import leets.leenk.domain.leenk.domain.entity.enums.LeenkStatus;
 import leets.leenk.domain.user.domain.entity.User;
@@ -38,9 +39,11 @@ public class Leenk extends BaseEntity {
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 
+    @Size(max = 30)
     @Column(nullable = false, length = 30)
     private String title;
 
+    @Size(max = 200)
     @Column(length = 200)
     private String content;
 

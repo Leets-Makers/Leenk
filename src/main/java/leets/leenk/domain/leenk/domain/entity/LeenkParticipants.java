@@ -40,7 +40,7 @@ public class LeenkParticipants extends BaseEntity {
 //    @JoinColumn(name = "user_id", nullable = false, updatable = false)
 //    private User user;
 
-    @Column(name = "joined_at", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime joinedAt;
 
     @Column(nullable = false)
@@ -48,6 +48,6 @@ public class LeenkParticipants extends BaseEntity {
     private ParticipantStatus status;
 
     @Builder.Default
-    @Column(name = "is_host", nullable = false)
+    @Column(nullable = false)
     private Boolean isHost = false;
 }

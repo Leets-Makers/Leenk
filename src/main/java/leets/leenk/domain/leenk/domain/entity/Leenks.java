@@ -36,16 +36,16 @@ public class Leenks extends BaseEntity {
     @Column(nullable = false, length = 25)
     private String placeName;
 
-    @Column(name = "start_time", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "min_participants", nullable = false)
+    @Column(nullable = false)
     private Long minParticipants;
 
-    @Column(name = "max_participants", nullable = false)
+    @Column(nullable = false)
     private Long maxParticipants;
 
-    @Column(name = "current_participants", nullable = false)
+    @Column(nullable = false)
     private Long currentParticipants;
 
 //    @Column(columnDefinition = "TEXT")

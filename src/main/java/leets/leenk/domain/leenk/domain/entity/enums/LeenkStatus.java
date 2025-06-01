@@ -5,9 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ParticipantStatus {
-    PARTICIPATING("참여중"),
-    COMPLETED("활동 완료");
+public enum LeenkStatus {
+    RECRUITING("모집중"),
+    CLOSED("모집 완료"),
+    FINISHED("모임 종료");
 
     private final String displayValue;
 }

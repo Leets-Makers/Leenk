@@ -3,8 +3,6 @@ package leets.leenk.domain.leenk.domain.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +11,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import leets.leenk.domain.leenk.domain.entity.enums.ParticipantStatus;
 import leets.leenk.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,7 +34,7 @@ public class LeenkParticipants extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "leenk_id", nullable = false, updatable = false)
-    private Leenks leenk;
+    private Leenk leenk;
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "user_id", nullable = false, updatable = false)
@@ -45,10 +42,6 @@ public class LeenkParticipants extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDateTime joinedAt;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ParticipantStatus status;
 
     @Builder.Default
     @Column(nullable = false)

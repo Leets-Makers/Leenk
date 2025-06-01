@@ -30,7 +30,7 @@ public class Leenks extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String title;
 
-    @Column(length = 100)
+    @Column(length = 200)
     private String content;
 
     @Column(nullable = false, length = 25)

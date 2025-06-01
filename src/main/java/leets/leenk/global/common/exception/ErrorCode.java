@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum ErrorCode implements ErrorCodeInterface{
     // 3000번대: 서버 에러
     INTERNAL_SERVER_ERROR    (3001, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다."),
 

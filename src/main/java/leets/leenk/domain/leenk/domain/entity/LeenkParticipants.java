@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -49,8 +48,4 @@ public class LeenkParticipants extends BaseEntity {
     @Column(nullable = false)
     @CreatedDate
     private LocalDateTime joinedAt;
-
-    @Builder.Default
-    @Column(nullable = false)
-    private Boolean isHost = false;
 }

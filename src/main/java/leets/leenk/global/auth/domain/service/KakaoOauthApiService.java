@@ -1,7 +1,7 @@
 package leets.leenk.global.auth.domain.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import leets.leenk.domain.user.application.exception.UserInActiveException;
+import leets.leenk.global.auth.application.exception.UserInActiveException;
 import leets.leenk.domain.user.application.exception.UserNotFoundException;
 import leets.leenk.global.auth.application.dto.response.OauthErrorResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;

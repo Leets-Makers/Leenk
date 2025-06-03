@@ -11,3 +11,16 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+auth:
+  oauth2:
+    clientId: ${CLIENT_ID}
+    clientSecret: ${CLIENT_SECRET}
+    oauthIss: ${OAUTH_ISS}
+    oauthServerTokenUri: ${OAUTH_SERVER_TOKEN_URI}
+    oauthJwkSetUri: ${OAUTH_JWK_SET_URI}
+    oauthServerUserInfoUri: ${OAUTH_SERVER_USER_INFO_URI}
+    kakao:
+      kakao_grant_type: ${KAKAO_GRANT_TYPE}
+      kakao_grant_type_name: ${KAKAO_GRANT_TYPE_NAME}
+

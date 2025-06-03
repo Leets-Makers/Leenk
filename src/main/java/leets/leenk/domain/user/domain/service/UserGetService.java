@@ -6,6 +6,8 @@ import leets.leenk.domain.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserGetService {
@@ -15,5 +17,9 @@ public class UserGetService {
     public User findById(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    public Optional<User> existById(long userId) {
+        return userRepository.findById(userId);
     }
 }

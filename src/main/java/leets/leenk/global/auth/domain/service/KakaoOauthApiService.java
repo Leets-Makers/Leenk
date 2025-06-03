@@ -43,7 +43,7 @@ public class KakaoOauthApiService {
                     switch (error.error()) {
                         case "WAE-001" -> throw new UserInActiveException(error.error_description());
                         case "WAE-002" -> throw new UserNotFoundException(error.error_description());
-                        default -> throw new OauthException();
+                        default -> throw new OauthException(error.error_description());
                     }
                 })
                 .body(OauthTokenResponse.class);

@@ -18,7 +18,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<CommonResponse<Void>> handleException(BaseException e) {
         ErrorCodeInterface errorCode = e.getErrorCode();
-        CommonResponse<Void> body = CommonResponse.error(errorCode);
+        String errorMessage = e.getMessage();
+        CommonResponse<Void> body = CommonResponse.error(errorCode, errorMessage);
 
         return ResponseEntity
                 .status(errorCode.getStatus())

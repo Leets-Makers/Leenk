@@ -1,9 +1,12 @@
 package leets.leenk.global.auth.application.usecase;
 
 import leets.leenk.domain.user.application.mapper.UserMapper;
+import leets.leenk.domain.user.application.mapper.UserSettingMapper;
 import leets.leenk.domain.user.domain.entity.User;
+import leets.leenk.domain.user.domain.entity.UserSetting;
 import leets.leenk.domain.user.domain.service.UserGetService;
 import leets.leenk.domain.user.domain.service.UserSaveService;
+import leets.leenk.domain.user.domain.service.UserSettingSaveService;
 import leets.leenk.global.auth.application.dto.request.KakaoAccessTokenRequest;
 import leets.leenk.global.auth.application.dto.response.LoginResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;
@@ -26,10 +29,12 @@ public class AuthUsecase {
 
     private final UserGetService userGetService;
     private final UserSaveService userSaveService;
+    private final UserSettingSaveService userSettingSaveService;
     private final KakaoOauthApiService kakaoOauthApiService;
     private final OauthApiService oauthApiService;
     private final LoginMapper loginMapper;
     private final UserMapper userMapper;
+    private final UserSettingMapper userSettingMapper;
 
     private final JwtDecoder jwtDecoder;
 
@@ -57,7 +62,10 @@ public class AuthUsecase {
     private LoginResponse saveNewUser(OauthTokenResponse response) {
         OauthUserInfoResponse userInfo = oauthApiService.getUserInfo(response.access_token());
         User user = userMapper.toUser(userInfo);
+        UserSetting userSetting = userSettingMapper.toDefaultSetting(user);
+
         userSaveService.save(user);
+        userSettingSaveService.save(userSetting);
 
         return loginMapper.toLoginResponse(user, response.access_token(), response.refresh_token());
     }

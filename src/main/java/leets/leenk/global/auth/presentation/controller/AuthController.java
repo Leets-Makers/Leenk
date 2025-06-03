@@ -22,7 +22,11 @@ public class AuthController {
     @Operation(summary = "카카오 login api [for mobile]")
     public CommonResponse<LoginResponse> kakaoLogin(@RequestBody @Valid KakaoAccessTokenRequest kakaoAccessTokenRequest) {
         LoginResponse response = authUsecase.kakaoLogin(kakaoAccessTokenRequest);
-        
-        return CommonResponse.success(ResponseCode.LOGIN_SUCCESS, response);
+
+        if (response.userId() == null) {
+            return CommonResponse.success(ResponseCode.LOGIN_SUCCESS, response);
+        }
+
+        return CommonResponse.success(ResponseCode.INITIAL_LOGIN_SUCCESS, response);
     }
 }

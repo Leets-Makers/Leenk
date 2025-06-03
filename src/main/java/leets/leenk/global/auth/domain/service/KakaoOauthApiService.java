@@ -1,11 +1,11 @@
 package leets.leenk.global.auth.domain.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import leets.leenk.global.auth.application.exception.UserInActiveException;
-import leets.leenk.domain.user.application.exception.UserNotFoundException;
 import leets.leenk.global.auth.application.dto.response.OauthErrorResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;
 import leets.leenk.global.auth.application.exception.OauthException;
+import leets.leenk.global.auth.application.exception.UnRegisterUserException;
+import leets.leenk.global.auth.application.exception.UserInActiveException;
 import leets.leenk.global.auth.application.property.KakaoOauthProperty;
 import leets.leenk.global.auth.application.property.OauthProperty;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class KakaoOauthApiService {
 
                     switch (error.error()) {
                         case "WAE-001" -> throw new UserInActiveException(error.error_description());
-                        case "WAE-002" -> throw new UserNotFoundException(error.error_description());
+                        case "WAE-002" -> throw new UnRegisterUserException();
                         default -> throw new OauthException(error.error_description());
                     }
                 })

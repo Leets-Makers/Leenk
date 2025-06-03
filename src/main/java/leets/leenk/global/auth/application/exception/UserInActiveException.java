@@ -1,4 +1,4 @@
-package leets.leenk.domain.user.application.exception;
+package leets.leenk.global.auth.application.exception;
 
 import leets.leenk.global.common.exception.BaseException;
 

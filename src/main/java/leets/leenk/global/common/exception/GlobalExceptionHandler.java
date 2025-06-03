@@ -95,9 +95,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonResponse<Void>> handleAll() {
+    public ResponseEntity<CommonResponse<Void>> handleAll(Exception e) {
         ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-        CommonResponse<Void> body = CommonResponse.error(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode, e.getMessage());
 
         return ResponseEntity
                 .status(errorCode.getStatus())

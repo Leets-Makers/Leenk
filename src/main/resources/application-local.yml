@@ -11,3 +11,16 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+  cloud:
+    aws:
+      credentials:
+        access-key: ${LOCAL_AWS_ACCESS_KEY}
+        secret-key: ${LOCAL_AWS_SECRET_KEY}
+      region:
+        static: ap-northeast-2
+
+myapp:
+  sqs:
+    queue-name: ${SQS_QUEUE_NAME}
+    queue-url: ${SQS_QUEUE_URL}
+    messageDelaySecs : 0

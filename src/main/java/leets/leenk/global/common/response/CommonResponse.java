@@ -29,6 +29,13 @@ public record CommonResponse<T> (
                 null
         );
     }
+    public static CommonResponse<Void> error(ErrorCodeInterface errorCode, String message) {
+        return new CommonResponse<>(
+                errorCode.getCode(),
+                message,
+                null
+        );
+    }
     public static <T> CommonResponse<T> error(ErrorCodeInterface errorCode, T data) {
         return new CommonResponse<>(
                 errorCode.getCode(),

@@ -19,6 +19,9 @@ import org.springframework.web.client.RestClient;
 @Service
 @RequiredArgsConstructor
 public class KakaoOauthApiService {
+    private static final String USER_INACTIVE_ERROR = "WAE-001";
+    private static final String USER_NOT_FOUND_ERROR = "WAE-002";
+
     private final OauthProperty oauthProperty;
     private final KakaoOauthProperty kakaoOauthProperty;
 
@@ -41,8 +44,8 @@ public class KakaoOauthApiService {
                     OauthErrorResponse error = objectMapper.readValue(response.getBody(), OauthErrorResponse.class);
 
                     switch (error.error()) {
-                        case "WAE-001" -> throw new UserInActiveException(error.error_description());
-                        case "WAE-002" -> throw new UnRegisterUserException();
+                        case USER_INACTIVE_ERROR -> throw new UserInActiveException(error.error_description());
+                        case USER_NOT_FOUND_ERROR -> throw new UnRegisterUserException();
                         default -> throw new OauthException(error.error_description());
                     }
                 })

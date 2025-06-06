@@ -35,4 +35,11 @@ public class NotificationController {
 		return null;
 	}
 
+	@Operation(summary = "임시 새로운 피드 알림 발행 API")
+	@PostMapping("/new_feed")
+	public CommonResponse<Void> NewFeedNotification(){
+		notificationService.temporaryNewFeedNotification();
+		return null;
+	}
+
 }

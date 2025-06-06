@@ -17,6 +17,8 @@ import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
 import leets.leenk.domain.user.domain.entity.User;
+import leets.leenk.domain.user.domain.entity.UserSetting;
+import leets.leenk.domain.user.domain.repository.UserRepository;
 import leets.leenk.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
 
@@ -93,5 +95,56 @@ public class NotificationService {
 		User user1 = userGetService.findById(1);
 		User user2 = userGetService.findById(2);
 		createFirstReactionNotification(user1, user2, 1L);
+	}
+
+	
+	@Transactional
+	public void createNewFeedNotification(Long feedId){	// Todo: Feed로 받아오기
+		/*
+		Todo: User 도메인 머지된 후 UserSettingRepository를 이용해
+		 IsNewFeedNotify가 True인 모든 유저에게 이벤트 발생
+		List<UserSetting> userSettings = UserSettingRepository.findAllByIsNewFeedNotifyTrue();
+		 */
+
+		User user1 = userGetService.findById(1);
+
+		UserSetting setting1 = UserSetting.builder()
+			.user(user1)
+			.isNewLeenkNotify(true)
+			.isLeenkStatusNotify(true)
+			.isNewFeedNotify(true)
+			.isNewReactionNotify(true)
+			.build();
+
+		User user2 = userGetService.findById(2);
+
+		UserSetting setting2 = UserSetting.builder()
+			.user(user2)
+			.isNewLeenkNotify(true)
+			.isLeenkStatusNotify(true)
+			.isNewFeedNotify(true)
+			.isNewReactionNotify(true)
+			.build();
+
+		List<UserSetting> userSettings = List.of(setting1, setting2);
+
+		userSettings.forEach(
+			userSetting -> {
+				Notification notification = notificationMapper.toNewFeedNotification(feedId, userSetting.getUser());
+				notificationRepository.save(notification);
+				eventPublisher.publishEvent(notification);
+			}
+		);
+
+
+
+
+
+	}
+
+	// 새로운 피드 알림 테스트를 위한 메소드, 추후 삭제 예정
+	public void temporaryNewFeedNotification() {
+		Long feedId = 1L;
+		createNewFeedNotification(feedId);
 	}
 }

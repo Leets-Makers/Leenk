@@ -11,6 +11,7 @@ import leets.leenk.domain.notification.domain.entity.NotificationType;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
 import leets.leenk.domain.notification.domain.entity.details.FeedTagDetail;
+import leets.leenk.domain.notification.domain.entity.details.NewFeedDetail;
 import leets.leenk.domain.user.domain.entity.User;
 
 @Component
@@ -48,6 +49,24 @@ public class NotificationMapper {
 							feedFirstLike
 						)
 					)
+					.build()
+			)
+			.build();
+	}
+
+	public Notification toNewFeedNotification(Long feedId, User user){	// Todo : Feed 객체 받아오도록 수정
+		return Notification.builder()
+			.userId(user.getId())
+			.deviceToken(user.getFcmToken())
+			.notificationType(NotificationType.NEW_FEED)
+			.newFeedDetail(
+				NewFeedDetail.builder()
+					.feedId(feedId)
+					.authorUserId(user.getId())
+					.authorName(user.getName())
+					.title(NotificationType.FEED_TAG.getTitle())
+					.body(NotificationType.NEW_FEED.getFormattedContent("글쓴이1"))
+					.isRead(Boolean.FALSE)
 					.build()
 			)
 			.build();

@@ -1,10 +1,10 @@
-package leets.leenk.domain.notification.application.service;
+package leets.leenk.domain.notification.sqs.mapper;
 
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import leets.leenk.domain.notification.config.AwsSqsProperties;
+import leets.leenk.domain.notification.sqs.config.AwsSqsProperties;
 import leets.leenk.domain.notification.application.dto.SqsMessageEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

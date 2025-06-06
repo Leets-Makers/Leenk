@@ -1,4 +1,4 @@
-package leets.leenk.domain.notification.application.mapper;
+package leets.leenk.domain.notification.sqs.mapper;
 
 import org.springframework.stereotype.Component;
 

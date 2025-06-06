@@ -2,14 +2,16 @@ package leets.leenk.domain.notification.application.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
 import leets.leenk.domain.notification.domain.entity.LinkedUser;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.NotificationType;
+import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
+import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
 import leets.leenk.domain.notification.domain.entity.details.FeedTagDetail;
+import leets.leenk.domain.user.domain.entity.User;
 
 @Component
 public class NotificationMapper {
@@ -31,5 +33,23 @@ public class NotificationMapper {
 				.build()
 			)
 			.collect(Collectors.toList());
+	}
+
+	public Notification toFirstReactionNotification(User author, Long feedId, FeedFirstLike feedFirstLike) {
+		return Notification.builder()
+			.userId(author.getId())
+			.deviceToken(author.getFcmToken())
+			.notificationType(NotificationType.FIRST_FEED_LIKE)
+			.feedFirstLikeDetail(
+				FeedFirstLikeDetail.builder()
+					.feedId(feedId)
+					.feedFirstLikes(
+						List.of(
+							feedFirstLike
+						)
+					)
+					.build()
+			)
+			.build();
 	}
 }

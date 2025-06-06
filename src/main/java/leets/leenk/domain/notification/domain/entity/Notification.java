@@ -23,7 +23,6 @@ import lombok.experimental.SuperBuilder;
 public class Notification extends BaseEntity {
 
 	@Id
-	@Field(name = "notification_id")
 	private String id;
 
 	private Long userId;

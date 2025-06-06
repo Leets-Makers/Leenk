@@ -28,4 +28,11 @@ public class NotificationController {
 		return null;
 	}
 
+	@Operation(summary = "임시 첫 좋아요 알림 발행 API")
+	@PostMapping("/first_like")
+	public CommonResponse<Void> FeedFirstLikeNotification(){
+		notificationService.temporaryFeedFirstLikeNotification();
+		return null;
+	}
+
 }

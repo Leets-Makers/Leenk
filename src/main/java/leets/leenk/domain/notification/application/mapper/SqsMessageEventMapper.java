@@ -6,6 +6,7 @@ import leets.leenk.domain.notification.application.dto.SqsMessageEvent;
 import leets.leenk.domain.notification.application.exception.InvalidNotificationTypeException;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
+import leets.leenk.domain.notification.domain.entity.event.FeedLikeCountEvent;
 
 @Component
 public class SqsMessageEventMapper {
@@ -34,6 +35,14 @@ public class SqsMessageEventMapper {
 			.title(feedFirstLike.getTitle())
 			.content(feedFirstLike.getBody())
 			.deviceToken(deviceToken)
+			.build();
+	}
+
+	public SqsMessageEvent fromFeedLikeCountEvent(FeedLikeCountEvent feedLikeCountEvent) {
+		return SqsMessageEvent.builder()
+			.title(feedLikeCountEvent.getFeedLikeCount().getTitle())
+			.content(feedLikeCountEvent.getFeedLikeCount().getBody())
+			.deviceToken(feedLikeCountEvent.getDeviceToken())
 			.build();
 	}
 }

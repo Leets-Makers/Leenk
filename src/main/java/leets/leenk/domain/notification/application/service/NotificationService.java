@@ -7,8 +7,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import leets.leenk.domain.notification.application.mapper.TagNotificationEventMapper;
+import leets.leenk.domain.notification.application.mapper.NotificationMapper;
 import leets.leenk.domain.notification.domain.entity.LinkedUser;
+import leets.leenk.domain.notification.domain.entity.Notification;
+import leets.leenk.domain.notification.domain.repository.NotificationRepository;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +20,20 @@ import lombok.RequiredArgsConstructor;
 public class NotificationService {
 
 	private final ApplicationEventPublisher eventPublisher;
-	private final TagNotificationEventMapper tagNotificationEventMapper;
 	private final UserGetService userGetService;	// 차후 삭제 예정
+	private final NotificationMapper notificationMapper;
+	private final NotificationRepository notificationRepository;
 
-	// todo: 추후 피드에 머지된 linkedUser 엔티티와 태그한 사람의 유저를 파라미터로 받도록 수정
+	// todo: 추후 피드에 머지된 linkedUser 엔티티와 Tag 엔티티를 파라미터로 받을 예정
 	@Transactional
 	public void createTagNotification(List<LinkedUser> linkedUsers) {
-		eventPublisher.publishEvent(tagNotificationEventMapper
-			.toTagNotificationEvent(linkedUsers));
+		List<Notification> notifications = notificationMapper.toFeedTagNotification(linkedUsers);
+		notificationRepository.saveAll(notifications);
+
+		eventPublisher.publishEvent(notifications);
 	}
 
-	// 임시 태그 알림 메서드
+	// 테스트를 위한 임시 태그 알림 메서드
 	@Transactional
 	public void temporaryTagNotification() {
 		List<LinkedUser> linkedUsers = new ArrayList<>();

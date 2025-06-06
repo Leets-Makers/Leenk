@@ -1,0 +1,22 @@
+package leets.leenk.domain.notification.domain.entity.details;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+@SuperBuilder
+@NoArgsConstructor
+@Getter
+public class FeedFirstLikeDetail {
+
+	@Field("feedId")
+	private Long feedId;
+
+	private List<FeedFirstLike> feedFirstLikes = new ArrayList<>();
+
+}

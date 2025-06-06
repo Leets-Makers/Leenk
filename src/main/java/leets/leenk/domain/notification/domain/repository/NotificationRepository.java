@@ -13,4 +13,7 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 
 	@Query("{ 'feedFirstLikeDetail.feedId': ?0, 'feedFirstLikeDetail.feedFirstLikes.userId': ?1 }")
 	Optional<Notification> findByFeedIdAndUserIdInFirstLikes(Long feedId, Long id);
+
+	@Query("{ 'feedLikeCountDetail.feedId': ?0, 'feedLikeCountDetail.feedLikeCounts.likeCount': ?1}")
+	Optional<Notification> findByFeedIdAndLikeCount(Long feedId, Long likeCount);
 }

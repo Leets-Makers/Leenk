@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
+import leets.leenk.domain.notification.application.mapper.FeedLikeCountMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
+import leets.leenk.domain.notification.domain.entity.details.FeedLikeCount;
 import leets.leenk.domain.notification.domain.entity.event.FeedFirstLikeEvent;
 import leets.leenk.domain.notification.domain.entity.LinkedUser;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
+import leets.leenk.domain.notification.domain.entity.event.FeedLikeCountEvent;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.entity.UserSetting;
@@ -31,6 +34,7 @@ public class NotificationService {
 	private final NotificationMapper notificationMapper;
 	private final NotificationRepository notificationRepository;
 	private final FeedFirstReactionMapper feedFirstReactionMapper;
+	private final FeedLikeCountMapper feedLikeCountMapper;
 
 	// todo: 추후 피드에 머지된 linkedUser 엔티티와 Tag 엔티티를 파라미터로 받을 예정
 	@Transactional
@@ -135,16 +139,40 @@ public class NotificationService {
 				eventPublisher.publishEvent(notification);
 			}
 		);
-
-
-
-
-
 	}
 
 	// 새로운 피드 알림 테스트를 위한 메소드, 추후 삭제 예정
+	@Transactional
 	public void temporaryNewFeedNotification() {
 		Long feedId = 1L;
 		createNewFeedNotification(feedId);
 	}
+
+	// 리액션 수 알림 테스트를 위한 메소드, 추후 삭제 예정
+	@Transactional
+	public void temporaryReactionCountNotification() {
+		Long feedId = 1L;
+		Long reactionCount = 50L;
+		User user = userGetService.findById(1);
+
+		createReactionCountNotification(feedId, user, reactionCount);
+	}
+
+	// Todo : Feed 객체로 파라미터 받아오기
+	// 파라미터 : Feed feed, Long reactionCount
+	@Transactional
+	public void createReactionCountNotification(Long feedId, User user, Long reactionCount) {
+
+		Notification notification = notificationRepository.findByFeedIdAndLikeCount(feedId, reactionCount)
+			.orElseGet(() -> notificationMapper.toReactionCountNotification(feedId, user));
+
+		FeedLikeCount feedLikeCount = feedLikeCountMapper.toFeedLikeCount(reactionCount);
+
+		notification.getFeedLikeCountDetail().getFeedLikeCounts().add(feedLikeCount);
+		FeedLikeCountEvent feedLikeCountEvent = new FeedLikeCountEvent(feedLikeCount, user.getFcmToken());
+		eventPublisher.publishEvent(feedLikeCountEvent);
+
+		notificationRepository.save(notification);
+	}
+
 }

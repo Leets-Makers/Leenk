@@ -42,4 +42,11 @@ public class NotificationController {
 		return null;
 	}
 
+	@Operation(summary = "임시 새로운 피드 알림 발행 API")
+	@PostMapping("/like_count")
+	public CommonResponse<Void> ReactionCountNotification(){
+		notificationService.temporaryReactionCountNotification();
+		return null;
+	}
+
 }

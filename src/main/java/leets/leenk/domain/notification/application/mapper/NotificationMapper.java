@@ -1,5 +1,6 @@
 package leets.leenk.domain.notification.application.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,7 @@ import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.NotificationType;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
+import leets.leenk.domain.notification.domain.entity.details.FeedLikeCountDetail;
 import leets.leenk.domain.notification.domain.entity.details.FeedTagDetail;
 import leets.leenk.domain.notification.domain.entity.details.NewFeedDetail;
 import leets.leenk.domain.user.domain.entity.User;
@@ -67,6 +69,20 @@ public class NotificationMapper {
 					.title(NotificationType.FEED_TAG.getTitle())
 					.body(NotificationType.NEW_FEED.getFormattedContent("글쓴이1"))
 					.isRead(Boolean.FALSE)
+					.build()
+			)
+			.build();
+	}
+
+	public Notification toReactionCountNotification(Long feedId, User user) {
+		return Notification.builder()
+			.userId(user.getId())	// Todo : feed.getId()로 수정
+			.deviceToken(user.getFcmToken())
+			.notificationType(NotificationType.LIKE_COUNT)
+			.feedLikeCountDetail(
+				FeedLikeCountDetail.builder()
+					.feedId(feedId)
+					.feedLikeCounts(new ArrayList<>())
 					.build()
 			)
 			.build();

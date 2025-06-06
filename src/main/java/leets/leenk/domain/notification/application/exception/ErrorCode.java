@@ -11,7 +11,8 @@ import lombok.Getter;
 public enum ErrorCode implements ErrorCodeInterface {
 
 	INVALID_NOTIFICATION_REQUEST_EXCEPTION(2201, HttpStatus.BAD_REQUEST,
-		"알림을 보내기 위해 필요한 정보(제목, 내용 또는 디바이스 토큰)가 누락되었습니다.");
+		"알림을 보내기 위해 필요한 정보(제목, 내용 또는 디바이스 토큰)가 누락되었습니다."),
+	INVALID_NOTIFICATION_TYPE_EXCEPTION(2202, HttpStatus.BAD_REQUEST, "유효하지 않은 알림 타입입니다.");
 
 	private final int code;
 	private final HttpStatus status;

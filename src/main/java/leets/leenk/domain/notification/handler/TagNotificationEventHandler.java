@@ -19,11 +19,7 @@ public class TagNotificationEventHandler {
 	private final SqsMessageEventMapper sqsMessageEventMapper;
 
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-	public void handler(List<Notification> notificationEvents){
-		notificationEvents.forEach((notification ->
-			eventPublisher.publishEvent(
-				sqsMessageEventMapper.toSqsMessageEvent(notification))
-			)
-		);
+	public void handler(Notification notificationEvent){
+		eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notificationEvent));
 	}
 }

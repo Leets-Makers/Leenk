@@ -30,7 +30,7 @@ public class NotificationService {
 		List<Notification> notifications = notificationMapper.toFeedTagNotification(linkedUsers);
 		notificationRepository.saveAll(notifications);
 
-		eventPublisher.publishEvent(notifications);
+		notifications.forEach(eventPublisher::publishEvent);
 	}
 
 	// 테스트를 위한 임시 태그 알림 메서드

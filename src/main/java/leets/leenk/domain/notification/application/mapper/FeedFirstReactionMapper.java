@@ -1,5 +1,7 @@
 package leets.leenk.domain.notification.application.mapper;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import leets.leenk.domain.notification.domain.entity.NotificationType;
@@ -16,6 +18,8 @@ public class FeedFirstReactionMapper {
 			.title(NotificationType.FIRST_FEED_LIKE.getTitle())
 			.body(NotificationType.FIRST_FEED_LIKE.getFormattedContent(user.getName()))
 			.isRead(Boolean.FALSE)
+			.createDate(LocalDateTime.now())
+			.updateDate(LocalDateTime.now())
 			.build();
 	}
 }

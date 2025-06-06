@@ -64,27 +64,17 @@ public class NotificationService {
 
 	@Transactional
 	public void createFirstReactionNotification(User user, User author, Long feedId) {
-		Optional<Notification> existingNotification = notificationRepository.findByFeedFirstLikeDetailFeedId(feedId);
-
-		Notification notification;
+		if(notificationRepository.findByFeedIdAndUserIdInFirstLikes(feedId, user.getId()).isPresent()){
+			//  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
+			return ;
+		}
+		Notification notification = notificationRepository.findByFeedFirstLikeDetailFeedId(feedId)
+			.orElseGet(()->notificationMapper.toFirstReactionNotification(author, feedId));
 
 		FeedFirstLike feedFirstLike = feedFirstReactionMapper.toFeedFirstReaction(user);
-		if (existingNotification.isEmpty()) { 	// 존재하지 않는 알림인 경우
-			notification = notificationMapper.toFirstReactionNotification(author, feedId, feedFirstLike);
-		}
-		else{	// 이미 존재하는 알림에 추가
-			notification = existingNotification.get();
 
-			if(notificationRepository.findByFeedIdAndUserIdInFirstLikes(feedId, user.getId()).isPresent()){
-				System.out.println("이미 있음!");
-				//  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
-				return ;
-			}
-
-			FeedFirstLikeDetail detail = notification.getFeedFirstLikeDetail();
-			detail.getFeedFirstLikes().add(feedFirstLike);
-		}
-
+		notification.getFeedFirstLikeDetail().getFeedFirstLikes().add(feedFirstLike);
+		// 알림의 FeedFirstLikes 리스트에 추가
 		notificationRepository.save(notification);
 
 		FeedFirstLikeEvent feedFirstLikeEvent = new FeedFirstLikeEvent(feedFirstLike, notification.getDeviceToken());

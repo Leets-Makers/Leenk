@@ -21,6 +21,6 @@ public class FeedFirstReactionEventHandler {
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void handler(FeedFirstLikeEvent feedFirstLikeEvent){
 		eventPublisher.publishEvent(sqsMessageEventMapper
-			.fromFeedFirstLike(feedFirstLikeEvent.getFeedFirstLike(), feedFirstLikeEvent.getDeviceToken()));
+			.fromFeedFirstLike(feedFirstLikeEvent));
 	}
 }

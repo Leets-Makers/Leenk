@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import leets.leenk.domain.notification.application.dto.SqsMessageEvent;
 import leets.leenk.domain.notification.application.exception.InvalidNotificationTypeException;
 import leets.leenk.domain.notification.domain.entity.Notification;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
+import leets.leenk.domain.notification.domain.entity.event.FeedFirstLikeEvent;
 import leets.leenk.domain.notification.domain.entity.event.FeedLikeCountEvent;
 
 @Component
@@ -30,11 +30,11 @@ public class SqsMessageEventMapper {
 		};
 	}
 
-	public SqsMessageEvent fromFeedFirstLike(FeedFirstLike feedFirstLike, String deviceToken) {
+	public SqsMessageEvent fromFeedFirstLike(FeedFirstLikeEvent feedFirstLikeEvent) {
 		return SqsMessageEvent.builder()
-			.title(feedFirstLike.getTitle())
-			.content(feedFirstLike.getBody())
-			.deviceToken(deviceToken)
+			.title(feedFirstLikeEvent.getFeedFirstLike().getTitle())
+			.content(feedFirstLikeEvent.getFeedFirstLike().getBody())
+			.deviceToken(feedFirstLikeEvent.getDeviceToken())
 			.build();
 	}
 

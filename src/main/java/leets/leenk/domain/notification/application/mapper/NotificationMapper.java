@@ -38,7 +38,7 @@ public class NotificationMapper {
 			.collect(Collectors.toList());
 	}
 
-	public Notification toFirstReactionNotification(User author, Long feedId, FeedFirstLike feedFirstLike) {
+	public Notification toFirstReactionNotification(User author, Long feedId) {
 		return Notification.builder()
 			.userId(author.getId())
 			.deviceToken(author.getFcmToken())
@@ -47,9 +47,7 @@ public class NotificationMapper {
 				FeedFirstLikeDetail.builder()
 					.feedId(feedId)
 					.feedFirstLikes(
-						List.of(
-							feedFirstLike
-						)
+						new ArrayList<>()
 					)
 					.build()
 			)

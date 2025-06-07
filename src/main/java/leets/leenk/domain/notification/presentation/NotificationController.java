@@ -1,25 +1,31 @@
 package leets.leenk.domain.notification.presentation;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import leets.leenk.domain.notification.application.dto.NotificationResponse;
 import leets.leenk.domain.notification.application.service.NotificationService;
+import leets.leenk.domain.notification.application.usecase.NotificationResponseCode;
+import leets.leenk.domain.notification.application.usecase.NotificationUsecase;
 import leets.leenk.global.common.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Tag(name = "NOTIFICATION")
+@Tag(name = "NOTIFICATION", description = "알림 API")
 @RestController
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
 
 	private final NotificationService notificationService;
+	private final NotificationUsecase notificationUsecase;
 
 	// 태그 알림 생성을 위한 임시 컨트롤러. 추후 삭제 예정
 	@Operation(summary = "태그 알림 발행 API")
@@ -50,4 +56,13 @@ public class NotificationController {
 		return null;
 	}
 
+	@Operation(summary = "최근 알림 조회 API [무한스크롤]", description = "사용자의 최근 알림 목록을 페이지 단위로 조회합니다. "
+		+ "pageNumber: 0부터 시작")
+	@GetMapping()
+	public CommonResponse<Slice<NotificationResponse>> getNotifications(
+		@RequestParam("pageNumber") int pageNumber,
+		@RequestParam("pageSize") int pageSize){	// 파라미터 : @CurrentUser userId
+		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_READ_SUCCESS,
+			notificationUsecase.getNotifications(1L, pageNumber, pageSize));	// userId : 1L
+	}
 }

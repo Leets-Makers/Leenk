@@ -2,6 +2,8 @@ package leets.leenk.domain.notification.domain.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -16,4 +18,6 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 
 	@Query("{ 'feedReactionCountDetail.feedId': ?0, 'feedReactionCountDetail.feedReactionCounts.reactionCount': ?1}")
 	Optional<Notification> findByFeedIdAndReactionCount(Long feedId, Long reactionCount);
+
+	Slice<Notification> findPageByUserId(Pageable pageable, Long userId);
 }

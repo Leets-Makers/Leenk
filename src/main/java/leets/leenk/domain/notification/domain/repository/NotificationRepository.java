@@ -9,11 +9,11 @@ import leets.leenk.domain.notification.domain.entity.Notification;
 
 public interface NotificationRepository extends MongoRepository<Notification, String> {
 
-	Optional<Notification> findByFeedFirstLikeDetailFeedId(Long feedId);
+	Optional<Notification> findByFeedFirstReactionDetailFeedId(Long feedId);
 
-	@Query("{ 'feedFirstLikeDetail.feedId': ?0, 'feedFirstLikeDetail.feedFirstLikes.userId': ?1 }")
-	Optional<Notification> findByFeedIdAndUserIdInFirstLikes(Long feedId, Long id);
+	@Query("{ 'feedFirstReactionDetail.feedId': ?0, 'feedFirstReactionDetail.feedFirstReactions.userId': ?1 }")
+	Optional<Notification> findByFeedIdAndUserIdInFirstReactions(Long feedId, Long id);
 
-	@Query("{ 'feedLikeCountDetail.feedId': ?0, 'feedLikeCountDetail.feedLikeCounts.likeCount': ?1}")
-	Optional<Notification> findByFeedIdAndLikeCount(Long feedId, Long likeCount);
+	@Query("{ 'feedReactionCountDetail.feedId': ?0, 'feedReactionCountDetail.feedReactionCounts.reactionCount': ?1}")
+	Optional<Notification> findByFeedIdAndReactionCount(Long feedId, Long reactionCount);
 }

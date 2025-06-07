@@ -5,18 +5,18 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import leets.leenk.domain.notification.domain.entity.NotificationType;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
+import leets.leenk.domain.notification.domain.entity.details.FeedFirstReaction;
 import leets.leenk.domain.user.domain.entity.User;
 
 @Component
 public class FeedFirstReactionMapper {
 
-	public FeedFirstLike toFeedFirstReaction(User user){
-		return FeedFirstLike.builder()
+	public FeedFirstReaction toFeedFirstReaction(User user){
+		return FeedFirstReaction.builder()
 			.userId(user.getId())
 			.name(user.getName())
-			.title(NotificationType.FIRST_FEED_LIKE.getTitle())
-			.body(NotificationType.FIRST_FEED_LIKE.getFormattedContent(user.getName()))
+			.title(NotificationType.FEED_FIRST_REACTION.getTitle())
+			.body(NotificationType.FEED_FIRST_REACTION.getFormattedContent(user.getName()))
 			.isRead(Boolean.FALSE)
 			.createDate(LocalDateTime.now())
 			.updateDate(LocalDateTime.now())

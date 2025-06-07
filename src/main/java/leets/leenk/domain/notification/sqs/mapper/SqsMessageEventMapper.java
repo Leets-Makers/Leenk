@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import leets.leenk.domain.notification.application.dto.SqsMessageEvent;
 import leets.leenk.domain.notification.application.exception.InvalidNotificationTypeException;
 import leets.leenk.domain.notification.domain.entity.Notification;
-import leets.leenk.domain.notification.domain.entity.event.FeedFirstLikeEvent;
-import leets.leenk.domain.notification.domain.entity.event.FeedLikeCountEvent;
+import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;
+import leets.leenk.domain.notification.domain.entity.event.FeedReactionCountEvent;
 
 @Component
 public class SqsMessageEventMapper {
@@ -30,19 +30,19 @@ public class SqsMessageEventMapper {
 		};
 	}
 
-	public SqsMessageEvent fromFeedFirstLike(FeedFirstLikeEvent feedFirstLikeEvent) {
+	public SqsMessageEvent fromFeedFirstReaction(FeedFirstReactionEvent feedFirstReactionEvent) {
 		return SqsMessageEvent.builder()
-			.title(feedFirstLikeEvent.getFeedFirstLike().getTitle())
-			.content(feedFirstLikeEvent.getFeedFirstLike().getBody())
-			.deviceToken(feedFirstLikeEvent.getDeviceToken())
+			.title(feedFirstReactionEvent.getFeedFirstReaction().getTitle())
+			.content(feedFirstReactionEvent.getFeedFirstReaction().getBody())
+			.deviceToken(feedFirstReactionEvent.getDeviceToken())
 			.build();
 	}
 
-	public SqsMessageEvent fromFeedLikeCountEvent(FeedLikeCountEvent feedLikeCountEvent) {
+	public SqsMessageEvent fromFeedReactionCountEvent(FeedReactionCountEvent feedReactionCountEvent) {
 		return SqsMessageEvent.builder()
-			.title(feedLikeCountEvent.getFeedLikeCount().getTitle())
-			.content(feedLikeCountEvent.getFeedLikeCount().getBody())
-			.deviceToken(feedLikeCountEvent.getDeviceToken())
+			.title(feedReactionCountEvent.getFeedReactionCount().getTitle())
+			.content(feedReactionCountEvent.getFeedReactionCount().getBody())
+			.deviceToken(feedReactionCountEvent.getDeviceToken())
 			.build();
 	}
 }

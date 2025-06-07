@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @SuperBuilder
-public class FeedFirstLike extends NotificationContent {
+public class FeedFirstReaction extends NotificationContent {
 
 	private Long userId;
 

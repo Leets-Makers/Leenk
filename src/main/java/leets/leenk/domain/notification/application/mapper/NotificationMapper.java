@@ -9,9 +9,8 @@ import org.springframework.stereotype.Component;
 import leets.leenk.domain.notification.domain.entity.LinkedUser;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.NotificationType;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
-import leets.leenk.domain.notification.domain.entity.details.FeedLikeCountDetail;
+import leets.leenk.domain.notification.domain.entity.details.FeedFirstReactionDetail;
+import leets.leenk.domain.notification.domain.entity.details.FeedReactionCountDetail;
 import leets.leenk.domain.notification.domain.entity.details.FeedTagDetail;
 import leets.leenk.domain.notification.domain.entity.details.NewFeedDetail;
 import leets.leenk.domain.user.domain.entity.User;
@@ -42,11 +41,11 @@ public class NotificationMapper {
 		return Notification.builder()
 			.userId(author.getId())
 			.deviceToken(author.getFcmToken())
-			.notificationType(NotificationType.FIRST_FEED_LIKE)
-			.feedFirstLikeDetail(
-				FeedFirstLikeDetail.builder()
+			.notificationType(NotificationType.FEED_FIRST_REACTION)
+			.feedFirstReactionDetail(
+				FeedFirstReactionDetail.builder()
 					.feedId(feedId)
-					.feedFirstLikes(
+					.feedFirstReactions(
 						new ArrayList<>()
 					)
 					.build()
@@ -62,8 +61,8 @@ public class NotificationMapper {
 			.newFeedDetail(
 				NewFeedDetail.builder()
 					.feedId(feedId)
-					.authorUserId(user.getId())
-					.authorName(user.getName())
+					.authorUserId(1L)
+					.authorName("글쓴이")
 					.title(NotificationType.FEED_TAG.getTitle())
 					.body(NotificationType.NEW_FEED.getFormattedContent("글쓴이1"))
 					.isRead(Boolean.FALSE)
@@ -76,11 +75,11 @@ public class NotificationMapper {
 		return Notification.builder()
 			.userId(user.getId())	// Todo : feed.getId()로 수정
 			.deviceToken(user.getFcmToken())
-			.notificationType(NotificationType.LIKE_COUNT)
-			.feedLikeCountDetail(
-				FeedLikeCountDetail.builder()
+			.notificationType(NotificationType.FEED_REACTION_COUNT)
+			.feedReactionCountDetail(
+				FeedReactionCountDetail.builder()
 					.feedId(feedId)
-					.feedLikeCounts(new ArrayList<>())
+					.feedReactionCounts(new ArrayList<>())
 					.build()
 			)
 			.build();

@@ -29,9 +29,9 @@ public class NotificationController {
 	}
 
 	@Operation(summary = "임시 첫 좋아요 알림 발행 API")
-	@PostMapping("/first_like")
-	public CommonResponse<Void> FeedFirstLikeNotification(){
-		notificationService.temporaryFeedFirstLikeNotification();
+	@PostMapping("/first_reaction")
+	public CommonResponse<Void> FeedFirstReactionNotification(){
+		notificationService.temporaryFeedFirstReactionNotification();
 		return null;
 	}
 
@@ -43,7 +43,7 @@ public class NotificationController {
 	}
 
 	@Operation(summary = "임시 새로운 피드 알림 발행 API")
-	@PostMapping("/like_count")
+	@PostMapping("/reaction_count")
 	public CommonResponse<Void> ReactionCountNotification(){
 		notificationService.temporaryReactionCountNotification();
 		return null;

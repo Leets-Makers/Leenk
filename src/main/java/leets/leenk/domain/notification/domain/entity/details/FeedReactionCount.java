@@ -8,8 +8,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @SuperBuilder
-public class FeedLikeCount extends NotificationContent {
+public class FeedReactionCount extends NotificationContent {
 
-	private Long likeCount;
+	private Long reactionCount;
 
 }

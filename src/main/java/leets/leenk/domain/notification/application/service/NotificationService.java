@@ -2,26 +2,23 @@ package leets.leenk.domain.notification.application.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
-import leets.leenk.domain.notification.application.mapper.FeedLikeCountMapper;
+import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
-import leets.leenk.domain.notification.domain.entity.details.FeedLikeCount;
-import leets.leenk.domain.notification.domain.entity.event.FeedFirstLikeEvent;
+import leets.leenk.domain.notification.domain.entity.details.FeedReactionCount;
+import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;
 import leets.leenk.domain.notification.domain.entity.LinkedUser;
 import leets.leenk.domain.notification.domain.entity.Notification;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstLike;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
-import leets.leenk.domain.notification.domain.entity.event.FeedLikeCountEvent;
+import leets.leenk.domain.notification.domain.entity.details.FeedFirstReaction;
+import leets.leenk.domain.notification.domain.entity.event.FeedReactionCountEvent;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.entity.UserSetting;
-import leets.leenk.domain.user.domain.repository.UserRepository;
 import leets.leenk.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +31,7 @@ public class NotificationService {
 	private final NotificationMapper notificationMapper;
 	private final NotificationRepository notificationRepository;
 	private final FeedFirstReactionMapper feedFirstReactionMapper;
-	private final FeedLikeCountMapper feedLikeCountMapper;
+	private final FeedReactionCountMapper feedReactionCountMapper;
 
 	// todo: 추후 피드에 머지된 linkedUser 엔티티와 Tag 엔티티를 파라미터로 받을 예정
 	@Transactional
@@ -62,38 +59,40 @@ public class NotificationService {
 		createTagNotification(linkedUsers);
 	}
 
+	// 파라미터 : Feed와 Reaction
 	@Transactional
 	public void createFirstReactionNotification(User user, User author, Long feedId) {
-		if(notificationRepository.findByFeedIdAndUserIdInFirstLikes(feedId, user.getId()).isPresent()){
+		if(notificationRepository.findByFeedIdAndUserIdInFirstReactions(feedId, user.getId()).isPresent()){
 			//  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
 			return ;
 		}
-		Notification notification = notificationRepository.findByFeedFirstLikeDetailFeedId(feedId)
+		Notification notification = notificationRepository.findByFeedFirstReactionDetailFeedId(feedId)
 			.orElseGet(()->notificationMapper.toFirstReactionNotification(author, feedId));
 
-		FeedFirstLike feedFirstLike = feedFirstReactionMapper.toFeedFirstReaction(user);
+		FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(user);
 
-		notification.getFeedFirstLikeDetail().getFeedFirstLikes().add(feedFirstLike);
-		// 알림의 FeedFirstLikes 리스트에 추가
+		notification.getFeedFirstReactionDetail().getFeedFirstReactions().add(feedFirstReaction);
+		// 알림의 FeedFirstReactions 리스트에 추가
 		notificationRepository.save(notification);
 
-		FeedFirstLikeEvent feedFirstLikeEvent = new FeedFirstLikeEvent(feedFirstLike, notification.getDeviceToken());
-		eventPublisher.publishEvent(feedFirstLikeEvent);
+		FeedFirstReactionEvent feedFirstReactionEvent = new FeedFirstReactionEvent(feedFirstReaction, notification.getDeviceToken());
+		eventPublisher.publishEvent(feedFirstReactionEvent);
 
 	}
 
 	// 첫 리액션 알림 테스트를 위한 메소드, 추후 삭제 예정
 	// 같은 메소드 내에서의 @Transactional은 적용 받지 않음
 	@Transactional
-	public void temporaryFeedFirstLikeNotification() {
+	public void temporaryFeedFirstReactionNotification() {
 		User user1 = userGetService.findById(1);
 		User user2 = userGetService.findById(2);
 		createFirstReactionNotification(user1, user2, 1L);
 	}
 
-	
+
+	// 파라미터 : Feed
 	@Transactional
-	public void createNewFeedNotification(Long feedId){	// Todo: Feed로 받아오기
+	public void createNewFeedNotification(Long feedId){
 		/*
 		Todo: User 도메인 머지된 후 UserSettingRepository를 이용해
 		 IsNewFeedNotify가 True인 모든 유저에게 이벤트 발생
@@ -149,18 +148,18 @@ public class NotificationService {
 	}
 
 	// Todo : Feed 객체로 파라미터 받아오기
-	// 파라미터 : Feed feed, Long reactionCount
+	// 파라미터 : Feed feed, Reaction reaction
 	@Transactional
 	public void createReactionCountNotification(Long feedId, User user, Long reactionCount) {
 
-		Notification notification = notificationRepository.findByFeedIdAndLikeCount(feedId, reactionCount)
+		Notification notification = notificationRepository.findByFeedIdAndReactionCount(feedId, reactionCount)
 			.orElseGet(() -> notificationMapper.toReactionCountNotification(feedId, user));
 
-		FeedLikeCount feedLikeCount = feedLikeCountMapper.toFeedLikeCount(reactionCount);
+		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
-		notification.getFeedLikeCountDetail().getFeedLikeCounts().add(feedLikeCount);
-		FeedLikeCountEvent feedLikeCountEvent = new FeedLikeCountEvent(feedLikeCount, user.getFcmToken());
-		eventPublisher.publishEvent(feedLikeCountEvent);
+		notification.getFeedReactionCountDetail().getFeedReactionCounts().add(feedReactionCount);
+		FeedReactionCountEvent feedReactionCountEvent = new FeedReactionCountEvent(feedReactionCount, user.getFcmToken());
+		eventPublisher.publishEvent(feedReactionCountEvent);
 
 		notificationRepository.save(notification);
 	}

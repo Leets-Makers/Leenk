@@ -12,11 +12,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
-public class FeedFirstLikeDetail {
+public class FeedFirstReactionDetail {
 
 	@Field("feedId")
 	private Long feedId;
 
-	private List<FeedFirstLike> feedFirstLikes = new ArrayList<>();
+	private List<FeedFirstReaction> feedFirstReactions = new ArrayList<>();
 
 }

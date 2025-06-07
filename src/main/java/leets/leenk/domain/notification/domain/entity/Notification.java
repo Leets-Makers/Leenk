@@ -1,13 +1,12 @@
 package leets.leenk.domain.notification.domain.entity;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstLikeDetail;
-import leets.leenk.domain.notification.domain.entity.details.FeedLikeCountDetail;
+import leets.leenk.domain.notification.domain.entity.details.FeedFirstReactionDetail;
+import leets.leenk.domain.notification.domain.entity.details.FeedReactionCountDetail;
 import leets.leenk.domain.notification.domain.entity.details.FeedTagDetail;
 import leets.leenk.domain.notification.domain.entity.details.NewFeedDetail;
 import leets.leenk.global.common.entity.BaseEntity;
@@ -34,9 +33,9 @@ public class Notification extends BaseEntity {
 
 	private FeedTagDetail feedTagDetail;
 
-	private FeedLikeCountDetail feedLikeCountDetail;
+	private FeedReactionCountDetail feedReactionCountDetail;
 
-	private FeedFirstLikeDetail feedFirstLikeDetail;
+	private FeedFirstReactionDetail feedFirstReactionDetail;
 
 	private NewFeedDetail newFeedDetail;
 

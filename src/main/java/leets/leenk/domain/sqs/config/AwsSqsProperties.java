@@ -1,4 +1,4 @@
-package leets.leenk.domain.notification.sqs.config;
+package leets.leenk.domain.sqs.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

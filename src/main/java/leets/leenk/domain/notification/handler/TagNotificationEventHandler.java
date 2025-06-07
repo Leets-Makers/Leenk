@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import leets.leenk.domain.notification.sqs.mapper.SqsMessageEventMapper;
+import leets.leenk.domain.sqs.application.mapper.SqsMessageEventMapper;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import lombok.RequiredArgsConstructor;
 

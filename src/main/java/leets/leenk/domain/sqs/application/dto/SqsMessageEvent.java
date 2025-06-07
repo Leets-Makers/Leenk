@@ -1,4 +1,4 @@
-package leets.leenk.domain.notification.application.dto;
+package leets.leenk.domain.sqs.application.dto;
 
 import leets.leenk.domain.notification.application.exception.InvalidNotificationRequestException;
 import lombok.Builder;

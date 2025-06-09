@@ -25,7 +25,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthUsecase {
-    private static final String JWT_USER_ID_CLAIM = "id";
+    public static final String JWT_USER_ID_CLAIM = "id";
 
     private final UserGetService userGetService;
     private final UserSaveService userSaveService;

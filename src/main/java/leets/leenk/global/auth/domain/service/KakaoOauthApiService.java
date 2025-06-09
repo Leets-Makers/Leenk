@@ -1,8 +1,10 @@
 package leets.leenk.global.auth.domain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import leets.leenk.global.auth.application.dto.response.OauthErrorResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;
+import leets.leenk.global.auth.application.exception.CustomJsonProcessingException;
 import leets.leenk.global.auth.application.exception.OauthException;
 import leets.leenk.global.auth.application.exception.UnRegisterUserException;
 import leets.leenk.global.auth.application.exception.UserInActiveException;
@@ -41,12 +43,16 @@ public class KakaoOauthApiService {
                 .body(body)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (request, response) -> {
-                    OauthErrorResponse error = objectMapper.readValue(response.getBody(), OauthErrorResponse.class);
+                    try {
+                        OauthErrorResponse error = objectMapper.readValue(response.getBody(), OauthErrorResponse.class);
 
-                    switch (error.error()) {
-                        case USER_INACTIVE_ERROR -> throw new UserInActiveException(error.error_description());
-                        case USER_NOT_FOUND_ERROR -> throw new UnRegisterUserException();
-                        default -> throw new OauthException(error.error_description());
+                        switch (error.error()) {
+                            case USER_INACTIVE_ERROR -> throw new UserInActiveException(error.error_description());
+                            case USER_NOT_FOUND_ERROR -> throw new UnRegisterUserException();
+                            default -> throw new OauthException(error.error_description());
+                        }
+                    } catch (JsonProcessingException e) {
+                        throw new CustomJsonProcessingException(e.getMessage());
                     }
                 })
                 .body(OauthTokenResponse.class);

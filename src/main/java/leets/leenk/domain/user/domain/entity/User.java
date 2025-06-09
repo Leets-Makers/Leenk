@@ -44,7 +44,7 @@ public class User extends BaseEntity {
     private String fcmToken;
 
     @Size(max = 20)
-    @Column(length = 20)
+    @Column(nullable = false, length = 20)
     private String kakaoTalkId;
 
     @Column(nullable = false)

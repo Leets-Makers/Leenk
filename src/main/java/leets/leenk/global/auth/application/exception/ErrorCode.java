@@ -9,10 +9,9 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode implements ErrorCodeInterface {
 
-    OAUTH_ERROR(2001, HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
-    UN_REGISTER(2002, HttpStatus.UNAUTHORIZED, "가입되지 않은 사용자입니다."),
     USER_IN_ACTIVE(2000, HttpStatus.FORBIDDEN, "가입 승인이 허가되지 않은 계정입니다."),
-    JSON_PROCESSING(3000, HttpStatus.INTERNAL_SERVER_ERROR, "Json 처리 중 문제가 발생했습니다.");
+    OAUTH_ERROR(2001, HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
+    UN_REGISTER(2002, HttpStatus.UNAUTHORIZED, "가입되지 않은 사용자입니다.");
 
     private final int code;
     private final HttpStatus status;

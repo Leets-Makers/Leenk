@@ -31,7 +31,7 @@ public class UserController {
         return CommonResponse.success(COMPLETE_PROFILE);
     }
 
-    @GetMapping
+    @GetMapping("/me")
     @Operation(summary = "마이페이지 조회 API")
     public CommonResponse<UserInfoResponse> getMyInfo(@Parameter(hidden = true) @CurrentUserId Long userId) {
         UserInfoResponse response = userUsecase.getUserInfo(userId);

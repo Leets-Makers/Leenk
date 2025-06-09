@@ -51,4 +51,16 @@ public class User extends BaseEntity {
     private long totalReactionCount;
 
     private LocalDateTime deleteDate;
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public void updateMbti(String mbti) {
+        this.mbti = mbti;
+    }
 }

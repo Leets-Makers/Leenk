@@ -52,6 +52,10 @@ public class User extends BaseEntity {
 
     private LocalDateTime deleteDate;
 
+    public void updateKakaoTalkId(String kakaoTalkId) {
+        this.kakaoTalkId = kakaoTalkId;
+    }
+
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }

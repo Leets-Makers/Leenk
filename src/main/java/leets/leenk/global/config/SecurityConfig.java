@@ -2,6 +2,8 @@ package leets.leenk.global.config;
 
 
 import leets.leenk.global.auth.application.property.OauthProperty;
+import leets.leenk.global.auth.domain.handler.CustomAccessDeniedHandler;
+import leets.leenk.global.auth.domain.handler.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,8 @@ import java.util.List;
 public class SecurityConfig {
     private final PermitUrlConfig permitUrlConfig;
     private final OauthProperty oauthProperty;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,7 +38,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfig()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .authenticationEntryPoint(authenticationEntryPoint)
+                                .accessDeniedHandler(accessDeniedHandler))
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .jwt(jwt -> jwt
+                                .decoder(jwtDecoder())
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(permitUrlConfig.getPublicUrl()).permitAll()
                         .anyRequest().authenticated()

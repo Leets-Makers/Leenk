@@ -1,9 +1,9 @@
 package leets.leenk.domain.feed.application.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record ReactionRequest(
-        @NotBlank
+        @NotNull
         long reactionCount
 ) {
 }

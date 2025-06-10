@@ -2,6 +2,8 @@ package leets.leenk.domain.feed.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import leets.leenk.domain.feed.application.dto.request.FeedUpdateRequest;
 import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
 import leets.leenk.domain.feed.application.dto.response.FeedDetailResponse;
@@ -32,7 +34,7 @@ public class FeedController {
 
     @GetMapping("/{feedId}")
     @Operation(summary = "피드 상세 조회 API")
-    public CommonResponse<FeedDetailResponse> getFeedDetail(@PathVariable Long feedId) {
+    public CommonResponse<FeedDetailResponse> getFeedDetail(@PathVariable @Positive Long feedId) {
         FeedDetailResponse response = feedUsecase.getFeedDetail(feedId);
 
         return CommonResponse.success(ResponseCode.GET_FEED_DETAIL, response);
@@ -40,7 +42,7 @@ public class FeedController {
 
     @PostMapping
     @Operation(summary = "피드 업로드 API")
-    public CommonResponse<Void> uploadFeed(@RequestBody FeedUploadRequest request) {
+    public CommonResponse<Void> uploadFeed(@RequestBody @Valid FeedUploadRequest request) {
         feedUsecase.uploadFeed(request);
 
         return CommonResponse.success(ResponseCode.UPLOAD_FEED);
@@ -48,7 +50,7 @@ public class FeedController {
 
     @PostMapping("/{feedId}/reactions")
     @Operation(summary = "공감하기 API")
-    public CommonResponse<Void> reactToFeed(@PathVariable Long feedId) {
+    public CommonResponse<Void> reactToFeed(@PathVariable @Positive Long feedId) {
         feedUsecase.reactToFeed(feedId);
 
         return CommonResponse.success(ResponseCode.CREATE_REACTION);
@@ -56,7 +58,7 @@ public class FeedController {
 
     @GetMapping("/{feedId}/reactions")
     @Operation(summary = "피드 공감 유저 목록 조회 API")
-    public CommonResponse<List<ReactionUserResponse>> getLikedUsers(@PathVariable Long feedId) {
+    public CommonResponse<List<ReactionUserResponse>> getLikedUsers(@PathVariable @Positive Long feedId) {
         List<ReactionUserResponse> response = feedUsecase.getLikedUsers(feedId);
 
         return CommonResponse.success(ResponseCode.GET_REACTED_USERS, response);
@@ -64,7 +66,7 @@ public class FeedController {
 
     @PatchMapping
     @Operation(summary = "피드 수정 API")
-    public CommonResponse<Void> updateFeed(@RequestBody FeedUpdateRequest request) {
+    public CommonResponse<Void> updateFeed(@RequestBody @Valid FeedUpdateRequest request) {
         feedUsecase.updateFeed(request);
 
         return CommonResponse.success(ResponseCode.UPDATE_FEED);

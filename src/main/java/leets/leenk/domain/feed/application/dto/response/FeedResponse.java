@@ -2,7 +2,7 @@ package leets.leenk.domain.feed.application.dto.response;
 
 public record FeedResponse(
         long feedId,
-        String profileImage,
+        FeedAuthorResponse author,
         String thumbNeil,
         long totalReactionCount
 ) {

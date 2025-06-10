@@ -1,4 +1,4 @@
-package leets.leenk.domain.feed.domain.enitty;
+package leets.leenk.domain.feed.domain.entity;
 
 import jakarta.persistence.*;
 import leets.leenk.domain.user.domain.entity.User;
@@ -11,16 +11,19 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @SuperBuilder
 @Table(
-        name = "linked_users",
+        name = "reactions",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"feed_id", "user_id"})
-        })
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LinkedUser {
+public class Reaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private int reactionCount;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "feed_id", nullable = false, updatable = false)
@@ -29,5 +32,4 @@ public class LinkedUser {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
-
 }

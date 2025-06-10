@@ -2,7 +2,7 @@ package leets.leenk.domain.media.domain.entity;
 
 
 import jakarta.persistence.*;
-import leets.leenk.domain.feed.domain.enitty.Feed;
+import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.leenk.domain.entity.Leenk;
 import leets.leenk.domain.media.domain.entity.enums.MediaType;
 import lombok.AccessLevel;

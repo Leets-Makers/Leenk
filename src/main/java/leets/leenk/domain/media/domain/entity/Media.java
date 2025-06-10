@@ -10,8 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.UUID;
-
 @Getter
 @Entity
 @SuperBuilder
@@ -26,9 +24,6 @@ public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, unique = true, columnDefinition = "BINARY(16)")
-    private UUID publicId;
 
     @Column(nullable = false)
     private String mediaUrl;

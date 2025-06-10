@@ -22,7 +22,7 @@ public class Feed extends BaseEntity {
     private Long id;
 
     @Column(length = 100)
-    private String content;
+    private String description;
 
     @Column(nullable = false)
     private long totalReactionCount;

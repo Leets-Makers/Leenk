@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Table(
         name = "reactions",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "feed_id"})
+                @UniqueConstraint(columnNames = {"feed_id", "user_id"})
         }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,10 +26,10 @@ public class Reaction {
     private int reactionCount;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "feed_id", nullable = false, updatable = false)
     private Feed feed;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private User user;
 }

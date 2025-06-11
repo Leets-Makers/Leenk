@@ -44,11 +44,27 @@ public class User extends BaseEntity {
     private String fcmToken;
 
     @Size(max = 20)
-    @Column(length = 20)
+    @Column(nullable = false, length = 20)
     private String kakaoTalkId;
 
     @Column(nullable = false)
     private long totalReactionCount;
 
     private LocalDateTime deleteDate;
+
+    public void updateKakaoTalkId(String kakaoTalkId) {
+        this.kakaoTalkId = kakaoTalkId;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public void updateMbti(String mbti) {
+        this.mbti = mbti;
+    }
 }

@@ -28,7 +28,7 @@ public class KakaoOauthApiService {
     private final KakaoOauthProperty kakaoOauthProperty;
 
     private final RestClient authRestClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     public OauthTokenResponse getOauthToken(String kakaoAccessToken) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();

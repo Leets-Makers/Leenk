@@ -7,7 +7,6 @@ import leets.leenk.domain.user.domain.entity.UserSetting;
 import leets.leenk.domain.user.domain.service.UserGetService;
 import leets.leenk.domain.user.domain.service.UserSaveService;
 import leets.leenk.domain.user.domain.service.UserSettingSaveService;
-import leets.leenk.global.auth.application.dto.request.KakaoAccessTokenRequest;
 import leets.leenk.global.auth.application.dto.response.LoginResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;
 import leets.leenk.global.auth.application.dto.response.OauthUserInfoResponse;
@@ -25,7 +24,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthUsecase {
-    private static final String JWT_USER_ID_CLAIM = "id";
+    public static final String JWT_USER_ID_CLAIM = "id";
 
     private final UserGetService userGetService;
     private final UserSaveService userSaveService;
@@ -39,8 +38,8 @@ public class AuthUsecase {
     private final JwtDecoder jwtDecoder;
 
     @Transactional
-    public LoginResponse kakaoLogin(KakaoAccessTokenRequest kakaoAccessTokenRequest) {
-        OauthTokenResponse response = kakaoOauthApiService.getOauthToken(kakaoAccessTokenRequest.kakaoAccessToken());
+    public LoginResponse kakaoLogin(String kakaoAccessToken) {
+        OauthTokenResponse response = kakaoOauthApiService.getOauthToken(kakaoAccessToken);
 
         long userId = parseUserId(response);
         Optional<User> optionalUser = userGetService.existById(userId);

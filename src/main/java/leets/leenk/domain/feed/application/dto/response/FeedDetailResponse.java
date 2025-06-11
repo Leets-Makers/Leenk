@@ -1,6 +1,6 @@
 package leets.leenk.domain.feed.application.dto.response;
 
-import leets.leenk.domain.media.domain.application.FeedMediaResponse;
+import leets.leenk.domain.media.domain.application.dto.response.FeedMediaResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

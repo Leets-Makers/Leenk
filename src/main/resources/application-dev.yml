@@ -4,6 +4,10 @@ spring:
     username: ${RDS_USER_NAME}
     password: ${RDS_USER_PW}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    mongodb:
+      uri: ${DEV_MONGODB_URI}
+      database: ${DEV_MONGODB_DB_NAME}
   jpa:
     show-sql: true
     properties:
@@ -11,3 +15,16 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+  cloud:
+    aws:
+      credentials:
+        access-key: ${DEV_AWS_ACCESS_KEY}
+        secret-key: ${DEV_AWS_SECRET_KEY}
+      region:
+        static: ap-northeast-2
+
+myapp:
+  sqs:
+    queue-name: ${DEV_AWS_SQS_QUEUE_NAME}
+    queue-url: ${DEV_AWS_SQS_QUEUE_URL}
+    messageDelaySecs: 0

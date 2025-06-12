@@ -24,6 +24,18 @@ spring:
       region:
         static: ap-northeast-2
 
+auth:
+  oauth2:
+    client-id: ${CLIENT_ID}
+    client-secret: ${CLIENT_SECRET}
+    oauth-iss: ${OAUTH_ISS}
+    oauth-server-token-uri: ${OAUTH_SERVER_TOKEN_URI}
+    oauth-jwk-set-uri: ${OAUTH_JWK_SET_URI}
+    oauth-server-user-info-uri: ${OAUTH_SERVER_USER_INFO_URI}
+    kakao:
+      kakao_grant_type: ${KAKAO_GRANT_TYPE}
+      kakao_grant_type_name: ${KAKAO_GRANT_TYPE_NAME}
+
 myapp:
   sqs:
     queue-name: ${LOCAL_AWS_SQS_QUEUE_NAME}

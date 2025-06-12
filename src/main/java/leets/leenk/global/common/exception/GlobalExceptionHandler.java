@@ -18,7 +18,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<CommonResponse<Void>> handleException(BaseException e) {
         ErrorCodeInterface errorCode = e.getErrorCode();
-        CommonResponse<Void> body = CommonResponse.error(errorCode);
+        String errorMessage = e.getMessage();
+        CommonResponse<Void> body = CommonResponse.error(errorCode, errorMessage);
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -95,9 +96,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonResponse<Void>> handleAll() {
+    public ResponseEntity<CommonResponse<Void>> handleAll(Exception e) {
         ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-        CommonResponse<Void> body = CommonResponse.error(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode, e.getMessage());
 
         return ResponseEntity
                 .status(errorCode.getStatus())

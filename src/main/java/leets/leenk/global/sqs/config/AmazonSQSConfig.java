@@ -1,4 +1,4 @@
-package leets.leenk.domain.sqs.config;
+package leets.leenk.global.sqs.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

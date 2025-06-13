@@ -1,8 +1,8 @@
-package leets.leenk.domain.sqs.application.mapper;
+package leets.leenk.global.sqs.application.mapper;
 
 import org.springframework.stereotype.Component;
 
-import leets.leenk.domain.sqs.application.dto.SqsMessageEvent;
+import leets.leenk.global.sqs.application.dto.SqsMessageEvent;
 import leets.leenk.domain.notification.application.exception.InvalidNotificationTypeException;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;

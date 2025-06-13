@@ -1,11 +1,11 @@
-package leets.leenk.domain.sqs.application.mapper;
+package leets.leenk.global.sqs.application.mapper;
 
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import leets.leenk.domain.sqs.application.dto.SqsMessageEvent;
-import leets.leenk.domain.sqs.config.AwsSqsProperties;
+import leets.leenk.global.sqs.application.dto.SqsMessageEvent;
+import leets.leenk.global.sqs.config.AwsSqsProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;

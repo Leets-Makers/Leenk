@@ -29,7 +29,7 @@ public class NotificationController {
 	private final NotificationService notificationService;
 	private final NotificationUsecase notificationUsecase;
 
-	// 태그 알림 생성을 위한 임시 컨트롤러. 추후 삭제 예정
+	// 알림 생성을 위한 임시 컨트롤러. 추후 삭제 예정
 	@Operation(summary = "태그 알림 발행 API")
 	@PostMapping("/tag")
 	public CommonResponse<Void> TagNotification(){
@@ -64,12 +64,12 @@ public class NotificationController {
 	public CommonResponse<Slice<NotificationResponse>> getNotifications(
 		@CurrentUserId Long userId,
 		@RequestParam("pageNumber") int pageNumber,
-		@RequestParam("pageSize") int pageSize){	// 파라미터 : @CurrentUser userId
+		@RequestParam("pageSize") int pageSize){
 		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_READ_SUCCESS,
 			notificationUsecase.getNotifications(userId, pageNumber, pageSize));
 	}
 
-	@Operation(summary = "알램 개수 조회 API")
+	@Operation(summary = "알림 개수 조회 API")
 	@GetMapping("/count")
 	public CommonResponse<NotificationCountResponse> getNotificationCount(@CurrentUserId long userId){
 		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_COUNT_READ_SUCCESS,

@@ -3,8 +3,8 @@ package leets.leenk.domain.notification.handler;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import leets.leenk.domain.sqs.application.mapper.AwsSqsManager;
-import leets.leenk.domain.sqs.application.dto.SqsMessageEvent;
+import leets.leenk.global.sqs.application.mapper.AwsSqsManager;
+import leets.leenk.global.sqs.application.dto.SqsMessageEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest;

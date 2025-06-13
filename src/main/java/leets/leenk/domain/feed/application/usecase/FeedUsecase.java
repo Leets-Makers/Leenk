@@ -23,8 +23,10 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,8 +90,8 @@ public class FeedUsecase {
     }
 
     private List<LinkedUser> getLinkedUsers(User author, List<Long> userIds, Feed feed) {
-        List<User> users = userGetService.findAll(userIds);
-        users.add(author);
+        Set<User> users = new HashSet<>(userGetService.findAll(userIds));
+        users.add(author); // 중복 자동 제거
 
         return users.stream()
                 .map(user -> feedLinkedUserMapper.toLinkedUser(user, feed))

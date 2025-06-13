@@ -20,6 +20,9 @@ public record FeedDetailResponse(
         @Schema(description = "피드 설명", example = "행복한 링크 생활")
         String description,
 
+        @Schema(description = "총 공감 수")
+        long totalReactionCount,
+
         @Schema(description = "피드 생성 시간", example = "2025-06-30T00:00:00")
         LocalDateTime createdAt,
 

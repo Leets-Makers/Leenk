@@ -61,6 +61,7 @@ public class FeedMapper {
                 .feedId(feed.getId())
                 .author(toFeedAuthorResponse(feed))
                 .description(feed.getDescription())
+                .totalReactionCount(feed.getTotalReactionCount())
                 .createdAt(feed.getCreateDate())
                 .media(toFeedMediaResponses(medias))
                 .linkedUser(toLinkedUserResponses(linkedUsers, feed))

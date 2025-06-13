@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
 import leets.leenk.domain.notification.application.dto.NotificationResponse;
 import leets.leenk.domain.notification.application.service.NotificationService;
 import leets.leenk.domain.notification.application.usecase.NotificationResponseCode;
 import leets.leenk.domain.notification.application.usecase.NotificationUsecase;
+import leets.leenk.global.auth.application.annotation.CurrentUserId;
 import leets.leenk.global.common.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,9 +62,17 @@ public class NotificationController {
 		+ "pageNumber: 0부터 시작")
 	@GetMapping()
 	public CommonResponse<Slice<NotificationResponse>> getNotifications(
+		@CurrentUserId Long userId,
 		@RequestParam("pageNumber") int pageNumber,
 		@RequestParam("pageSize") int pageSize){	// 파라미터 : @CurrentUser userId
 		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_READ_SUCCESS,
-			notificationUsecase.getNotifications(1L, pageNumber, pageSize));	// userId : 1L
+			notificationUsecase.getNotifications(userId, pageNumber, pageSize));
+	}
+
+	@Operation(summary = "알램 개수 조회 API")
+	@GetMapping("/count")
+	public CommonResponse<NotificationCountResponse> getNotificationCount(@CurrentUserId long userId){
+		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_COUNT_READ_SUCCESS,
+			notificationUsecase.getNotificationCount(userId));
 	}
 }

@@ -20,4 +20,6 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 	Optional<Notification> findByFeedIdAndReactionCount(Long feedId, long reactionCount);
 
 	Slice<Notification> findPageByUserId(Pageable pageable, Long userId);
+
+	Long countByUserIdAndIsReadFalse(Long id);
 }

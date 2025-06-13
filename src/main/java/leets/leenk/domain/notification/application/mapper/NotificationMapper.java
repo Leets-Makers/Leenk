@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import leets.leenk.domain.feed.domain.entity.Feed;
+import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
 import leets.leenk.domain.notification.application.dto.NotificationResponse;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
 import leets.leenk.domain.notification.domain.entity.Notification;
@@ -101,6 +102,12 @@ public class NotificationMapper {
 			.newFeedDetail(notification.getNewFeedDetail())
 			.createDate(notification.getCreateDate())
 			.updateDate(notification.getUpdateDate())
+			.build();
+	}
+
+	public NotificationCountResponse toCountResponse(Long notificationCount) {
+		return NotificationCountResponse.builder()
+			.notificationCount(notificationCount)
 			.build();
 	}
 }

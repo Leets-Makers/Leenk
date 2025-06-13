@@ -73,6 +73,7 @@ public class FeedUsecase {
         return feedMapper.toFeedListResponse(slice, mediaMap);
     }
 
+    @Transactional(readOnly = true)
     public FeedDetailResponse getFeedDetail(Long feedId) {
         Feed feed = feedGetService.findById(feedId);
         List<Media> medias = mediaGetService.findAll(feed);

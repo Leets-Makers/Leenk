@@ -11,6 +11,7 @@ import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstReaction;
 import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
+import leets.leenk.domain.user.domain.service.UserSettingGetService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,6 +22,7 @@ public class FirstReactionNotificationSaveService {
 	private final NotificationRepository notificationRepository;
 	private final FeedFirstReactionMapper feedFirstReactionMapper;
 	private final NotificationMapper notificationMapper;
+	private final UserSettingGetService userSettingGetService;
 
 	@Transactional
 	public void createFirstReactionNotification(Reaction reaction) {
@@ -38,7 +40,9 @@ public class FirstReactionNotificationSaveService {
 		notificationRepository.save(notification);
 
 		FeedFirstReactionEvent feedFirstReactionEvent = new FeedFirstReactionEvent(feedFirstReaction, notification.getDeviceToken());
-		eventPublisher.publishEvent(feedFirstReactionEvent);
 
+		// isNewReactionNotify 가 True인 사용자일 경우 푸시 알림
+		if(userSettingGetService.getUserSetting(notification.getUserId()).isNewReactionNotify())
+			eventPublisher.publishEvent(feedFirstReactionEvent);
 	}
 }

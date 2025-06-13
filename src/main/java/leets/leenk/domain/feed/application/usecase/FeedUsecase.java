@@ -2,13 +2,16 @@ package leets.leenk.domain.feed.application.usecase;
 
 import leets.leenk.domain.feed.application.dto.request.FeedUpdateRequest;
 import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
+import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
 import leets.leenk.domain.feed.application.dto.response.FeedDetailResponse;
 import leets.leenk.domain.feed.application.dto.response.FeedListResponse;
 import leets.leenk.domain.feed.application.dto.response.ReactionUserResponse;
 import leets.leenk.domain.feed.application.mapper.FeedLinkedUserMapper;
 import leets.leenk.domain.feed.application.mapper.FeedMapper;
+import leets.leenk.domain.feed.application.mapper.ReactionMapper;
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
+import leets.leenk.domain.feed.domain.entity.Reaction;
 import leets.leenk.domain.feed.domain.service.*;
 import leets.leenk.domain.media.domain.application.mapper.MediaMapper;
 import leets.leenk.domain.media.domain.entity.Media;
@@ -45,9 +48,13 @@ public class FeedUsecase {
     private final LinkedUserGetService linkedUserGetService;
     private final LinkedUserSaveService linkedUserSaveService;
 
+    private final ReactionGetService reactionGetService;
+    private final ReactionSaveService reactionSaveService;
+
     private final FeedMapper feedMapper;
     private final MediaMapper mediaMapper;
     private final FeedLinkedUserMapper feedLinkedUserMapper;
+    private final ReactionMapper reactionMapper;
 
     /*
         추후 n+1, FetchJoin과 성능 테스트 진행할 것
@@ -98,11 +105,28 @@ public class FeedUsecase {
                 .toList();
     }
 
-    public void reactToFeed(Long feedId) {
+    @Transactional
+    public void reactToFeed(long userId, long feedId, ReactionRequest request) {
+        User user = userGetService.findById(userId);
+        Feed feed = feedGetService.findById(feedId);
+        Reaction reaction = reactionGetService.findByFeedAndUser(feed, user)
+                .orElseGet(() ->
+                        reactionSaveService.save(
+                                reactionMapper.toReaction(user, feed, 0L)
+                        )
+                );
+
+        feedUpdateService.updateTotalReaction(feed, reaction, request.reactionCount());
     }
 
-    public List<ReactionUserResponse> getLikedUsers(Long feedId) {
-        return null;
+    @Transactional(readOnly = true)
+    public List<ReactionUserResponse> getReactionUser(Long feedId) {
+        Feed feed = feedGetService.findById(feedId);
+        List<Reaction> reactions = reactionGetService.findAll(feed);
+
+        return reactions.stream()
+                .map(reactionMapper::toResponse)
+                .toList();
     }
 
     public void updateFeed(FeedUpdateRequest request) {

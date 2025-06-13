@@ -36,6 +36,6 @@ auth:
 
 myapp:
   sqs:
-    queue-name: ${DEV_AWS_SQS_QUEUE_NAME}
-    queue-url: ${DEV_AWS_SQS_QUEUE_URL}
+    queue_name: ${DEV_AWS_SQS_QUEUE_NAME}
+    queue_url: ${DEV_AWS_SQS_QUEUE_URL}
     messageDelaySecs: 0

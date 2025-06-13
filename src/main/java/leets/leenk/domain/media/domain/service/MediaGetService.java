@@ -19,7 +19,7 @@ public class MediaGetService {
     }
 
     public List<Media> findAll(Feed feed) {
-        return mediaRepository.findAllByFeed(feed);
+        return mediaRepository.findAllByFeedOrderByPosition(feed);
     }
 
     public List<Media> findAll(List<Feed> feeds) {

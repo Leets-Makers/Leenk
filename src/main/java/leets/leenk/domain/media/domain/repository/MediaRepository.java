@@ -10,5 +10,5 @@ public interface MediaRepository extends JpaRepository<Media, Long> {
 
     List<Media> findAllByFeedInOrderByPosition(List<Feed> feeds);
 
-    List<Media> findAllByFeed(Feed feed);
+    List<Media> findAllByFeedOrderByPosition(Feed feed);
 }

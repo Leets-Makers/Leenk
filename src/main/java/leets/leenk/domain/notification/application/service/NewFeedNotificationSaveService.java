@@ -1,6 +1,7 @@
 package leets.leenk.domain.notification.application.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,9 @@ public class NewFeedNotificationSaveService {
 	public void createNewFeedNotification(Feed feed){
 		List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
 		// IsNewFeedNotify가 True인 글쓴이를 제외한 모든 유저에게 이벤트 발생
-		users.forEach(
+		users.stream()
+			.filter(user -> !Objects.equals(user.getId(), feed.getUser().getId()))
+			.forEach(
 			user -> {
 				Notification notification = notificationMapper.toNewFeedNotification(feed, user);
 				notificationRepository.save(notification);

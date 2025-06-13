@@ -37,6 +37,8 @@ public class FirstReactionNotificationSaveService {
 
 		notification.getFeedFirstReactionDetail().getFeedFirstReactions().add(feedFirstReaction);
 		// 알림의 FeedFirstReactions 리스트에 추가
+
+		notification.setIsReadFalse();
 		notificationRepository.save(notification);
 
 		FeedFirstReactionEvent feedFirstReactionEvent = new FeedFirstReactionEvent(feedFirstReaction, notification.getDeviceToken());

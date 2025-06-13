@@ -13,6 +13,5 @@ public class NotificationContent extends BaseEntity {
 
 	private String title;
 	private String body;
-	private Boolean isRead;
 
 }

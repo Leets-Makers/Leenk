@@ -35,6 +35,7 @@ public class ReactionCountNotificationSaveService {
 		notification.getFeedReactionCountDetail().getFeedReactionCounts().add(feedReactionCount);
 		FeedReactionCountEvent feedReactionCountEvent = new FeedReactionCountEvent(feedReactionCount, feed.getUser().getFcmToken());
 
+		notification.setIsReadFalse();
 		notificationRepository.save(notification);
 
 		if(userSettingGetService.getUserSetting(notification.getUserId()).isNewReactionNotify())

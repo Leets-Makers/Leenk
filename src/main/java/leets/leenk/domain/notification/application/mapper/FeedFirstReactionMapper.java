@@ -17,7 +17,6 @@ public class FeedFirstReactionMapper {
 			.name(user.getName())
 			.title(NotificationType.FEED_FIRST_REACTION.getTitle())
 			.body(NotificationType.FEED_FIRST_REACTION.getFormattedContent(user.getName()))
-			.isRead(Boolean.FALSE)
 			.createDate(LocalDateTime.now())
 			.updateDate(LocalDateTime.now())
 			.build();

@@ -31,6 +31,8 @@ public class Notification extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private NotificationType notificationType;
 
+	private Boolean isRead;
+
 	private FeedTagDetail feedTagDetail;
 
 	private FeedReactionCountDetail feedReactionCountDetail;
@@ -38,5 +40,9 @@ public class Notification extends BaseEntity {
 	private FeedFirstReactionDetail feedFirstReactionDetail;
 
 	private NewFeedDetail newFeedDetail;
+
+	public void setIsReadFalse(){
+		this.isRead = false;
+	}
 
 }

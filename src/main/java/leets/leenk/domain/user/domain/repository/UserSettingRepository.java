@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserSettingRepository extends JpaRepository<UserSetting, Long> {
 	List<UserSetting> findAllByIsNewFeedNotifyTrue();
+
+	UserSetting findByUserId(Long userId);
 }

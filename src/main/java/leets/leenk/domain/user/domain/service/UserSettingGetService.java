@@ -20,4 +20,8 @@ public class UserSettingGetService {
 			.map(UserSetting::getUser)
 			.toList();
 	}
+
+	public UserSetting getUserSetting(Long userId){
+		return userSettingRepository.findByUserId(userId);
+	}
 }

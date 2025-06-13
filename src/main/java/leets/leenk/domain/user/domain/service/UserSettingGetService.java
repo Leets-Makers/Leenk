@@ -22,6 +22,6 @@ public class UserSettingGetService {
 	}
 
 	public UserSetting getUserSetting(Long userId){
-		return userSettingRepository.findByUserId(userId);
+		return userSettingRepository.findByUserId(userId).orElseThrow();
 	}
 }

@@ -1,9 +1,7 @@
 package leets.leenk.domain.notification.application.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

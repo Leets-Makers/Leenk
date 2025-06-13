@@ -51,7 +51,7 @@ public class NotificationController {
 		return null;
 	}
 
-	@Operation(summary = "임시 새로운 피드 알림 발행 API")
+	@Operation(summary = "임시 누적 공감 알림 발행 API")
 	@PostMapping("/reaction_count")
 	public CommonResponse<Void> ReactionCountNotification(){
 		notificationService.temporaryReactionCountNotification();

@@ -45,6 +45,7 @@ public class NotificationMapper {
 			.userId(feed.getUser().getId())
 			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_FIRST_REACTION)
+			.isRead(Boolean.FALSE)
 			.feedFirstReactionDetail(
 				FeedFirstReactionDetail.builder()
 					.feedId(feed.getId())
@@ -67,7 +68,7 @@ public class NotificationMapper {
 					.feedId(feed.getId())
 					.authorUserId(feed.getUser().getId())
 					.authorName(feed.getUser().getName())
-					.title(NotificationType.FEED_TAG.getTitle())
+					.title(NotificationType.NEW_FEED.getTitle())
 					.body(NotificationType.NEW_FEED.getFormattedContent(feed.getUser().getName()))
 					.build()
 			)

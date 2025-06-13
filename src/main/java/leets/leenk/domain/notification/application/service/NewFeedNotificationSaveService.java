@@ -1,0 +1,38 @@
+package leets.leenk.domain.notification.application.service;
+
+import java.util.List;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import leets.leenk.domain.feed.domain.entity.Feed;
+import leets.leenk.domain.notification.application.mapper.NotificationMapper;
+import leets.leenk.domain.notification.domain.entity.Notification;
+import leets.leenk.domain.notification.domain.repository.NotificationRepository;
+import leets.leenk.domain.user.domain.entity.User;
+import leets.leenk.domain.user.domain.service.UserSettingGetService;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class NewFeedNotificationSaveService {
+
+	private final UserSettingGetService userSettingGetService;
+	private final NotificationMapper notificationMapper;
+	private final ApplicationEventPublisher eventPublisher;
+	private final NotificationRepository notificationRepository;
+
+	@Transactional
+	public void createNewFeedNotification(Feed feed){
+		List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
+		// IsNewFeedNotify가 True인 글쓴이를 제외한 모든 유저에게 이벤트 발생
+		users.forEach(
+			user -> {
+				Notification notification = notificationMapper.toNewFeedNotification(feed, user);
+				notificationRepository.save(notification);
+				eventPublisher.publishEvent(notification);
+			}
+		);
+	}
+}

@@ -29,7 +29,7 @@ public class NotificationController {
 
 	// 태그 알림 생성을 위한 임시 컨트롤러. 추후 삭제 예정
 	@Operation(summary = "태그 알림 발행 API")
-	@PostMapping
+	@PostMapping("/tag")
 	public CommonResponse<Void> TagNotification(){
 		notificationService.temporaryTagNotification();
 		return null;

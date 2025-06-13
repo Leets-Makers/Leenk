@@ -10,7 +10,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableMongoAuditing
-@EnableJpaRepositories(basePackages = "leets.leenk.domain.user.domain.repository")
+@EnableJpaRepositories(basePackages = {
+	"leets.leenk.domain.feed.domain.repository",
+	"leets.leenk.domain.user.domain.repository",
+})
 @EnableMongoRepositories(basePackages = "leets.leenk.domain.notification.domain.repository")
 public class LeenkApplication {
 

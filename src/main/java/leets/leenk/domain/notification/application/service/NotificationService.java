@@ -7,161 +7,59 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
-import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
-import leets.leenk.domain.notification.application.mapper.NotificationMapper;
-import leets.leenk.domain.notification.domain.entity.details.FeedReactionCount;
-import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;
-import leets.leenk.domain.notification.domain.entity.LinkedUser;
-import leets.leenk.domain.notification.domain.entity.Notification;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstReaction;
-import leets.leenk.domain.notification.domain.entity.event.FeedReactionCountEvent;
-import leets.leenk.domain.notification.domain.repository.NotificationRepository;
-import leets.leenk.domain.user.domain.entity.User;
-import leets.leenk.domain.user.domain.entity.UserSetting;
-import leets.leenk.domain.user.domain.service.UserGetService;
+import leets.leenk.domain.feed.domain.entity.Feed;
+import leets.leenk.domain.feed.domain.entity.LinkedUser;
+import leets.leenk.domain.feed.domain.entity.Reaction;
+import leets.leenk.domain.feed.domain.repository.FeedRepository;
+import leets.leenk.domain.feed.domain.repository.LinkedUserRepository;
+import leets.leenk.domain.feed.domain.repository.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
+	// 해당 서비스는 테스트용으로 추후 머지 전에 삭제 예정
 
-	private final ApplicationEventPublisher eventPublisher;
-	private final UserGetService userGetService;	// 차후 삭제 예정
-	private final NotificationMapper notificationMapper;
-	private final NotificationRepository notificationRepository;
-	private final FeedFirstReactionMapper feedFirstReactionMapper;
-	private final FeedReactionCountMapper feedReactionCountMapper;
+	private final FirstReactionNotificationSaveService firstReactionNotificationSaveService;
+	private final NewFeedNotificationSaveService newFeedNotificationSaveService;
+	private final ReactionCountNotificationSaveService reactionCountNotificationSaveService;
+	private final TagNotificationSaveService tagNotificationSaveService;
+	private final LinkedUserRepository linkedUserRepository;
+	private final FeedRepository feedRepository;
+	private final ReactionRepository reactionRepository;
 
-	// todo: 추후 피드에 머지된 linkedUser 엔티티와 Tag 엔티티를 파라미터로 받을 예정
-	@Transactional
-	public void createTagNotification(List<LinkedUser> linkedUsers) {
-		List<Notification> notifications = notificationMapper.toFeedTagNotification(linkedUsers);
-		notificationRepository.saveAll(notifications);
-
-		notifications.forEach(eventPublisher::publishEvent);
-	}
-
-	// 테스트를 위한 임시 태그 알림 메서드
+	// 피드 태그 알림 테스트를 위한 메소드
 	@Transactional
 	public void temporaryTagNotification() {
-		List<LinkedUser> linkedUsers = new ArrayList<>();
-
-		User user = userGetService.findById(1);
-		LinkedUser linkedUser = new LinkedUser(user, 1L);
-
-		User user2 = userGetService.findById(2);
-		LinkedUser linkedUser2 = new LinkedUser(user2, 1L);
-
-		linkedUsers.add(linkedUser);
-		linkedUsers.add(linkedUser2);
-
-		createTagNotification(linkedUsers);
+		List<LinkedUser> linkedUsers = linkedUserRepository.findAllByFeedId(1);
+		Feed feed = feedRepository.findById(1L).orElseThrow();
+		tagNotificationSaveService.createTagNotification(feed, linkedUsers);
 	}
 
-	// 파라미터 : Feed와 Reaction
-	@Transactional
-	public void createFirstReactionNotification(User user, User author, Long feedId) {
-		if(notificationRepository.findByFeedIdAndUserIdInFirstReactions(feedId, user.getId()).isPresent()){
-			//  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
-			return ;
-		}
-		Notification notification = notificationRepository.findByFeedFirstReactionDetailFeedId(feedId)
-			.orElseGet(()->notificationMapper.toFirstReactionNotification(author, feedId));
-
-		FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(user);
-
-		notification.getFeedFirstReactionDetail().getFeedFirstReactions().add(feedFirstReaction);
-		// 알림의 FeedFirstReactions 리스트에 추가
-		notificationRepository.save(notification);
-
-		FeedFirstReactionEvent feedFirstReactionEvent = new FeedFirstReactionEvent(feedFirstReaction, notification.getDeviceToken());
-		eventPublisher.publishEvent(feedFirstReactionEvent);
-
-	}
-
-	// 첫 리액션 알림 테스트를 위한 메소드, 추후 삭제 예정
-	// 같은 메소드 내에서의 @Transactional은 적용 받지 않음
+	// 첫 리액션 알림 테스트를 위한 메소드
 	@Transactional
 	public void temporaryFeedFirstReactionNotification() {
-		User user1 = userGetService.findById(1);
-		User user2 = userGetService.findById(2);
-		createFirstReactionNotification(user1, user2, 1L);
+		Reaction reaction = reactionRepository.findById(1L).orElseThrow();
+
+		firstReactionNotificationSaveService.createFirstReactionNotification(reaction);
 	}
 
 
-	// 파라미터 : Feed
-	@Transactional
-	public void createNewFeedNotification(Long feedId){
-		/*
-		Todo: User 도메인 머지된 후 UserSettingRepository를 이용해
-		 IsNewFeedNotify가 True인 모든 유저에게 이벤트 발생
-		List<UserSetting> userSettings = UserSettingRepository.findAllByIsNewFeedNotifyTrue();
-		 */
-
-		User user1 = userGetService.findById(1);
-
-		UserSetting setting1 = UserSetting.builder()
-			.user(user1)
-			.isNewLeenkNotify(true)
-			.isLeenkStatusNotify(true)
-			.isNewFeedNotify(true)
-			.isNewReactionNotify(true)
-			.build();
-
-		User user2 = userGetService.findById(2);
-
-		UserSetting setting2 = UserSetting.builder()
-			.user(user2)
-			.isNewLeenkNotify(true)
-			.isLeenkStatusNotify(true)
-			.isNewFeedNotify(true)
-			.isNewReactionNotify(true)
-			.build();
-
-		List<UserSetting> userSettings = List.of(setting1, setting2);
-
-		userSettings.forEach(
-			userSetting -> {
-				Notification notification = notificationMapper.toNewFeedNotification(feedId, userSetting.getUser());
-				notificationRepository.save(notification);
-				eventPublisher.publishEvent(notification);
-			}
-		);
-	}
-
-	// 새로운 피드 알림 테스트를 위한 메소드, 추후 삭제 예정
+	// 새로운 피드 알림 테스트를 위한 메소드
 	@Transactional
 	public void temporaryNewFeedNotification() {
-		Long feedId = 1L;
-		createNewFeedNotification(feedId);
+		Feed feed = feedRepository.findById(1L).orElseThrow();
+		newFeedNotificationSaveService.createNewFeedNotification(feed);
 	}
 
-	// 리액션 수 알림 테스트를 위한 메소드, 추후 삭제 예정
+	// 리액션 수 알림 테스트를 위한 메소드
 	@Transactional
 	public void temporaryReactionCountNotification() {
-		Long feedId = 1L;
+		Feed feed = feedRepository.findById(1L).orElseThrow();
 		Long reactionCount = 50L;
-		User user = userGetService.findById(1);
 
-		createReactionCountNotification(feedId, user, reactionCount);
+		reactionCountNotificationSaveService.createReactionCountNotification(feed, reactionCount);
 	}
 
-	// Todo : Feed 객체로 파라미터 받아오기
-	// 파라미터 : Feed feed, Reaction reaction
-	@Transactional
-	public void createReactionCountNotification(Long feedId, User user, Long reactionCount) {
-
-		Notification notification = notificationRepository.findByFeedIdAndReactionCount(feedId, reactionCount)
-			.orElseGet(() -> notificationMapper.toReactionCountNotification(feedId, user));
-
-		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
-
-		notification.getFeedReactionCountDetail().getFeedReactionCounts().add(feedReactionCount);
-		FeedReactionCountEvent feedReactionCountEvent = new FeedReactionCountEvent(feedReactionCount, user.getFcmToken());
-		eventPublisher.publishEvent(feedReactionCountEvent);
-
-		notificationRepository.save(notification);
-	}
 
 }

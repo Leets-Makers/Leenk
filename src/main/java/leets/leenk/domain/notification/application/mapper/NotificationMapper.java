@@ -6,8 +6,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.notification.application.dto.NotificationResponse;
-import leets.leenk.domain.notification.domain.entity.LinkedUser;
+import leets.leenk.domain.feed.domain.entity.LinkedUser;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.NotificationType;
 import leets.leenk.domain.notification.domain.entity.details.FeedFirstReactionDetail;
@@ -20,17 +21,17 @@ import leets.leenk.domain.user.domain.entity.User;
 public class NotificationMapper {
 
 	// Todo : Feed id와 Feed 글쓴이 이름 파라미터로 가져오기
-	public List<Notification> toFeedTagNotification(List<LinkedUser> linkedUsers) {
+	public List<Notification> toFeedTagNotification(Feed feed, List<LinkedUser> linkedUsers) {
 		return linkedUsers.stream()
 			.map(linkedUser -> Notification.builder()
 				.userId(linkedUser.getUser().getId())
 				.deviceToken(linkedUser.getUser().getFcmToken())
 				.notificationType(NotificationType.FEED_TAG)
 				.feedTagDetail(FeedTagDetail.builder()
-					.feedId(1L)
-					.authorName("글쓴이")
+					.feedId(feed.getId())
+					.authorName(feed.getUser().getName())
 					.title(NotificationType.FEED_TAG.getTitle())
-					.body(NotificationType.FEED_TAG.getFormattedContent("글쓴이"))
+					.body(NotificationType.FEED_TAG.getFormattedContent(feed.getUser().getName()))
 					.isRead(Boolean.FALSE)
 					.build())
 				.build()
@@ -38,14 +39,14 @@ public class NotificationMapper {
 			.collect(Collectors.toList());
 	}
 
-	public Notification toFirstReactionNotification(User author, Long feedId) {
+	public Notification toFirstReactionNotification(Feed feed) {
 		return Notification.builder()
-			.userId(author.getId())
-			.deviceToken(author.getFcmToken())
+			.userId(feed.getUser().getId())
+			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_FIRST_REACTION)
 			.feedFirstReactionDetail(
 				FeedFirstReactionDetail.builder()
-					.feedId(feedId)
+					.feedId(feed.getId())
 					.feedFirstReactions(
 						new ArrayList<>()
 					)
@@ -54,32 +55,32 @@ public class NotificationMapper {
 			.build();
 	}
 
-	public Notification toNewFeedNotification(Long feedId, User user){	// Todo : Feed 객체 받아오도록 수정
+	public Notification toNewFeedNotification(Feed feed, User user){	// Todo : Feed 객체 받아오도록 수정
 		return Notification.builder()
 			.userId(user.getId())
 			.deviceToken(user.getFcmToken())
 			.notificationType(NotificationType.NEW_FEED)
 			.newFeedDetail(
 				NewFeedDetail.builder()
-					.feedId(feedId)
-					.authorUserId(1L)
-					.authorName("글쓴이")
+					.feedId(feed.getId())
+					.authorUserId(feed.getUser().getId())
+					.authorName(feed.getUser().getName())
 					.title(NotificationType.FEED_TAG.getTitle())
-					.body(NotificationType.NEW_FEED.getFormattedContent("글쓴이1"))
+					.body(NotificationType.NEW_FEED.getFormattedContent(feed.getUser().getName()))
 					.isRead(Boolean.FALSE)
 					.build()
 			)
 			.build();
 	}
 
-	public Notification toReactionCountNotification(Long feedId, User user) {
+	public Notification toReactionCountNotification(Feed feed) {
 		return Notification.builder()
-			.userId(user.getId())	// Todo : feed.getId()로 수정
-			.deviceToken(user.getFcmToken())
+			.userId(feed.getUser().getId())	// Todo : feed.getId()로 수정
+			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_REACTION_COUNT)
 			.feedReactionCountDetail(
 				FeedReactionCountDetail.builder()
-					.feedId(feedId)
+					.feedId(feed.getId())
 					.feedReactionCounts(new ArrayList<>())
 					.build()
 			)

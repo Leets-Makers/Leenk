@@ -2,6 +2,8 @@ package leets.leenk.domain.notification.presentation;
 
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,5 +76,13 @@ public class NotificationController {
 	public CommonResponse<NotificationCountResponse> getNotificationCount(@CurrentUserId long userId){
 		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_COUNT_READ_SUCCESS,
 			notificationUsecase.getNotificationCount(userId));
+	}
+
+	@Operation(summary = "알림 읽음 처리 API")
+	@PatchMapping("/{notificationId}")
+	public CommonResponse<Void> markAsRead(@CurrentUserId long userId,
+		@PathVariable String notificationId){
+		notificationUsecase.markNotificationAsRead(userId, notificationId);
+		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_MARK_AS_READ_SUCCESS);
 	}
 }

@@ -63,8 +63,8 @@ public class NotificationController {
 	@GetMapping()
 	public CommonResponse<Slice<NotificationResponse>> getNotifications(
 		@CurrentUserId Long userId,
-		@RequestParam("pageNumber") int pageNumber,
-		@RequestParam("pageSize") int pageSize){
+		@RequestParam("page") int pageNumber,
+		@RequestParam("size") int pageSize){
 		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_READ_SUCCESS,
 			notificationUsecase.getNotifications(userId, pageNumber, pageSize));
 	}

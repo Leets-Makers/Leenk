@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import leets.leenk.domain.user.application.exception.UserSettingNotFoundException;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.entity.UserSetting;
 import leets.leenk.domain.user.domain.repository.UserSettingRepository;
@@ -22,6 +23,7 @@ public class UserSettingGetService {
 	}
 
 	public UserSetting getUserSetting(Long userId){
-		return userSettingRepository.findByUserId(userId).orElseThrow();
+		return userSettingRepository.findByUserId(userId)
+			.orElseThrow(UserSettingNotFoundException::new);
 	}
 }

@@ -7,6 +7,6 @@ import jakarta.validation.constraints.Positive;
 public record LinkedUserRequest(
         @NotNull @Positive
         @Schema(description = "태그할 사용자 ID")
-        long userId
+        Long userId
 ) {
 }

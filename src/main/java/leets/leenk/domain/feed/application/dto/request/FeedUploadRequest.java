@@ -2,6 +2,7 @@ package leets.leenk.domain.feed.application.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import leets.leenk.domain.media.domain.application.dto.request.FeedMediaRequest;
 
@@ -12,6 +13,7 @@ public record FeedUploadRequest(
         String description,
 
         @Valid
+        @NotNull
         @Size(max = 3)
         List<FeedMediaRequest> media,
 

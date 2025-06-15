@@ -60,8 +60,8 @@ public class FeedUsecase {
         추후 n+1, FetchJoin과 성능 테스트 진행할 것
      */
     @Transactional(readOnly = true)
-    public FeedListResponse getFeeds(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public FeedListResponse getFeeds(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Slice<Feed> slice = feedGetService.findAll(pageable);
 
         List<Feed> feeds = slice.getContent();

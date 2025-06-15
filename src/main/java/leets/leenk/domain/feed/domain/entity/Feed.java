@@ -33,7 +33,7 @@ public class Feed extends BaseEntity {
 
     private LocalDateTime deletedAt;
 
-    public void increaseTotalReactionCount(long totalReactionCount) {
-        this.totalReactionCount += totalReactionCount;
+    public void increaseTotalReactionCount(long reactionCount) {
+        this.totalReactionCount += reactionCount;
     }
 }

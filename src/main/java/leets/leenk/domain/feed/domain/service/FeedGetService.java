@@ -1,5 +1,6 @@
 package leets.leenk.domain.feed.domain.service;
 
+import leets.leenk.domain.feed.application.exception.FeedNotFoundException;
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.repository.FeedRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,9 @@ public class FeedGetService {
 
     private final FeedRepository feedRepository;
 
-    public Feed findById(Long feedId) {
-        return feedRepository.findByDeletedAtIsNullAndId(feedId).orElseThrow(() -> new IllegalArgumentException("해당 feed가 존재하지 않습니다."));
+    public Feed findById(long feedId) {
+        return feedRepository.findByDeletedAtIsNullAndId(feedId)
+                .orElseThrow(FeedNotFoundException::new);
     }
 
     public Slice<Feed> findAll(Pageable pageable) {

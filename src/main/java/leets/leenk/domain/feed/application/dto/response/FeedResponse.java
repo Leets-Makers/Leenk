@@ -14,8 +14,8 @@ public record FeedResponse(
         @Schema(description = "작성자 정보")
         FeedAuthorResponse author,
 
-        @Schema(description = "썸네일 이미지", example = "https://s3.example.com/thumb_neil.jpg")
-        String thumbNeil,
+        @Schema(description = "썸네일 이미지", example = "https://s3.example.com/thumb_nail.jpg")
+        String thumbNail,
 
         @Schema(description = "총 공감 개수", example = "1004")
         long totalReactionCount

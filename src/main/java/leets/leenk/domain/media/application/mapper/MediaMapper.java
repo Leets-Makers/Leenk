@@ -1,7 +1,7 @@
-package leets.leenk.domain.media.domain.application.mapper;
+package leets.leenk.domain.media.application.mapper;
 
 import leets.leenk.domain.feed.domain.entity.Feed;
-import leets.leenk.domain.media.domain.application.dto.request.FeedMediaRequest;
+import leets.leenk.domain.media.application.dto.request.FeedMediaRequest;
 import leets.leenk.domain.media.domain.entity.Media;
 import org.springframework.stereotype.Component;
 

@@ -2,7 +2,7 @@ package leets.leenk.domain.feed.application.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import leets.leenk.domain.media.domain.application.dto.response.FeedMediaResponse;
+import leets.leenk.domain.media.application.dto.response.FeedMediaResponse;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

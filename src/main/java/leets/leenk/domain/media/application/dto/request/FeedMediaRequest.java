@@ -1,4 +1,4 @@
-package leets.leenk.domain.media.domain.application.dto.request;
+package leets.leenk.domain.media.application.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package leets.leenk.domain.media.domain.application.dto.response;
+package leets.leenk.domain.media.application.dto.response;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

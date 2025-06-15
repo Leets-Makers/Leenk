@@ -3,7 +3,7 @@ package leets.leenk.domain.feed.application.mapper;
 import leets.leenk.domain.feed.application.dto.response.*;
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
-import leets.leenk.domain.media.domain.application.dto.response.FeedMediaResponse;
+import leets.leenk.domain.media.application.dto.response.FeedMediaResponse;
 import leets.leenk.domain.media.domain.entity.Media;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.global.common.dto.PageableMapperUtil;

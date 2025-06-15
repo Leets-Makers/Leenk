@@ -1,4 +1,4 @@
-package leets.leenk.domain.media.domain.application.exception;
+package leets.leenk.domain.media.application.exception;
 
 import leets.leenk.global.common.exception.ErrorCodeInterface;
 import lombok.AllArgsConstructor;

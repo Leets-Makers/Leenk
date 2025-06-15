@@ -36,7 +36,7 @@ public class FeedMapper {
         return FeedResponse.builder()
                 .feedId(feed.getId())
                 .author(toFeedAuthorResponse(feed))
-                .thumbNeil(thumbNeil.getMediaUrl())
+                .thumbNail(thumbNeil.getMediaUrl())
                 .totalReactionCount(feed.getTotalReactionCount())
                 .build();
     }

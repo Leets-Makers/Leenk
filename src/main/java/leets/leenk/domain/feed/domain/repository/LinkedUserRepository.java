@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface LinkedUserRepository extends JpaRepository<LinkedUser, Long> {
 
-    @Query("SELECT lu FROM LinkedUser lu JOIN FETCH lu.user WHERE lu.feed = :feed")
+    @Query("SELECT lu FROM LinkedUser lu JOIN FETCH lu.user WHERE lu.feed = :feed order by lu.user.name asc")
     List<LinkedUser> findAllByFeed(Feed feed);
 }

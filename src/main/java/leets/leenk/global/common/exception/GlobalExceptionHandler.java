@@ -2,6 +2,7 @@ package leets.leenk.global.common.exception;
 
 import leets.leenk.global.common.exception.response.ValidErrorResponse;
 import leets.leenk.global.common.response.CommonResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
-
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -19,6 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonResponse<Void>> handleException(BaseException e) {
         ErrorCodeInterface errorCode = e.getErrorCode();
         String errorMessage = e.getMessage();
+        log.warn("구체로그: ", e);
         CommonResponse<Void> body = CommonResponse.error(errorCode, errorMessage);
 
         return ResponseEntity
@@ -29,6 +31,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponse<List<ValidErrorResponse>>> handleValidation(MethodArgumentNotValidException e) {
         ErrorCode errorCode = ErrorCode.INVALID_ARGUMENT;
+        log.warn("구체로그: ", e);
+
         List<ValidErrorResponse> errors = e.getBindingResult()
                 .getFieldErrors().stream()
                 .map(fe -> ValidErrorResponse.of(
@@ -46,9 +50,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<CommonResponse<Void>> handleIllegalArgument() {
+    public ResponseEntity<CommonResponse<Void>> handleIllegalArgument(IllegalArgumentException e) {
         ErrorCode errorCode = ErrorCode.INVALID_ARGUMENT;
         CommonResponse<Void> body = CommonResponse.error(errorCode);
+        log.warn("구체로그: ", e);
+
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -69,6 +75,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonResponse<Void>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
         ErrorCode errorCode = ErrorCode.METHOD_NOT_ALLOWED;
         CommonResponse<Void> body = CommonResponse.error(errorCode);
+        log.warn("구체로그: ", e);
+
 
         return ResponseEntity
                 .status(e.getStatusCode().value())
@@ -78,9 +86,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<CommonResponse<Void>> handleMessageNotReadable(HttpMessageNotReadableException ex) {
         Throwable cause = ex.getMostSpecificCause();
+
         if (cause instanceof BaseException be) {
             ErrorCodeInterface errorCode = be.getErrorCode();
-            CommonResponse<Void> body = CommonResponse.error(errorCode);
+            CommonResponse<Void> body = CommonResponse.error(errorCode, ex.getMessage());
 
             return ResponseEntity
                     .status(errorCode.getStatus())
@@ -88,7 +97,7 @@ public class GlobalExceptionHandler {
         }
 
         ErrorCode errorCode = ErrorCode.JSON_PARSE_ERROR;
-        CommonResponse<Void> body = CommonResponse.error(errorCode);
+        CommonResponse<Void> body = CommonResponse.error(errorCode, ex.getMessage());
 
         return ResponseEntity
                 .status(errorCode.getStatus())
@@ -99,6 +108,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonResponse<Void>> handleAll(Exception e) {
         ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
         CommonResponse<Void> body = CommonResponse.error(errorCode, e.getMessage());
+        log.warn("구체로그: ", e);
+
 
         return ResponseEntity
                 .status(errorCode.getStatus())

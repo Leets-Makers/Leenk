@@ -21,6 +21,9 @@ public class S3PresignedUrlService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    /*
+    차후 CDN 캐싱도 고려
+     */
     public MediaUrlResponse generateUrl(String fileName) {
         String key = generateKey(fileName);
 

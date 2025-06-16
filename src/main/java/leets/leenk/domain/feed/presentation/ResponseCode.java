@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum ResponseCode implements ResponseCodeInterface {
 
     GET_ALL_FEED(1200, HttpStatus.OK, "전체 피드 조회에 성공했습니다."),
-    GET_FEED_DETAIL(1101, HttpStatus.OK, "피드 상세 조회에 성공했습니다."),
+    GET_FEED_DETAIL(1201, HttpStatus.OK, "피드 상세 조회에 성공했습니다."),
     UPLOAD_FEED(1202, HttpStatus.OK, "피드 업로드에 성공했습니다."),
     UPDATE_FEED(1203, HttpStatus.OK, "피드 수정에 성공했습니다."),
 

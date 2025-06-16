@@ -23,7 +23,7 @@ public class Reaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int reactionCount;
+    private long reactionCount;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "feed_id", nullable = false, updatable = false)
@@ -32,4 +32,8 @@ public class Reaction {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
+
+    public void increaseReactionCount(long reactionCount) {
+        this.reactionCount += reactionCount;
+    }
 }

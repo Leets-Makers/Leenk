@@ -6,6 +6,7 @@ import leets.leenk.domain.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,5 +22,9 @@ public class UserGetService {
 
     public Optional<User> existById(long userId) {
         return userRepository.findById(userId);
+    }
+
+    public List<User> findAll(List<Long> userIds) {
+        return userRepository.findAllByIdIn(userIds);
     }
 }

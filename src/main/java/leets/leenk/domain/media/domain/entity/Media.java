@@ -36,10 +36,10 @@ public class Media {
     private int position;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_id", nullable = false, updatable = false)
+    @JoinColumn(name = "feed_id", updatable = false)
     private Feed feed;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "leenk_id", nullable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leenk_id", updatable = false)
     private Leenk leenk;
 }

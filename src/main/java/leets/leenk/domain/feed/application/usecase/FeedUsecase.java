@@ -114,7 +114,7 @@ public class FeedUsecase {
                         )
                 );
 
-        feedUpdateService.updateTotalReaction(feed, reaction, request.reactionCount());
+        feedUpdateService.updateTotalReaction(feed, reaction, feed.getUser(), request.reactionCount());
     }
 
     @Transactional(readOnly = true)

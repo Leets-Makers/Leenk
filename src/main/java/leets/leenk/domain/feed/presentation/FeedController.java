@@ -8,10 +8,7 @@ import jakarta.validation.constraints.Positive;
 import leets.leenk.domain.feed.application.dto.request.FeedUpdateRequest;
 import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
 import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
-import leets.leenk.domain.feed.application.dto.response.FeedDetailResponse;
-import leets.leenk.domain.feed.application.dto.response.FeedListResponse;
-import leets.leenk.domain.feed.application.dto.response.FeedUserResponse;
-import leets.leenk.domain.feed.application.dto.response.ReactionUserResponse;
+import leets.leenk.domain.feed.application.dto.response.*;
 import leets.leenk.domain.feed.application.usecase.FeedUsecase;
 import leets.leenk.global.auth.application.annotation.CurrentUserId;
 import leets.leenk.global.common.response.CommonResponse;
@@ -81,10 +78,19 @@ public class FeedController {
         return CommonResponse.success(ResponseCode.UPDATE_FEED);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/users/all")
     @Operation(summary = "함께한 사람 추가를 위한 사용자 조회")
     public CommonResponse<List<FeedUserResponse>> getLinkedUsers() {
         List<FeedUserResponse> response = feedUsecase.getAllUser();
+
+        return CommonResponse.success(ResponseCode.GET_ALL_USERS, response);
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "함께한 사람 추가를 위한 사용자 무한 스크롤 조회", hidden = true)
+    public CommonResponse<FeedUserListResponse> getLinkedUsers(@RequestParam int pageNumber,
+                                                               @RequestParam int pageSize) {
+        FeedUserListResponse response = feedUsecase.getUsers(pageNumber, pageSize);
 
         return CommonResponse.success(ResponseCode.GET_ALL_USERS, response);
     }

@@ -4,6 +4,8 @@ import leets.leenk.domain.user.application.exception.UserNotFoundException;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,5 +32,9 @@ public class UserGetService {
 
     public List<User> findAll() {
         return userRepository.findAllByOrderByName();
+    }
+
+    public Slice<User> findAll(Pageable pageable) {
+        return userRepository.findAllByOrderByName(pageable);
     }
 }

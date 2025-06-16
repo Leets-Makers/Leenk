@@ -14,3 +14,6 @@ notion:
   token: ${NOTION_API_TOKEN}
   database_id: ${NOTION_DATABASE_ID}
   version: ${NOTION_VERSION}
+
+slack:
+  webhook_url: ${SLACK_WEBHOOK_URL}

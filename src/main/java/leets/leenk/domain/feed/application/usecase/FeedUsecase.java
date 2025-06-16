@@ -5,9 +5,10 @@ import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
 import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
 import leets.leenk.domain.feed.application.dto.response.FeedDetailResponse;
 import leets.leenk.domain.feed.application.dto.response.FeedListResponse;
+import leets.leenk.domain.feed.application.dto.response.FeedUserResponse;
 import leets.leenk.domain.feed.application.dto.response.ReactionUserResponse;
 import leets.leenk.domain.feed.application.exception.SelfReactionNotAllowedException;
-import leets.leenk.domain.feed.application.mapper.FeedLinkedUserMapper;
+import leets.leenk.domain.feed.application.mapper.FeedUserMapper;
 import leets.leenk.domain.feed.application.mapper.FeedMapper;
 import leets.leenk.domain.feed.application.mapper.ReactionMapper;
 import leets.leenk.domain.feed.domain.entity.Feed;
@@ -54,7 +55,7 @@ public class FeedUsecase {
 
     private final FeedMapper feedMapper;
     private final MediaMapper mediaMapper;
-    private final FeedLinkedUserMapper feedLinkedUserMapper;
+    private final FeedUserMapper feedUserMapper;
     private final ReactionMapper reactionMapper;
 
     @Transactional(readOnly = true)
@@ -100,7 +101,7 @@ public class FeedUsecase {
         users.add(author); // 중복 자동 제거
 
         return users.stream()
-                .map(user -> feedLinkedUserMapper.toLinkedUser(user, feed))
+                .map(user -> feedUserMapper.toLinkedUser(user, feed))
                 .toList();
     }
 
@@ -137,5 +138,13 @@ public class FeedUsecase {
     }
 
     public void updateFeed(FeedUpdateRequest request) {
+    }
+
+    public List<FeedUserResponse> getAllUser() {
+        List<User> users = userGetService.findAll();
+
+        return users.stream()
+                .map(feedUserMapper::toFeedUserResponse)
+                .toList();
     }
 }

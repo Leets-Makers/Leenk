@@ -10,6 +10,7 @@ import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
 import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
 import leets.leenk.domain.feed.application.dto.response.FeedDetailResponse;
 import leets.leenk.domain.feed.application.dto.response.FeedListResponse;
+import leets.leenk.domain.feed.application.dto.response.FeedUserResponse;
 import leets.leenk.domain.feed.application.dto.response.ReactionUserResponse;
 import leets.leenk.domain.feed.application.usecase.FeedUsecase;
 import leets.leenk.global.auth.application.annotation.CurrentUserId;
@@ -80,4 +81,11 @@ public class FeedController {
         return CommonResponse.success(ResponseCode.UPDATE_FEED);
     }
 
+    @GetMapping("/users")
+    @Operation(summary = "함께한 사람 추가를 위한 사용자 조회")
+    public CommonResponse<List<FeedUserResponse>> getLinkedUsers() {
+        List<FeedUserResponse> response = feedUsecase.getAllUser();
+
+        return CommonResponse.success(ResponseCode.GET_ALL_USERS, response);
+    }
 }

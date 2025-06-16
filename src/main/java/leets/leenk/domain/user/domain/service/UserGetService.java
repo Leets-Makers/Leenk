@@ -27,4 +27,8 @@ public class UserGetService {
     public List<User> findAll(List<Long> userIds) {
         return userRepository.findAllByIdIn(userIds);
     }
+
+    public List<User> findAll() {
+        return userRepository.findAllByOrderByName();
+    }
 }

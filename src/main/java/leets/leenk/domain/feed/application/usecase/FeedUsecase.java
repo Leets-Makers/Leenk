@@ -6,6 +6,7 @@ import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
 import leets.leenk.domain.feed.application.dto.response.FeedDetailResponse;
 import leets.leenk.domain.feed.application.dto.response.FeedListResponse;
 import leets.leenk.domain.feed.application.dto.response.ReactionUserResponse;
+import leets.leenk.domain.feed.application.exception.SelfReactionNotAllowedException;
 import leets.leenk.domain.feed.application.mapper.FeedLinkedUserMapper;
 import leets.leenk.domain.feed.application.mapper.FeedMapper;
 import leets.leenk.domain.feed.application.mapper.ReactionMapper;
@@ -107,6 +108,8 @@ public class FeedUsecase {
     public void reactToFeed(long userId, long feedId, ReactionRequest request) {
         User user = userGetService.findById(userId);
         Feed feed = feedGetService.findById(feedId);
+        validateReaction(feed, user);
+
         Reaction reaction = reactionGetService.findByFeedAndUser(feed, user)
                 .orElseGet(() ->
                         reactionSaveService.save(
@@ -115,6 +118,12 @@ public class FeedUsecase {
                 );
 
         feedUpdateService.updateTotalReaction(feed, reaction, feed.getUser(), request.reactionCount());
+    }
+
+    private void validateReaction(Feed feed, User user) {
+        if (feed.getUser().equals(user)) {
+            throw new SelfReactionNotAllowedException();
+        }
     }
 
     @Transactional(readOnly = true)

@@ -36,7 +36,7 @@ public class UserSettingController {
     @PatchMapping("/notifications")
     @Operation(
             summary = "알림 설정하기 API",
-            description = "PATCH 메서드에 맞게, 수정할 항목의 값만 변경해서 넣어주세요. (피드 좋아요 끄기 -> isNewReactionNotify: false, 나머지는 생략)"
+            description = "PATCH 메서드에 맞게, 수정할 항목의 값만 변경해서 넣어주세요. (피드 좋아요 알림 끄기 -> newReactionNotify: false, 나머지는 생략)"
     )
     public CommonResponse<Void> updateNotifications(@Parameter(hidden = true) @CurrentUserId Long userId,
                                                     @RequestBody @Valid NotificationSettingUpdateRequest request) {

@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     Optional<Reaction> findByFeedAndUser(Feed feed, User user);
 
-    @Query("SELECT r FROM Reaction r JOIN FETCH r.user WHERE r.feed = :feed")
+    @Query("SELECT r FROM Reaction r JOIN FETCH r.user WHERE r.feed = :feed order by r.reactionCount desc")
     List<Reaction> findAllByFeed(Feed feed);
 }

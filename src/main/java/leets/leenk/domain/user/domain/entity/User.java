@@ -68,6 +68,10 @@ public class User extends BaseEntity {
         this.mbti = mbti;
     }
 
+    public void increaseTotalReactionCount(long reactionCount) {
+        this.totalReactionCount += reactionCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

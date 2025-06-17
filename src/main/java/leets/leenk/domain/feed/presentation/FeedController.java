@@ -80,4 +80,51 @@ public class FeedController {
         return CommonResponse.success(ResponseCode.UPDATE_FEED);
     }
 
+    @GetMapping("/me")
+    @Operation(summary = "내가 작성한 피드 조회 API")
+    public CommonResponse<FeedListResponse> getMyFeeds(@Parameter(hidden = true) @CurrentUserId Long userId,
+                                                       @RequestParam int pageNumber,
+                                                       @RequestParam int pageSize) {
+        FeedListResponse response = feedUsecase.getFeeds(userId, pageNumber, pageSize);
+
+        return CommonResponse.success(ResponseCode.GET_MY_FEEDS, response);
+    }
+
+    @GetMapping("/me/linked")
+    @Operation(
+            summary = "내가 함께한 피드 조회 API",
+            description = "내가 작성한 피드는 제외하고 보여집니다."
+    )
+    public CommonResponse<FeedListResponse> getMyLinkedFeeds(@Parameter(hidden = true) @CurrentUserId Long userId,
+                                                             @RequestParam int pageNumber,
+                                                             @RequestParam int pageSize) {
+        FeedListResponse response = feedUsecase.getLinkedFeeds(userId, pageNumber, pageSize);
+
+        return CommonResponse.success(ResponseCode.GET_LINKED_FEEDS, response);
+    }
+
+    @GetMapping("/{userId}")
+    @Operation(
+            summary = "다른 사용자가 작성한 피드 조회 API"
+    )
+    public CommonResponse<FeedListResponse> getOthersFeeds(@PathVariable long userId,
+                                                           @RequestParam int pageNumber,
+                                                           @RequestParam int pageSize) {
+        FeedListResponse response = feedUsecase.getFeeds(userId, pageNumber, pageSize);
+
+        return CommonResponse.success(ResponseCode.GET_OTHER_FEEDS, response);
+    }
+
+    @GetMapping("/{userId}/linked")
+    @Operation(
+            summary = "다른 사용자가 함께한 피드 조회 API",
+            description = "해당 사용자가 작성한 피드는 제외하고 보여집니다."
+    )
+    public CommonResponse<FeedListResponse> getOthersLinkedFeeds(@PathVariable long userId,
+                                                                 @RequestParam int pageNumber,
+                                                                 @RequestParam int pageSize) {
+        FeedListResponse response = feedUsecase.getLinkedFeeds(userId, pageNumber, pageSize);
+
+        return CommonResponse.success(ResponseCode.GET_LINKED_FEEDS, response);
+    }
 }

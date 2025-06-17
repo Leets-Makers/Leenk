@@ -129,4 +129,32 @@ public class FeedUsecase {
 
     public void updateFeed(FeedUpdateRequest request) {
     }
+
+    @Transactional(readOnly = true)
+    public FeedListResponse getFeeds(long userId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        User user = userGetService.findById(userId);
+
+        Slice<Feed> slice = feedGetService.findAllByUser(user, pageable);
+        List<Media> medias = mediaGetService.findAll(slice.getContent());
+
+        Map<Long, List<Media>> mediaMap = medias.stream()
+                .collect(Collectors.groupingBy(media -> media.getFeed().getId()));
+
+        return feedMapper.toFeedListResponse(user, slice, mediaMap); // 내가 작성한 Feed는 숫자를 줘야 하는데, 그게 아니면 안 줘야함
+    }
+
+    @Transactional(readOnly = true)
+    public FeedListResponse getLinkedFeeds(long userId, int pageNumber, int pageSize) {
+        User user = userGetService.findById(userId);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Slice<Feed> slice = linkedUserGetService.findAllByUser(user, pageable);
+        List<Media> medias = mediaGetService.findAll(slice.getContent());
+
+        Map<Long, List<Media>> mediaMap = medias.stream()
+                .collect(Collectors.groupingBy(media -> media.getFeed().getId()));
+
+        return feedMapper.toFeedListResponse(slice, mediaMap);
+    }
 }

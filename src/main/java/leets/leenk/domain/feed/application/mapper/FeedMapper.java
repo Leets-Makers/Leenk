@@ -32,6 +32,23 @@ public class FeedMapper {
                 .build();
     }
 
+    public FeedListResponse toFeedListResponse(User user, Slice<Feed> slice, Map<Long, List<Media>> mediaMap) {
+        List<FeedResponse> responses = slice.getContent().stream()
+                .map(feed -> {
+                    List<Media> medias = mediaMap.getOrDefault(feed.getId(), List.of());
+                    Media thumbnail = medias.stream().findFirst().orElse(null);
+
+                    return toFeedResponse(feed, thumbnail);
+                })
+                .toList();
+
+        return FeedListResponse.builder()
+                .totalReactionCount(user.getTotalReactionCount())
+                .feeds(responses)
+                .pageable(PageableMapperUtil.from(slice))
+                .build();
+    }
+
     public FeedResponse toFeedResponse(Feed feed, Media thumbNeil) {
         return FeedResponse.builder()
                 .feedId(feed.getId())

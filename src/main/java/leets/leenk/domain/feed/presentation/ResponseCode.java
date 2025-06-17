@@ -15,7 +15,10 @@ public enum ResponseCode implements ResponseCodeInterface {
     UPDATE_FEED(1203, HttpStatus.OK, "피드 수정에 성공했습니다."),
 
     CREATE_REACTION(1204, HttpStatus.OK, "피드 공감에 성공했습니다."),
-    GET_REACTED_USERS(1205, HttpStatus.OK, "피드에 공감한 사용자 조회에 성공했습니다.");
+    GET_REACTED_USERS(1205, HttpStatus.OK, "피드에 공감한 사용자 조회에 성공했습니다."),
+    GET_MY_FEEDS(1206, HttpStatus.OK, "내 피드 조회에 성공했습니다."),
+    GET_LINKED_FEEDS(1207, HttpStatus.OK, "링크된 피드 조회에 성공했습니다."),
+    GET_OTHER_FEEDS(1208, HttpStatus.OK, "다른 사용자의 피드 조회에 성공했습니다.");
 
     private final int code;
     private final HttpStatus status;

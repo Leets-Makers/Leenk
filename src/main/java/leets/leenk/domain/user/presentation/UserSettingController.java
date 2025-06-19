@@ -24,10 +24,10 @@ public class UserSettingController {
 
     @GetMapping("/notifications")
     @Operation(
-            summary = "알림 조회하기 API",
+            summary = "알림 설정 조회하기 API",
             description = "알림 설정을 위한 조회 API입니다."
     )
-    public CommonResponse<NotificationSettingResponse> getNotifications(@Parameter(hidden = true) @CurrentUserId Long userId) {
+    public CommonResponse<NotificationSettingResponse> getNotificationSetting(@Parameter(hidden = true) @CurrentUserId Long userId) {
         NotificationSettingResponse response = userSettingUsecase.getNotificationSetting(userId);
 
         return CommonResponse.success(ResponseCode.GET_NOTIFICATION_SETTING, response);

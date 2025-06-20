@@ -34,4 +34,21 @@ public class UserSetting extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    public void updateIsNewLeenkNotify(boolean isNewLeenkNotify) {
+        this.isNewLeenkNotify = isNewLeenkNotify;
+    }
+
+    public void updateIsLeenkStatusNotify(boolean isLeenkStatusNotify) {
+        this.isLeenkStatusNotify = isLeenkStatusNotify;
+    }
+
+    public void updateIsNewFeedNotify(boolean isNewFeedNotify) {
+        this.isNewFeedNotify = isNewFeedNotify;
+    }
+
+    public void updateIsNewReactionNotify(boolean isNewReactionNotify) {
+        this.isNewReactionNotify = isNewReactionNotify;
+    }
 }

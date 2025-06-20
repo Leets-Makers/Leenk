@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode implements ErrorCodeInterface {
 
-    USER_NOT_FOUND(2100, HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다.");
+    USER_NOT_FOUND(2100, HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
+    USER_SETTING_NOT_FOUND(2101, HttpStatus.NOT_FOUND, "존재하지 않는 사용자 설정입니다.");
 
     private final int code;
     private final HttpStatus status;

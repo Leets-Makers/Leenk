@@ -3,6 +3,7 @@ package leets.leenk.domain.feed.domain.service;
 import leets.leenk.domain.feed.application.exception.FeedNotFoundException;
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.repository.FeedRepository;
+import leets.leenk.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,4 +24,7 @@ public class FeedGetService {
         return feedRepository.findAllByDeletedAtIsNullWithUser(pageable);
     }
 
+    public Slice<Feed> findAllByUser(User user, Pageable pageable) {
+        return feedRepository.findAllByUserAndDeletedAtIsNull(user, pageable);
+    }
 }

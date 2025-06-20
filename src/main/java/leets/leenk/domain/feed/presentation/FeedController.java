@@ -125,6 +125,6 @@ public class FeedController {
                                                                  @RequestParam int pageSize) {
         FeedListResponse response = feedUsecase.getLinkedFeeds(userId, pageNumber, pageSize);
 
-        return CommonResponse.success(ResponseCode.GET_LINKED_FEEDS, response);
+        return CommonResponse.success(ResponseCode.GET_OTHER_LINKED_FEEDS, response);
     }
 }

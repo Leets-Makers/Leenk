@@ -12,7 +12,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record FeedListResponse(
 
-        @Schema(description = "내가 받은 총 공감 수", example = "12345")
+        @Schema(description = "내가 받은 총 공감 수 (실제 API에서는 /feed/me에서만 반환됩니다. 스웨거 예시 용)", example = "12345")
         Long totalReactionCount,
 
         @Schema(description = "피드 목록")

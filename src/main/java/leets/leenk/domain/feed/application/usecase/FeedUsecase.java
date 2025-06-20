@@ -131,7 +131,16 @@ public class FeedUsecase {
     }
 
     @Transactional(readOnly = true)
-    public FeedListResponse getFeeds(long userId, int pageNumber, int pageSize) {
+    public FeedListResponse getMyFeeds(long userId, int pageNumber, int pageSize) {
+        return getFeedsByUser(userId, pageNumber, pageSize, true);
+    }
+
+    @Transactional(readOnly = true)
+    public FeedListResponse getOthersFeeds(long userId, int pageNumber, int pageSize) {
+        return getFeedsByUser(userId, pageNumber, pageSize, false);
+    }
+
+    private FeedListResponse getFeedsByUser(long userId, int pageNumber, int pageSize, boolean includeTotalReaction) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         User user = userGetService.findById(userId);
 
@@ -141,7 +150,7 @@ public class FeedUsecase {
         Map<Long, List<Media>> mediaMap = medias.stream()
                 .collect(Collectors.groupingBy(media -> media.getFeed().getId()));
 
-        return feedMapper.toFeedListResponse(user, slice, mediaMap); // 내가 작성한 Feed는 숫자를 줘야 하는데, 그게 아니면 안 줘야함
+        return feedMapper.toFeedListResponse(user, slice, mediaMap, includeTotalReaction);
     }
 
     @Transactional(readOnly = true)

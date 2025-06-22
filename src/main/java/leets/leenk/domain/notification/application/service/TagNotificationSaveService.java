@@ -22,7 +22,7 @@ public class TagNotificationSaveService {
 	private final NotificationRepository notificationRepository;
 
 	@Transactional
-	public void createTagNotification(Feed feed, List<LinkedUser> linkedUsers) {
+	public void save(Feed feed, List<LinkedUser> linkedUsers) {
 		List<Notification> notifications = notificationMapper.toFeedTagNotification(feed, linkedUsers);
 		notificationRepository.saveAll(notifications);
 

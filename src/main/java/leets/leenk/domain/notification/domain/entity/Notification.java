@@ -31,11 +31,11 @@ public class Notification extends BaseEntity {
 
 	private NotificationContent content;
 
-	public void setIsReadFalse(){
+	public void markUnread(){
 		this.isRead = false;
 	}
 
-	public void setIsReadTrue(){
+	public void markread(){
 		this.isRead = true;
 	}
 

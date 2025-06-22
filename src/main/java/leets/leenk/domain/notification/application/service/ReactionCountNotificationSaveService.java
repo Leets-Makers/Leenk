@@ -21,24 +21,19 @@ import lombok.RequiredArgsConstructor;
 public class ReactionCountNotificationSaveService {
 
 	private final ApplicationEventPublisher eventPublisher;
-	private final NotificationMapper notificationMapper;
 	private final NotificationRepository notificationRepository;
 	private final FeedReactionCountMapper feedReactionCountMapper;
 	private final UserSettingGetService userSettingGetService;
 
 	@Transactional
-	public void createReactionCountNotification(Feed feed, Long reactionCount) {
-
-		Notification notification = notificationRepository.findByFeedIdAndReactionCount(NotificationType.FEED_REACTION_COUNT,
-				feed.getId(), reactionCount)
-			.orElseGet(() -> notificationMapper.toReactionCountNotification(feed));
+	public void save(Feed feed, Long reactionCount, Notification notification) {
 
 		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
 		FeedReactionCountNotificationContent content = (FeedReactionCountNotificationContent)notification.getContent();
 		content.getFeedReactionCounts().add(feedReactionCount);
 
-		notification.setIsReadFalse();
+		notification.markUnread();
 		notificationRepository.save(notification);
 
 		FeedReactionCountEvent feedReactionCountEvent = new FeedReactionCountEvent(feedReactionCount, feed.getUser().getFcmToken());

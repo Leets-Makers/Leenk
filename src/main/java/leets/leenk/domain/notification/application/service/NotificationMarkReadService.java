@@ -22,7 +22,7 @@ public class NotificationMarkReadService {
 			throw new InvalidNotificationAccessException();
 		}
 
-		notification.setIsReadTrue();
+		notification.markread();
 
 		notificationRepository.save(notification);
 	}

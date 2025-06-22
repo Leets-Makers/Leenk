@@ -25,8 +25,7 @@ public class NewFeedNotificationSaveService {
 	private final NotificationRepository notificationRepository;
 
 	@Transactional
-	public void createNewFeedNotification(Feed feed){
-		List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
+	public void save(List<User> users, Feed feed){
 		// IsNewFeedNotify가 True인 글쓴이를 제외한 모든 유저에게 이벤트 발생
 		users.stream()
 			.filter(user -> !Objects.equals(user.getId(), feed.getUser().getId()))

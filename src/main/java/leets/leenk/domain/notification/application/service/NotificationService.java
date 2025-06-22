@@ -11,6 +11,7 @@ import leets.leenk.domain.feed.domain.entity.Reaction;
 import leets.leenk.domain.feed.domain.repository.FeedRepository;
 import leets.leenk.domain.feed.domain.repository.LinkedUserRepository;
 import leets.leenk.domain.feed.domain.repository.ReactionRepository;
+import leets.leenk.domain.notification.application.usecase.NotificationUsecase;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,8 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class NotificationService {
 	// 해당 서비스는 테스트용으로 추후 머지 전에 삭제 예정
 
-	private final FirstReactionNotificationSaveService firstReactionNotificationSaveService;
-	private final NewFeedNotificationSaveService newFeedNotificationSaveService;
+	private final NotificationUsecase notificationUsecase;
 	private final ReactionCountNotificationSaveService reactionCountNotificationSaveService;
 	private final TagNotificationSaveService tagNotificationSaveService;
 	private final LinkedUserRepository linkedUserRepository;
@@ -31,7 +31,7 @@ public class NotificationService {
 	public void temporaryTagNotification() {
 		Feed feed = feedRepository.findById(1L).orElseThrow();
 		List<LinkedUser> linkedUsers = linkedUserRepository.findAllByFeed(feed);
-		tagNotificationSaveService.createTagNotification(feed, linkedUsers);
+		notificationUsecase.saveTagNotification(feed, linkedUsers);
 	}
 
 	// 첫 리액션 알림 테스트를 위한 메소드
@@ -39,7 +39,7 @@ public class NotificationService {
 	public void temporaryFeedFirstReactionNotification() {
 		Reaction reaction = reactionRepository.findById(1L).orElseThrow();
 
-		firstReactionNotificationSaveService.createFirstReactionNotification(reaction);
+		notificationUsecase.saveFirstReactionNotification(reaction);
 	}
 
 
@@ -47,7 +47,7 @@ public class NotificationService {
 	@Transactional
 	public void temporaryNewFeedNotification() {
 		Feed feed = feedRepository.findById(1L).orElseThrow();
-		newFeedNotificationSaveService.createNewFeedNotification(feed);
+		notificationUsecase.saveNewFeedNotification(feed);
 	}
 
 	// 리액션 수 알림 테스트를 위한 메소드
@@ -56,8 +56,7 @@ public class NotificationService {
 		Feed feed = feedRepository.findById(1L).orElseThrow();
 		Long reactionCount = 50L;
 
-		reactionCountNotificationSaveService.createReactionCountNotification(feed, reactionCount);
+		notificationUsecase.saveReactionCountNotification(feed, reactionCount);
 	}
-
 
 }

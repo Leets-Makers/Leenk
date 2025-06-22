@@ -11,12 +11,13 @@ import leets.leenk.domain.notification.domain.entity.Notification;
 
 public interface NotificationRepository extends MongoRepository<Notification, String> {
 
-	Optional<Notification> findByFeedFirstReactionDetailFeedId(Long feedId);
+	@Query("{ 'content.feedId': ?0 }")
+	Optional<Notification> findFeedFirstReactionByFeedId(Long feedId);
 
-	@Query("{ 'feedFirstReactionDetail.feedId': ?0, 'feedFirstReactionDetail.feedFirstReactions.userId': ?1 }")
-	Optional<Notification> findByFeedIdAndUserIdInFirstReactions(Long feedId, Long id);
+	@Query("{ 'content.feedId': ?0, 'content.feedFirstReactions.userId': ?1 }")
+	Optional<Notification> findByFeedIdAndUserIdInFirstReactions(Long feedId, Long userId);
 
-	@Query("{ 'feedReactionCountDetail.feedId': ?0, 'feedReactionCountDetail.feedReactionCounts.reactionCount': ?1}")
+	@Query("{ 'content.feedId': ?0, 'content.feedReactionCounts.reactionCount': ?1}")
 	Optional<Notification> findByFeedIdAndReactionCount(Long feedId, long reactionCount);
 
 	Slice<Notification> findPageByUserId(Pageable pageable, Long userId);

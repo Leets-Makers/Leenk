@@ -3,7 +3,6 @@ package leets.leenk.global.sqs.application.mapper;
 import org.springframework.stereotype.Component;
 
 import leets.leenk.global.sqs.application.dto.SqsMessageEvent;
-import leets.leenk.domain.notification.application.exception.InvalidNotificationTypeException;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;
 import leets.leenk.domain.notification.domain.entity.event.FeedReactionCountEvent;
@@ -13,21 +12,11 @@ public class SqsMessageEventMapper {
 
 	public SqsMessageEvent toSqsMessageEvent(Notification notification) {
 
-		return switch (notification.getNotificationType()) {
-			case FEED_TAG -> SqsMessageEvent.builder()
-				.title(notification.getFeedTagDetail().getTitle())
-				.content(notification.getNotificationType()
-					.getFormattedContent(notification.getFeedTagDetail().getAuthorName()))
-				.deviceToken(notification.getDeviceToken())
-				.build();
-			case NEW_FEED -> SqsMessageEvent.builder()
-				.title(notification.getNewFeedDetail().getTitle())
-				.content(notification.getNotificationType()
-					.getFormattedContent(notification.getNewFeedDetail().getAuthorName()))
-				.deviceToken(notification.getDeviceToken())
-				.build();
-			default -> throw new InvalidNotificationTypeException();
-		};
+		return SqsMessageEvent.builder()
+			.title(notification.getContent().getTitle())
+			.content(notification.getContent().getBody())
+			.deviceToken(notification.getDeviceToken())
+			.build();
 	}
 
 	public SqsMessageEvent fromFeedFirstReaction(FeedFirstReactionEvent feedFirstReactionEvent) {

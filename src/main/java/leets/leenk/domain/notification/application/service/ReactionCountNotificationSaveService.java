@@ -8,7 +8,8 @@ import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
 import leets.leenk.domain.notification.domain.entity.Notification;
-import leets.leenk.domain.notification.domain.entity.details.FeedReactionCount;
+import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
+import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
 import leets.leenk.domain.notification.domain.entity.event.FeedReactionCountEvent;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
 import leets.leenk.domain.user.domain.service.UserSettingGetService;
@@ -32,11 +33,13 @@ public class ReactionCountNotificationSaveService {
 
 		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
-		notification.getFeedReactionCountDetail().getFeedReactionCounts().add(feedReactionCount);
-		FeedReactionCountEvent feedReactionCountEvent = new FeedReactionCountEvent(feedReactionCount, feed.getUser().getFcmToken());
+		FeedReactionCountNotificationContent content = (FeedReactionCountNotificationContent)notification.getContent();
+		content.getFeedReactionCounts().add(feedReactionCount);
 
 		notification.setIsReadFalse();
 		notificationRepository.save(notification);
+
+		FeedReactionCountEvent feedReactionCountEvent = new FeedReactionCountEvent(feedReactionCount, feed.getUser().getFcmToken());
 
 		if(userSettingGetService.getUserSetting(notification.getUserId()).isNewReactionNotify())
 			eventPublisher.publishEvent(feedReactionCountEvent);

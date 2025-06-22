@@ -12,10 +12,10 @@ import leets.leenk.domain.notification.application.dto.NotificationResponse;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.NotificationType;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstReactionDetail;
-import leets.leenk.domain.notification.domain.entity.details.FeedReactionCountDetail;
-import leets.leenk.domain.notification.domain.entity.details.FeedTagDetail;
-import leets.leenk.domain.notification.domain.entity.details.NewFeedDetail;
+import leets.leenk.domain.notification.domain.entity.content.FeedFirstReactionNotificationContent;
+import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
+import leets.leenk.domain.notification.domain.entity.content.FeedTagNotificationContent;
+import leets.leenk.domain.notification.domain.entity.content.NewFeedNotificationContent;
 import leets.leenk.domain.user.domain.entity.User;
 
 @Component
@@ -28,7 +28,7 @@ public class NotificationMapper {
 				.deviceToken(linkedUser.getUser().getFcmToken())
 				.notificationType(NotificationType.FEED_TAG)
 				.isRead(Boolean.FALSE)
-				.feedTagDetail(FeedTagDetail.builder()
+				.content(FeedTagNotificationContent.builder()
 					.feedId(feed.getId())
 					.authorName(feed.getUser().getName())
 					.title(NotificationType.FEED_TAG.getTitle())
@@ -45,8 +45,8 @@ public class NotificationMapper {
 			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_FIRST_REACTION)
 			.isRead(Boolean.FALSE)
-			.feedFirstReactionDetail(
-				FeedFirstReactionDetail.builder()
+			.content(
+				FeedFirstReactionNotificationContent.builder()
 					.feedId(feed.getId())
 					.feedFirstReactions(
 						new ArrayList<>()
@@ -62,13 +62,13 @@ public class NotificationMapper {
 			.deviceToken(user.getFcmToken())
 			.notificationType(NotificationType.NEW_FEED)
 			.isRead(Boolean.FALSE)
-			.newFeedDetail(
-				NewFeedDetail.builder()
+			.content(
+				NewFeedNotificationContent.builder()
 					.feedId(feed.getId())
 					.authorUserId(feed.getUser().getId())
 					.authorName(feed.getUser().getName())
 					.title(NotificationType.NEW_FEED.getTitle())
-					.body(NotificationType.NEW_FEED.getFormattedContent(feed.getUser().getName()))
+					.body(NotificationType.NEW_FEED.getContent())
 					.build()
 			)
 			.build();
@@ -79,8 +79,8 @@ public class NotificationMapper {
 			.userId(feed.getUser().getId())
 			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_REACTION_COUNT)
-			.feedReactionCountDetail(
-				FeedReactionCountDetail.builder()
+			.content(
+				FeedReactionCountNotificationContent.builder()
 					.feedId(feed.getId())
 					.feedReactionCounts(new ArrayList<>())
 					.build()
@@ -96,10 +96,7 @@ public class NotificationMapper {
 				.build()
 			)
 			.notificationType(notification.getNotificationType())
-			.feedTagDetail(notification.getFeedTagDetail())
-			.feedReactionCountDetail(notification.getFeedReactionCountDetail())
-			.feedFirstReactionDetail(notification.getFeedFirstReactionDetail())
-			.newFeedDetail(notification.getNewFeedDetail())
+			.content(notification.getContent())
 			.createDate(notification.getCreateDate())
 			.updateDate(notification.getUpdateDate())
 			.build();

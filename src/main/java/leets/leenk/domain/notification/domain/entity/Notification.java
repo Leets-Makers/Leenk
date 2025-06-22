@@ -5,10 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstReactionDetail;
-import leets.leenk.domain.notification.domain.entity.details.FeedReactionCountDetail;
-import leets.leenk.domain.notification.domain.entity.details.FeedTagDetail;
-import leets.leenk.domain.notification.domain.entity.details.NewFeedDetail;
 import leets.leenk.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,13 +29,7 @@ public class Notification extends BaseEntity {
 
 	private Boolean isRead;
 
-	private FeedTagDetail feedTagDetail;
-
-	private FeedReactionCountDetail feedReactionCountDetail;
-
-	private FeedFirstReactionDetail feedFirstReactionDetail;
-
-	private NewFeedDetail newFeedDetail;
+	private NotificationContent content;
 
 	public void setIsReadFalse(){
 		this.isRead = false;

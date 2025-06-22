@@ -1,6 +1,6 @@
 package leets.leenk.domain.notification.domain.entity.event;
 
-import leets.leenk.domain.notification.domain.entity.details.FeedFirstReaction;
+import leets.leenk.domain.notification.domain.entity.content.FeedFirstReaction;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

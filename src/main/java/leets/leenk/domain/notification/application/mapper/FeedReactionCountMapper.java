@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import leets.leenk.domain.notification.domain.entity.NotificationType;
-import leets.leenk.domain.notification.domain.entity.details.FeedReactionCount;
+import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
 
 @Component
 public class FeedReactionCountMapper {

@@ -82,4 +82,12 @@ public class UserController {
 
         return CommonResponse.success(UPDATE_MBTI);
     }
+
+    @DeleteMapping("/me")
+    @Operation(summary = "회원 탈퇴 API")
+    public CommonResponse<Void> deleteAccount(@Parameter(hidden = true) @CurrentUserId Long userId) {
+        userUsecase.deleteAccount(userId);
+
+        return CommonResponse.success(DELETE_USER);
+    }
 }

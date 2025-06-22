@@ -83,4 +83,8 @@ public class User extends BaseEntity {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
+    public void delete() {
+        this.deleteDate = LocalDateTime.now();
+    }
 }

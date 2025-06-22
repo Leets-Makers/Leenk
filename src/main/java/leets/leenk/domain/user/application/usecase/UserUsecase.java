@@ -4,6 +4,7 @@ import leets.leenk.domain.user.application.dto.request.*;
 import leets.leenk.domain.user.application.dto.response.UserInfoResponse;
 import leets.leenk.domain.user.application.mapper.UserMapper;
 import leets.leenk.domain.user.domain.entity.User;
+import leets.leenk.domain.user.domain.service.UserDeleteService;
 import leets.leenk.domain.user.domain.service.UserGetService;
 import leets.leenk.domain.user.domain.service.UserUpdateService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class UserUsecase {
     private final UserMapper userMapper;
     private final UserGetService userGetService;
     private final UserUpdateService userUpdateService;
+    private final UserDeleteService userDeleteService;
 
     @Transactional
     public void completeProfile(long userId, RegisterRequest request) {
@@ -58,5 +60,12 @@ public class UserUsecase {
         User user = userGetService.findById(userId);
 
         userUpdateService.updateMbti(user, request.mbti());
+    }
+
+    @Transactional
+    public void deleteAccount(long userId) {
+        User user = userGetService.findById(userId);
+
+        userDeleteService.delete(user);
     }
 }

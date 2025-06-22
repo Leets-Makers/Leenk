@@ -53,7 +53,7 @@ public class FeedUsecase {
 
     private final FeedMapper feedMapper;
     private final MediaMapper mediaMapper;
-    private final FeedLinkedUserMapper feedLinkedUserMapper;
+    private final FeedUserMapper feedUserMapper;
     private final ReactionMapper reactionMapper;
 
     @Transactional(readOnly = true)
@@ -99,7 +99,7 @@ public class FeedUsecase {
         users.add(author); // 중복 자동 제거
 
         return users.stream()
-                .map(user -> feedLinkedUserMapper.toLinkedUser(user, feed))
+                .map(user -> feedUserMapper.toLinkedUser(user, feed))
                 .toList();
     }
 
@@ -107,6 +107,8 @@ public class FeedUsecase {
     public void reactToFeed(long userId, long feedId, ReactionRequest request) {
         User user = userGetService.findById(userId);
         Feed feed = feedGetService.findById(feedId);
+        validateReaction(feed, user);
+
         Reaction reaction = reactionGetService.findByFeedAndUser(feed, user)
                 .orElseGet(() ->
                         reactionSaveService.save(
@@ -114,7 +116,13 @@ public class FeedUsecase {
                         )
                 );
 
-        feedUpdateService.updateTotalReaction(feed, reaction, request.reactionCount());
+        feedUpdateService.updateTotalReaction(feed, reaction, feed.getUser(), request.reactionCount());
+    }
+
+    private void validateReaction(Feed feed, User user) {
+        if (feed.getUser().equals(user)) {
+            throw new SelfReactionNotAllowedException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -165,5 +173,22 @@ public class FeedUsecase {
                 .collect(Collectors.groupingBy(media -> media.getFeed().getId()));
 
         return feedMapper.toFeedListResponse(slice, mediaMap);
+    }
+
+    @Transactional(readOnly = true)
+    public List<FeedUserResponse> getAllUser() {
+        List<User> users = userGetService.findAll();
+
+        return users.stream()
+                .map(feedUserMapper::toFeedUserResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public FeedUserListResponse getUsers(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Slice<User> slice = userGetService.findAll(pageable);
+
+        return feedUserMapper.toFeedUserListResponse(slice);
     }
 }

@@ -18,7 +18,6 @@ public class UserMapper {
                 .kakaoTalkId(user.getKakaoTalkId())
                 .introduction(user.getIntroduction())
                 .mbti(user.getMbti())
-                .totalReactionCount(user.getTotalReactionCount())
                 .build();
     }
 

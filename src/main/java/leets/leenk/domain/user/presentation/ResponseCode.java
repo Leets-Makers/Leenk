@@ -15,7 +15,12 @@ public enum ResponseCode implements ResponseCodeInterface {
     UPDATE_INTRODUCTION(1103, HttpStatus.OK, "자기소개 수정에 성공했습니다."),
     UPDATE_MBTI(1104, HttpStatus.OK, "MBTI 수정에 성공했습니다."),
     UPDATE_KAKAO_TALK_ID(1105, HttpStatus.OK, "카카오톡 Id 수정에 성공했습니다."),
-    COMPLETE_PROFILE(1106, HttpStatus.OK, "기본 정보 입력에 성공했습니다.");
+    COMPLETE_PROFILE(1106, HttpStatus.OK, "기본 정보 입력에 성공했습니다."),
+
+
+    GET_NOTIFICATION_SETTING(1110, HttpStatus.OK, "알림 설정 조회에 성공했습니다."),
+    UPDATE_NOTIFICATION_SETTING(1111, HttpStatus.OK, "알림 설정 수정에 성공했습니다."),
+    SEND_FEEDBACK(1112, HttpStatus.OK, "의견 남기기에 성공했습니다.");
 
     private final int code;
     private final HttpStatus status;

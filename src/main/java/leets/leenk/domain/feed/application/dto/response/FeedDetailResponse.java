@@ -29,6 +29,9 @@ public record FeedDetailResponse(
         @Schema(description = "피드 미디어 목록")
         List<FeedMediaResponse> media,
 
+        @Schema(description = "함께한 사용자 수 (작성자 포함)", example = "8")
+        long linkedUserCount,
+
         @Schema(description = "함께한 사용자 목록")
         List<LinkedUserResponse> linkedUser
 ) {

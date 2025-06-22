@@ -127,4 +127,20 @@ public class FeedController {
 
         return CommonResponse.success(ResponseCode.GET_OTHER_LINKED_FEEDS, response);
     }
+    @GetMapping("/users/all")
+    @Operation(summary = "함께한 사람 추가를 위한 사용자 조회")
+    public CommonResponse<List<FeedUserResponse>> getLinkedUsers() {
+        List<FeedUserResponse> response = feedUsecase.getAllUser();
+
+        return CommonResponse.success(ResponseCode.GET_ALL_USERS, response);
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "함께한 사람 추가를 위한 사용자 무한 스크롤 조회", hidden = true)
+    public CommonResponse<FeedUserListResponse> getLinkedUsers(@RequestParam int pageNumber,
+                                                               @RequestParam int pageSize) {
+        FeedUserListResponse response = feedUsecase.getUsers(pageNumber, pageSize);
+
+        return CommonResponse.success(ResponseCode.GET_ALL_USERS, response);
+    }
 }

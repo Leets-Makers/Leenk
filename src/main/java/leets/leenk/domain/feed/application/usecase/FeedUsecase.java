@@ -3,11 +3,10 @@ package leets.leenk.domain.feed.application.usecase;
 import leets.leenk.domain.feed.application.dto.request.FeedUpdateRequest;
 import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
 import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
-import leets.leenk.domain.feed.application.dto.response.FeedDetailResponse;
-import leets.leenk.domain.feed.application.dto.response.FeedListResponse;
-import leets.leenk.domain.feed.application.dto.response.ReactionUserResponse;
-import leets.leenk.domain.feed.application.mapper.FeedLinkedUserMapper;
+import leets.leenk.domain.feed.application.dto.response.*;
+import leets.leenk.domain.feed.application.exception.SelfReactionNotAllowedException;
 import leets.leenk.domain.feed.application.mapper.FeedMapper;
+import leets.leenk.domain.feed.application.mapper.FeedUserMapper;
 import leets.leenk.domain.feed.application.mapper.ReactionMapper;
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
@@ -53,7 +52,7 @@ public class FeedUsecase {
 
     private final FeedMapper feedMapper;
     private final MediaMapper mediaMapper;
-    private final FeedLinkedUserMapper feedLinkedUserMapper;
+    private final FeedUserMapper feedUserMapper;
     private final ReactionMapper reactionMapper;
 
     @Transactional(readOnly = true)
@@ -99,7 +98,7 @@ public class FeedUsecase {
         users.add(author); // 중복 자동 제거
 
         return users.stream()
-                .map(user -> feedLinkedUserMapper.toLinkedUser(user, feed))
+                .map(user -> feedUserMapper.toLinkedUser(user, feed))
                 .toList();
     }
 
@@ -107,6 +106,8 @@ public class FeedUsecase {
     public void reactToFeed(long userId, long feedId, ReactionRequest request) {
         User user = userGetService.findById(userId);
         Feed feed = feedGetService.findById(feedId);
+        validateReaction(feed, user);
+
         Reaction reaction = reactionGetService.findByFeedAndUser(feed, user)
                 .orElseGet(() ->
                         reactionSaveService.save(
@@ -114,7 +115,13 @@ public class FeedUsecase {
                         )
                 );
 
-        feedUpdateService.updateTotalReaction(feed, reaction, request.reactionCount());
+        feedUpdateService.updateTotalReaction(feed, reaction, feed.getUser(), request.reactionCount());
+    }
+
+    private void validateReaction(Feed feed, User user) {
+        if (feed.getUser().equals(user)) {
+            throw new SelfReactionNotAllowedException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -128,5 +135,22 @@ public class FeedUsecase {
     }
 
     public void updateFeed(FeedUpdateRequest request) {
+    }
+
+    @Transactional(readOnly = true)
+    public List<FeedUserResponse> getAllUser() {
+        List<User> users = userGetService.findAll();
+
+        return users.stream()
+                .map(feedUserMapper::toFeedUserResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public FeedUserListResponse getUsers(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Slice<User> slice = userGetService.findAll(pageable);
+
+        return feedUserMapper.toFeedUserListResponse(slice);
     }
 }

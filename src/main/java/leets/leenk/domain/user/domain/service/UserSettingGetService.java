@@ -22,8 +22,8 @@ public class UserSettingGetService {
 			.toList();
 	}
 
-	public UserSetting getUserSetting(Long userId){
-		return userSettingRepository.findByUserId(userId)
-			.orElseThrow(UserSettingNotFoundException::new);
-	}
+    public UserSetting findByUser(User user) {
+        return userSettingRepository.findByUser(user)
+                .orElseThrow(UserSettingNotFoundException::new);
+    }
 }

@@ -7,8 +7,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
-import leets.leenk.domain.notification.application.dto.NotificationResponse;
-import leets.leenk.domain.notification.application.mapper.NotificationMapper;
+import leets.leenk.domain.notification.application.dto.NotificationListResponse;
+import leets.leenk.domain.notification.application.mapper.NotificationResponseMapper;
 import leets.leenk.domain.notification.application.service.NotificationCountGetService;
 import leets.leenk.domain.notification.application.service.NotificationGetService;
 import leets.leenk.domain.notification.application.service.NotificationMarkReadService;
@@ -23,14 +23,14 @@ public class NotificationUsecase {
 	private final NotificationGetService notificationGetService;
 	private final NotificationCountGetService notificationCountGetService;
 	private final NotificationMarkReadService notificationMarkReadService;
-	private final NotificationMapper mapper;
+	private final NotificationResponseMapper mapper;
 	private final UserGetService userGetService;
 
-	public Slice<NotificationResponse> getNotifications(Long userId, int pageNumber, int pageSize){
+	public NotificationListResponse getNotifications(Long userId, int pageNumber, int pageSize){
 		Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateDate"));
 		Slice<Notification> notifications = notificationGetService.findRecentNotifications(userId, pageable);
 
-		return notifications.map(mapper::toResponse);
+		return mapper.toNotificationListResponse(notifications);
 	}
 
 	public NotificationCountResponse getNotificationCount(long userId) {

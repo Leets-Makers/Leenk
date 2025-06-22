@@ -8,6 +8,7 @@ import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
 import leets.leenk.domain.notification.domain.entity.Notification;
+import leets.leenk.domain.notification.domain.entity.NotificationType;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
 import leets.leenk.domain.notification.domain.entity.event.FeedReactionCountEvent;
@@ -28,7 +29,8 @@ public class ReactionCountNotificationSaveService {
 	@Transactional
 	public void createReactionCountNotification(Feed feed, Long reactionCount) {
 
-		Notification notification = notificationRepository.findByFeedIdAndReactionCount(feed.getId(), reactionCount)
+		Notification notification = notificationRepository.findByFeedIdAndReactionCount(NotificationType.FEED_REACTION_COUNT,
+				feed.getId(), reactionCount)
 			.orElseGet(() -> notificationMapper.toReactionCountNotification(feed));
 
 		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);

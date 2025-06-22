@@ -8,17 +8,18 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import leets.leenk.domain.notification.domain.entity.Notification;
+import leets.leenk.domain.notification.domain.entity.NotificationType;
 
 public interface NotificationRepository extends MongoRepository<Notification, String> {
 
-	@Query("{ 'content.feedId': ?0 }")
-	Optional<Notification> findFeedFirstReactionByFeedId(Long feedId);
+	@Query("{ 'notificationType' : ?0, 'content.feedId': ?1 }")
+	Optional<Notification> findFeedFirstReactionByFeedId(NotificationType type, Long feedId);
 
-	@Query("{ 'content.feedId': ?0, 'content.feedFirstReactions.userId': ?1 }")
-	Optional<Notification> findByFeedIdAndUserIdInFirstReactions(Long feedId, Long userId);
+	@Query("{ 'notificationType' : ?0, 'content.feedId': ?1, 'content.feedFirstReactions.userId': ?2 }")
+	Optional<Notification> findByFeedIdAndUserIdInFirstReactions(NotificationType type, Long feedId, Long userId);
 
-	@Query("{ 'content.feedId': ?0, 'content.feedReactionCounts.reactionCount': ?1}")
-	Optional<Notification> findByFeedIdAndReactionCount(Long feedId, long reactionCount);
+	@Query("{ 'notificationType' : ?0, 'content.feedId': ?1, 'content.feedReactionCounts.reactionCount': ?2}")
+	Optional<Notification> findByFeedIdAndReactionCount(NotificationType type, Long feedId, long reactionCount);
 
 	Slice<Notification> findPageByUserId(Pageable pageable, Long userId);
 

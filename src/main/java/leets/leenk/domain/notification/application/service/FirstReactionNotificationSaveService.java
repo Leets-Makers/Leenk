@@ -8,6 +8,7 @@ import leets.leenk.domain.feed.domain.entity.Reaction;
 import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
 import leets.leenk.domain.notification.domain.entity.Notification;
+import leets.leenk.domain.notification.domain.entity.NotificationType;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReaction;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReactionNotificationContent;
 import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;
@@ -27,11 +28,13 @@ public class FirstReactionNotificationSaveService {
 
 	@Transactional
 	public void createFirstReactionNotification(Reaction reaction) {
-		if(notificationRepository.findByFeedIdAndUserIdInFirstReactions(reaction.getFeed().getId(), reaction.getUser().getId()).isPresent()){
+		if(notificationRepository.findByFeedIdAndUserIdInFirstReactions(
+			NotificationType.FEED_FIRST_REACTION, reaction.getFeed().getId(), reaction.getUser().getId()).isPresent()){
 			//  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
 			return ;
 		}
-		Notification notification = notificationRepository.findFeedFirstReactionByFeedId(reaction.getFeed().getId())
+		Notification notification = notificationRepository.findFeedFirstReactionByFeedId(NotificationType.FEED_FIRST_REACTION,
+				reaction.getFeed().getId())
 			.orElseGet(()->notificationMapper.toFirstReactionNotification(reaction.getFeed()));
 
 		FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());

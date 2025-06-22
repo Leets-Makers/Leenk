@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
-import leets.leenk.domain.notification.application.dto.NotificationResponse;
+import leets.leenk.domain.notification.application.dto.NotificationListResponse;
 import leets.leenk.domain.notification.application.service.NotificationService;
 import leets.leenk.domain.notification.application.usecase.NotificationResponseCode;
 import leets.leenk.domain.notification.application.usecase.NotificationUsecase;
@@ -63,7 +63,7 @@ public class NotificationController {
 	@Operation(summary = "최근 알림 조회 API [무한스크롤]", description = "사용자의 최근 알림 목록을 페이지 단위로 조회합니다. "
 		+ "pageNumber: 0부터 시작")
 	@GetMapping()
-	public CommonResponse<Slice<NotificationResponse>> getNotifications(
+	public CommonResponse<NotificationListResponse> getNotifications(
 		@CurrentUserId Long userId,
 		@RequestParam("page") int pageNumber,
 		@RequestParam("size") int pageSize){

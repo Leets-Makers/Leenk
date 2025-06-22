@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
 import leets.leenk.domain.notification.application.dto.NotificationListResponse;
@@ -26,6 +27,7 @@ public class NotificationUsecase {
 	private final NotificationResponseMapper mapper;
 	private final UserGetService userGetService;
 
+	@Transactional(readOnly = true)
 	public NotificationListResponse getNotifications(Long userId, int pageNumber, int pageSize){
 		Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateDate"));
 		Slice<Notification> notifications = notificationGetService.findRecentNotifications(userId, pageable);
@@ -33,11 +35,13 @@ public class NotificationUsecase {
 		return mapper.toNotificationListResponse(notifications);
 	}
 
+	@Transactional(readOnly = true)
 	public NotificationCountResponse getNotificationCount(long userId) {
 		User user = userGetService.findById(userId);
 		return mapper.toCountResponse(notificationCountGetService.getNotificationCount(user));
 	}
 
+	@Transactional
 	public void markNotificationAsRead(Long userId, String notificationId) {
 		User user = userGetService.findById(userId);
 		notificationMarkReadService.markReadNotifiaction(user, notificationId);

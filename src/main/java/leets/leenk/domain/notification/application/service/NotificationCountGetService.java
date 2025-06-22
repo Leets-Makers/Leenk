@@ -13,7 +13,6 @@ public class NotificationCountGetService {
 
 	private final NotificationRepository notificationRepository;
 
-	@Transactional(readOnly = true)
 	public Long getNotificationCount(User user) {
 		return notificationRepository.countByUserIdAndIsReadFalse(user.getId());
 	}

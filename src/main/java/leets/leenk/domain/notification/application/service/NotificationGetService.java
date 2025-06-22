@@ -15,7 +15,6 @@ public class NotificationGetService {
 
 	private final NotificationRepository notificationRepository;
 
-	@Transactional(readOnly = true)
 	public Slice<Notification> findRecentNotifications(Long userId, Pageable pageable){
 		return notificationRepository.findPageByUserId(pageable, userId);
 	}

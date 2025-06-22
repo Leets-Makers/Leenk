@@ -48,9 +48,6 @@ public class NotificationMapper {
 			.content(
 				FeedFirstReactionNotificationContent.builder()
 					.feedId(feed.getId())
-					.feedFirstReactions(
-						new ArrayList<>()
-					)
 					.build()
 			)
 			.build();
@@ -82,7 +79,6 @@ public class NotificationMapper {
 			.content(
 				FeedReactionCountNotificationContent.builder()
 					.feedId(feed.getId())
-					.feedReactionCounts(new ArrayList<>())
 					.build()
 			)
 			.build();

@@ -29,8 +29,8 @@ public class NotificationService {
 	// 피드 태그 알림 테스트를 위한 메소드
 	@Transactional
 	public void temporaryTagNotification() {
-		List<LinkedUser> linkedUsers = linkedUserRepository.findAllByFeedId(1);
 		Feed feed = feedRepository.findById(1L).orElseThrow();
+		List<LinkedUser> linkedUsers = linkedUserRepository.findAllByFeed(feed);
 		tagNotificationSaveService.createTagNotification(feed, linkedUsers);
 	}
 

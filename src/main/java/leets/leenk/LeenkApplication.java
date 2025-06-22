@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableJpaRepositories(basePackages = {
 	"leets.leenk.domain.feed.domain.repository",
 	"leets.leenk.domain.user.domain.repository",
+	"leets.leenk.domain.media.domain.repository"
 })
 @EnableMongoRepositories(basePackages = "leets.leenk.domain.notification.domain.repository")
 public class LeenkApplication {

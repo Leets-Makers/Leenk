@@ -21,7 +21,6 @@ import leets.leenk.domain.user.domain.entity.User;
 @Component
 public class NotificationMapper {
 
-	// Todo : Feed id와 Feed 글쓴이 이름 파라미터로 가져오기
 	public List<Notification> toFeedTagNotification(Feed feed, List<LinkedUser> linkedUsers) {
 		return linkedUsers.stream()
 			.map(linkedUser -> Notification.builder()
@@ -57,7 +56,7 @@ public class NotificationMapper {
 			.build();
 	}
 
-	public Notification toNewFeedNotification(Feed feed, User user){	// Todo : Feed 객체 받아오도록 수정
+	public Notification toNewFeedNotification(Feed feed, User user){
 		return Notification.builder()
 			.userId(user.getId())
 			.deviceToken(user.getFcmToken())
@@ -77,7 +76,7 @@ public class NotificationMapper {
 
 	public Notification toReactionCountNotification(Feed feed) {
 		return Notification.builder()
-			.userId(feed.getUser().getId())	// Todo : feed.getId()로 수정
+			.userId(feed.getUser().getId())
 			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_REACTION_COUNT)
 			.feedReactionCountDetail(

@@ -9,6 +9,7 @@ public record LoginResponse(
         Long userId,
         String name,
         Integer cardinal,
+        String position,
         String accessToken,
         String refreshToken
 ) {

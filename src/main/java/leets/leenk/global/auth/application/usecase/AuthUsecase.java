@@ -66,6 +66,6 @@ public class AuthUsecase {
         userSaveService.save(user);
         userSettingSaveService.save(userSetting);
 
-        return loginMapper.toLoginResponse(user, response.access_token(), response.refresh_token());
+        return loginMapper.toLoginResponse(user, userInfo, response.access_token(), response.refresh_token());
     }
 }

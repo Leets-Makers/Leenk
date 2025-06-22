@@ -1,8 +1,10 @@
 package leets.leenk.domain.notification.domain.entity;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public enum NotificationType {
 	FEED_TAG("태그", "%s이 나를 게시글에 언급했어"),
 	NEW_FEED("새로운 피드", "새로운 게시글이 올라왔어"),
@@ -11,11 +13,6 @@ public enum NotificationType {
 
 	private final String title;
 	private final String content;
-
-	NotificationType(String title, String content) {
-		this.title = title;
-		this.content = content;
-	}
 
 	public String getFormattedContent(String name){
 		return String.format(content, name);

@@ -1,6 +1,5 @@
 package leets.leenk.domain.notification.presentation;
 
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
 import leets.leenk.domain.notification.application.dto.NotificationListResponse;
 import leets.leenk.domain.notification.application.service.NotificationService;
-import leets.leenk.domain.notification.application.usecase.NotificationResponseCode;
 import leets.leenk.domain.notification.application.usecase.NotificationUsecase;
 import leets.leenk.global.auth.application.annotation.CurrentUserId;
 import leets.leenk.global.common.response.CommonResponse;

@@ -1,4 +1,4 @@
-package leets.leenk.domain.notification.application.usecase;
+package leets.leenk.domain.notification.presentation;
 
 import org.springframework.http.HttpStatus;
 

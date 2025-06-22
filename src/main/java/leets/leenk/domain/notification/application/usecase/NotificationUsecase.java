@@ -74,7 +74,9 @@ public class NotificationUsecase {
 				reaction.getFeed().getId())
 			.orElseGet(()->notificationMapper.toFirstReactionNotification(reaction.getFeed()));
 
-		UserSetting userSetting = userSettingGetService.getUserSetting(notification.getUserId());
+		User user = userGetService.findById(notification.getUserId());
+
+		UserSetting userSetting = userSettingGetService.findByUser(user);
 		firstReactionNotificationSaveService.save(userSetting, notification, reaction);
 	}
 
@@ -88,7 +90,10 @@ public class NotificationUsecase {
 				feed.getId(), reactionCount)
 			.orElseGet(() -> notificationMapper.toReactionCountNotification(feed));
 
-		reactionCountNotificationSaveService.save(feed, reactionCount, notification);
+		User user = userGetService.findById(notification.getUserId());
+
+		UserSetting userSetting = userSettingGetService.findByUser(user);
+		reactionCountNotificationSaveService.save(feed, reactionCount, notification, userSetting);
 
 	}
 

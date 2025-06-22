@@ -6,14 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
-import leets.leenk.domain.notification.application.mapper.NotificationMapper;
 import leets.leenk.domain.notification.domain.entity.Notification;
-import leets.leenk.domain.notification.domain.entity.NotificationType;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
 import leets.leenk.domain.notification.domain.entity.event.FeedReactionCountEvent;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
-import leets.leenk.domain.user.domain.service.UserSettingGetService;
+import leets.leenk.domain.user.domain.entity.UserSetting;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,10 +21,9 @@ public class ReactionCountNotificationSaveService {
 	private final ApplicationEventPublisher eventPublisher;
 	private final NotificationRepository notificationRepository;
 	private final FeedReactionCountMapper feedReactionCountMapper;
-	private final UserSettingGetService userSettingGetService;
 
 	@Transactional
-	public void save(Feed feed, Long reactionCount, Notification notification) {
+	public void save(Feed feed, Long reactionCount, Notification notification, UserSetting userSetting) {
 
 		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
@@ -38,7 +35,9 @@ public class ReactionCountNotificationSaveService {
 
 		FeedReactionCountEvent feedReactionCountEvent = new FeedReactionCountEvent(feedReactionCount, feed.getUser().getFcmToken());
 
-		if(userSettingGetService.getUserSetting(notification.getUserId()).isNewReactionNotify())
+
+
+		if(userSetting.isNewReactionNotify())
 			eventPublisher.publishEvent(feedReactionCountEvent);
 	}
 }

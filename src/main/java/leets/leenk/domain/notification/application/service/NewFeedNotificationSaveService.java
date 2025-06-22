@@ -33,7 +33,7 @@ public class NewFeedNotificationSaveService {
 			user -> {
 				Notification notification = notificationMapper.toNewFeedNotification(feed, user);
 				notificationRepository.save(notification);
-				if(userSettingGetService.getUserSetting(user.getId()).isNewFeedNotify())
+				if(userSettingGetService.findByUser(user).isNewFeedNotify())
 					eventPublisher.publishEvent(notification);	// 알림을 허용한 유저
 			}
 		);

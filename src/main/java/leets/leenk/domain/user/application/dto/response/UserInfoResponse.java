@@ -12,7 +12,6 @@ public record UserInfoResponse(
         String profileImage,
         String kakaoTalkId,
         String introduction,
-        String mbti,
-        long totalReactionCount
+        String mbti
 ) {
 }

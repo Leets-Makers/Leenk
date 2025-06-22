@@ -156,6 +156,7 @@ public class FeedUsecase {
         return feedUserMapper.toFeedUserListResponse(slice);
     }
 
+    @Transactional
     public void deleteFeed(long userId, long feedId) {
         Feed feed = feedGetService.findById(feedId);
         User user = userGetService.findById(userId);

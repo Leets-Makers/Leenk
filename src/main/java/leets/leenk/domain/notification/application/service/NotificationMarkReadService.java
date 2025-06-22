@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class NotificationMarkReadService {
 	private final NotificationRepository notificationRepository;
 
-	public void markReadNotifiaction(User user, String notificationId) {
+	public void markReadNotification(User user, String notificationId) {
 		Notification notification = notificationRepository.findById(notificationId)
 			.orElseThrow(NotificationNotFoundException::new);
 

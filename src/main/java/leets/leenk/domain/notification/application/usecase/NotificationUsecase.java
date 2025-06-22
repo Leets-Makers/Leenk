@@ -99,7 +99,7 @@ public class NotificationUsecase {
 	@Transactional
 	public void markNotificationAsRead(Long userId, String notificationId) {
 		User user = userGetService.findById(userId);
-		notificationMarkReadService.markReadNotifiaction(user, notificationId);
+		notificationMarkReadService.markReadNotification(user, notificationId);
 	}
 
 	private Boolean isFirstReactionDuplicated(Reaction reaction){

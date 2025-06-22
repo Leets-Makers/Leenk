@@ -3,3 +3,10 @@ spring:
     active: local
   jpa:
     open-in-view: false
+
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+

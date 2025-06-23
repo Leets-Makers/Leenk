@@ -18,8 +18,11 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 	@Query("{ 'notificationType' : ?0, 'content.feedId': ?1, 'content.feedFirstReactions.userId': ?2 }")
 	Optional<Notification> findByFeedIdAndUserIdInFirstReactions(NotificationType type, Long feedId, Long userId);
 
+	@Query("{ 'notificationType' : ?0, 'content.feedId': ?1}")
+	Optional<Notification> findByFeedId(NotificationType type, Long feedId);
+
 	@Query("{ 'notificationType' : ?0, 'content.feedId': ?1, 'content.feedReactionCounts.reactionCount': ?2}")
-	Optional<Notification> findByFeedIdAndReactionCount(NotificationType type, Long feedId, long reactionCount);
+	Optional<Notification> findByFeedIdAndReactionCount(NotificationType type, Long feedId, Long reactionCount);
 
 	Slice<Notification> findPageByUserId(Pageable pageable, Long userId);
 

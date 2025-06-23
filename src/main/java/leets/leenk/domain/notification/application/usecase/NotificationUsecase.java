@@ -89,8 +89,11 @@ public class NotificationUsecase {
 
 	@Transactional
 	public void saveReactionCountNotification(Feed feed, Long reactionCount){
-		Notification notification = notificationRepository.findByFeedIdAndReactionCount(NotificationType.FEED_REACTION_COUNT,
-				feed.getId(), reactionCount)
+		if(notificationRepository.findByFeedIdAndReactionCount(NotificationType.FEED_REACTION_COUNT,feed.getId(), reactionCount).isPresent()){
+			return ;
+		}
+		Notification notification = notificationRepository.findByFeedId(NotificationType.FEED_REACTION_COUNT,
+				feed.getId())
 			.orElseGet(() -> notificationMapper.toReactionCountNotification(feed));
 
 		User user = userGetService.findById(notification.getUserId());

@@ -86,5 +86,17 @@ public class User extends BaseEntity {
 
     public void delete() {
         this.deleteDate = LocalDateTime.now();
+        this.name = "(알수없음)";
+        this.profileImage = null;
+    }
+
+    public boolean isDeleted() {
+        return this.deleteDate != null;
+    }
+
+    public void restore(UserBackupInfo userBackupInfo) {
+        this.deleteDate = null;
+        this.name = userBackupInfo.getName();
+        this.profileImage = userBackupInfo.getProfileImage();
     }
 }

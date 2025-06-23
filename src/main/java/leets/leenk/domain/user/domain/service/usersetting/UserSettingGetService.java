@@ -1,4 +1,4 @@
-package leets.leenk.domain.user.domain.service;
+package leets.leenk.domain.user.domain.service.usersetting;
 
 import leets.leenk.domain.user.application.exception.UserSettingNotFoundException;
 import leets.leenk.domain.user.domain.entity.User;

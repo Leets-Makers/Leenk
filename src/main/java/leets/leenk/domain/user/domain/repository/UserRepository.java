@@ -6,12 +6,15 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findAllByIdIn(List<Long> userIds);
+    Optional<User> findByIdAndDeleteDateIsNull(long userId);
 
-    List<User> findAllByOrderByName();
+    List<User> findAllByIdInAndDeleteDateIsNull(List<Long> userIds);
 
-    Slice<User> findAllByOrderByName(Pageable pageable);
+    List<User> findAllByDeleteDateIsNullOrderByName();
+
+    Slice<User> findAllByDeleteDateIsNullOrderByName(Pageable pageable);
 }

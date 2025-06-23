@@ -27,4 +27,12 @@ public class AuthController {
 
         return CommonResponse.success(ResponseCode.INITIAL_LOGIN_SUCCESS, response);
     }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "토큰 재발급 API")
+    public CommonResponse<LoginResponse> reissueToken(@RequestHeader("Authorization_refresh") String refreshToken) {
+        LoginResponse response = authUsecase.reissueToken(refreshToken);
+
+        return CommonResponse.success(ResponseCode.REFRESH_TOKEN_SUCCESS, response);
+    }
 }

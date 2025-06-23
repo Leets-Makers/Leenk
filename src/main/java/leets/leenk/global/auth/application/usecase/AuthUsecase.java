@@ -68,4 +68,10 @@ public class AuthUsecase {
 
         return loginMapper.toLoginResponse(user, userInfo, response.access_token(), response.refresh_token());
     }
+
+    public LoginResponse reissueToken(String refreshToken) {
+        OauthTokenResponse response = kakaoOauthApiService.reissueOauthToken(refreshToken);
+
+        return loginMapper.toLoginResponse(response.access_token(), response.refresh_token());
+    }
 }

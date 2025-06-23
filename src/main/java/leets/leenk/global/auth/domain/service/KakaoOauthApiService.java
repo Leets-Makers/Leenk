@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import leets.leenk.global.auth.application.dto.response.OauthErrorResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;
-import leets.leenk.global.auth.application.exception.CustomJsonProcessingException;
-import leets.leenk.global.auth.application.exception.OauthException;
-import leets.leenk.global.auth.application.exception.UnRegisterUserException;
-import leets.leenk.global.auth.application.exception.UserInActiveException;
+import leets.leenk.global.auth.application.exception.*;
 import leets.leenk.global.auth.application.property.KakaoOauthProperty;
 import leets.leenk.global.auth.application.property.OauthProperty;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +20,7 @@ import org.springframework.web.client.RestClient;
 public class KakaoOauthApiService {
     private static final String USER_INACTIVE_ERROR = "WAE-001";
     private static final String USER_NOT_FOUND_ERROR = "WAE-002";
+    private static final String INVALID_GRANT_ERROR = "invalid_grant";
 
     private final OauthProperty oauthProperty;
     private final KakaoOauthProperty kakaoOauthProperty;
@@ -49,6 +47,33 @@ public class KakaoOauthApiService {
                         switch (error.error()) {
                             case USER_INACTIVE_ERROR -> throw new UserInActiveException(error.error_description());
                             case USER_NOT_FOUND_ERROR -> throw new UnRegisterUserException();
+                            default -> throw new OauthException(error.error_description());
+                        }
+                    } catch (JsonProcessingException e) {
+                        throw new CustomJsonProcessingException(e.getMessage());
+                    }
+                })
+                .body(OauthTokenResponse.class);
+    }
+
+    public OauthTokenResponse reissueOauthToken(String refreshToken) {
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "refresh_token");
+        body.add("client_id", oauthProperty.getClientId());
+        body.add("client_secret", oauthProperty.getClientSecret());
+        body.add("refresh_token", refreshToken);
+
+        return authRestClient.post()
+                .uri(oauthProperty.getOauthServerTokenUri())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(body)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (request, response) -> {
+                    try {
+                        OauthErrorResponse error = objectMapper.readValue(response.getBody(), OauthErrorResponse.class);
+
+                        switch (error.error()) {
+                            case INVALID_GRANT_ERROR -> throw new RefreshTokenException();
                             default -> throw new OauthException(error.error_description());
                         }
                     } catch (JsonProcessingException e) {

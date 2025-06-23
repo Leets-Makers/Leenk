@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import leets.leenk.global.auth.application.dto.response.OauthUserInfoResponse;
 import leets.leenk.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -50,6 +51,8 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private long totalReactionCount;
 
+    private LocalDateTime leaveDate;
+
     private LocalDateTime deleteDate;
 
     public void updateKakaoTalkId(String kakaoTalkId) {
@@ -84,19 +87,41 @@ public class User extends BaseEntity {
         return id != null ? id.hashCode() : 0;
     }
 
-    public void delete() {
-        this.deleteDate = LocalDateTime.now();
+    public void leave() {
+        this.leaveDate = LocalDateTime.now();
         this.name = "(알수없음)";
         this.profileImage = null;
     }
 
-    public boolean isDeleted() {
+    public void delete() {
+        this.deleteDate = LocalDateTime.now();
+        this.name = "(알수없음)";
+        this.profileImage = null;
+        this.cardinal = 0;
+        this.mbti = null;
+        this.introduction = null;
+        this.kakaoTalkId = null;
+        this.totalReactionCount = 0L;
+    }
+
+    public boolean isLeave() {
+        return this.leaveDate != null;
+    }
+
+    public boolean isDelete() {
         return this.deleteDate != null;
     }
 
     public void restore(UserBackupInfo userBackupInfo) {
-        this.deleteDate = null;
+        this.leaveDate = null;
         this.name = userBackupInfo.getName();
         this.profileImage = userBackupInfo.getProfileImage();
+    }
+
+    public void reRegister(OauthUserInfoResponse userInfo) {
+        this.leaveDate = null;
+        this.deleteDate = null;
+        this.name = userInfo.name();
+        this.cardinal = userInfo.cardinal();
     }
 }

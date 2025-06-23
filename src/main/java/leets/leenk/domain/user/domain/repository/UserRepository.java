@@ -11,13 +11,13 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByIdAndDeleteDateIsNull(long userId);
+    Optional<User> findByIdAndLeaveDateIsNullAndDeleteDateIsNull(long userId);
 
-    List<User> findAllByIdInAndDeleteDateIsNull(List<Long> userIds);
+    List<User> findAllByIdInAndLeaveDateIsNullAndDeleteDateIsNull(List<Long> userIds);
 
-    List<User> findAllByDeleteDateIsNullOrderByName();
+    List<User> findAllByLeaveDateIsNullAndDeleteDateIsNullOrderByName();
 
-    Slice<User> findAllByDeleteDateIsNullOrderByName(Pageable pageable);
+    Slice<User> findAllByLeaveDateIsNullAndDeleteDateIsNullOrderByName(Pageable pageable);
 
-    List<User> findByDeleteDateIsNotNullAndDeleteDateBefore(LocalDateTime threshold);
+    List<User> findByDeleteDateIsNullAndLeaveDateBefore(LocalDateTime threshold);
 }

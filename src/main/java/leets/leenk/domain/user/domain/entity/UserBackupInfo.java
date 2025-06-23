@@ -17,7 +17,6 @@ public class UserBackupInfo {
     private Long userId;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -25,6 +24,5 @@ public class UserBackupInfo {
     @Column(length = 10, nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String profileImage;
 }

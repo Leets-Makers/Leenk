@@ -52,7 +52,14 @@ public class AuthUsecase {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            restoreDeletedUser(user);
+
+            if (user.isDelete()) {
+                return reRegisterUser(user, response);
+            }
+
+            if (user.isLeave()) {
+                restoreLeavedUser(user);
+            }
 
             return loginMapper.toLoginResponse(response.access_token(), response.refresh_token());
         }
@@ -78,14 +85,18 @@ public class AuthUsecase {
         return loginMapper.toLoginResponse(user, userInfo, response.access_token(), response.refresh_token());
     }
 
-    private void restoreDeletedUser(User user) {
-        if (!user.isDeleted()) {
-            return;
-        }
-
+    private void restoreLeavedUser(User user) {
         UserBackupInfo backupInfo = userBackupInfoGetService.findByUser(user);
+
         user.restore(backupInfo);
         userBackupInfoDeleteService.delete(backupInfo);
+    }
+
+    private LoginResponse reRegisterUser(User user, OauthTokenResponse response) {
+        OauthUserInfoResponse userInfo = oauthApiService.getUserInfo(response.access_token());
+        user.reRegister(userInfo);
+
+        return loginMapper.toLoginResponse(user, userInfo, response.access_token(), response.refresh_token());
     }
 
     public LoginResponse reissueToken(String refreshToken) {

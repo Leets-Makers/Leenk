@@ -13,14 +13,14 @@ public class UserDeleteService {
     private final UserRepository userRepository;
 
     public void leave(User user) {
-        if (user.isDeleted()) {
+        if (user.isLeave()) {
             throw new UserAlreadyDeletedException();
         }
 
-        user.delete();
+        user.leave();
     }
 
     public void delete(User user) {
-        userRepository.delete(user);
+        user.delete();
     }
 }

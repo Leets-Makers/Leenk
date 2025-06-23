@@ -19,7 +19,7 @@ public class UserGetService {
     private final UserRepository userRepository;
 
     public User findById(long userId) {
-        return userRepository.findByIdAndDeleteDateIsNull(userId)
+        return userRepository.findByIdAndLeaveDateIsNullAndDeleteDateIsNull(userId)
                 .orElseThrow(UserNotFoundException::new);
     }
 
@@ -28,18 +28,18 @@ public class UserGetService {
     }
 
     public List<User> findAll(List<Long> userIds) {
-        return userRepository.findAllByIdInAndDeleteDateIsNull(userIds);
+        return userRepository.findAllByIdInAndLeaveDateIsNullAndDeleteDateIsNull(userIds);
     }
 
     public List<User> findAll() {
-        return userRepository.findAllByDeleteDateIsNullOrderByName();
+        return userRepository.findAllByLeaveDateIsNullAndDeleteDateIsNullOrderByName();
     }
 
     public Slice<User> findAll(Pageable pageable) {
-        return userRepository.findAllByDeleteDateIsNullOrderByName(pageable);
+        return userRepository.findAllByLeaveDateIsNullAndDeleteDateIsNullOrderByName(pageable);
     }
 
     public List<User> findAllDeleteUser(LocalDateTime threshold) {
-        return userRepository.findByDeleteDateIsNotNullAndDeleteDateBefore(threshold);
+        return userRepository.findByDeleteDateIsNullAndLeaveDateBefore(threshold);
     }
 }

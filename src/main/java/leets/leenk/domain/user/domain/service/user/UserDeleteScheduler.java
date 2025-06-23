@@ -1,5 +1,6 @@
 package leets.leenk.domain.user.domain.service.user;
 
+import jakarta.transaction.Transactional;
 import leets.leenk.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ public class UserDeleteScheduler {
     private final UserGetService userGetService;
     private final UserDeleteService userDeleteService;
 
+    @Transactional
     @Scheduled(cron = "0 0 3 * * *") // 새벽 3시
     public void deleteExpiredUsers() {
         LocalDateTime threshold = LocalDateTime.now().minusDays(7);

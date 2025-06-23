@@ -18,7 +18,7 @@ public enum NotificationType {
 		return String.format(content, name);
 	}
 
-	public String getFormattedContent(long reactionCount){
+	public String getFormattedContent(Long reactionCount){
 		return String.format(content, reactionCount);
 	}
 }

@@ -4,6 +4,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import leets.leenk.domain.notification.application.exception.InvalidNotificationContentTypeException;
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
@@ -28,7 +29,9 @@ public class ReactionCountNotificationSaveService {
 
 		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
-		FeedReactionCountNotificationContent content = (FeedReactionCountNotificationContent)notification.getContent();
+		if(!(notification.getContent() instanceof FeedReactionCountNotificationContent content)){
+			throw new InvalidNotificationContentTypeException();
+		}
 		content.getFeedReactionCounts().add(feedReactionCount);
 
 		notification.markUnread();

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import leets.leenk.domain.feed.domain.entity.Reaction;
+import leets.leenk.domain.notification.application.exception.InvalidNotificationContentTypeException;
 import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReaction;
@@ -28,8 +29,9 @@ public class FirstReactionNotificationSaveService {
 	public void save(User user, UserSetting userSetting, Notification notification, Reaction reaction) {
 		FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
 
-		FeedFirstReactionNotificationContent content =
-			(FeedFirstReactionNotificationContent) notification.getContent();
+		if(!(notification.getContent() instanceof FeedFirstReactionNotificationContent content)){
+			throw new InvalidNotificationContentTypeException();
+		}
 
 		content.getFeedFirstReactions().add(feedFirstReaction);
 		// 알림의 FeedFirstReactions 리스트에 추가

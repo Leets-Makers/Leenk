@@ -1,8 +1,5 @@
 package leets.leenk.domain.notification.application.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
 
 import leets.leenk.domain.feed.domain.entity.Feed;
@@ -18,23 +15,18 @@ import leets.leenk.domain.user.domain.entity.User;
 @Component
 public class NotificationMapper {
 
-	public List<Notification> toFeedTagNotification(Feed feed, List<LinkedUser> linkedUsers) {
-		return linkedUsers.stream()
-			.map(linkedUser -> Notification.builder()
-				.userId(linkedUser.getUser().getId())
-				.deviceToken(linkedUser.getUser().getFcmToken())
-				.notificationType(NotificationType.FEED_TAG)
-				.isRead(Boolean.FALSE)
-				.content(toFeedTagNotificationContent(feed))
-				.build()
-			)
-			.collect(Collectors.toList());
+	public Notification toFeedTagNotification(Feed feed, LinkedUser linkedUser) {
+		return Notification.builder()
+			.userId(linkedUser.getUser().getId())
+			.notificationType(NotificationType.FEED_TAG)
+			.isRead(Boolean.FALSE)
+			.content(toFeedTagNotificationContent(feed))
+			.build();
 	}
 
 	public Notification toFirstReactionNotification(Feed feed) {
 		return Notification.builder()
 			.userId(feed.getUser().getId())
-			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_FIRST_REACTION)
 			.isRead(Boolean.FALSE)
 			.content(toFeedFirstReactionNotificationContent(feed))
@@ -44,7 +36,6 @@ public class NotificationMapper {
 	public Notification toNewFeedNotification(Feed feed, User user){
 		return Notification.builder()
 			.userId(user.getId())
-			.deviceToken(user.getFcmToken())
 			.notificationType(NotificationType.NEW_FEED)
 			.isRead(Boolean.FALSE)
 			.content(toNewFeedNotificationContent(feed))
@@ -54,7 +45,6 @@ public class NotificationMapper {
 	public Notification toReactionCountNotification(Feed feed) {
 		return Notification.builder()
 			.userId(feed.getUser().getId())
-			.deviceToken(feed.getUser().getFcmToken())
 			.notificationType(NotificationType.FEED_REACTION_COUNT)
 			.content(toFeedReactionCountNotificationContent(feed))
 			.build();

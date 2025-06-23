@@ -65,6 +65,7 @@ public class NotificationUsecase {
 		return mapper.toCountResponse(notificationCountGetService.getNotificationCount(user));
 	}
 
+	@Transactional
 	public void saveFirstReactionNotification(Reaction reaction){
 		if(isFirstReactionDuplicated(reaction)){
 			//  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
@@ -77,14 +78,16 @@ public class NotificationUsecase {
 		User user = userGetService.findById(notification.getUserId());
 
 		UserSetting userSetting = userSettingGetService.findByUser(user);
-		firstReactionNotificationSaveService.save(userSetting, notification, reaction);
+		firstReactionNotificationSaveService.save(user, userSetting, notification, reaction);
 	}
 
+	@Transactional
 	public void saveNewFeedNotification(Feed feed){
 		List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
 		newFeedNotificationSaveService.save(users, feed);
 	}
 
+	@Transactional
 	public void saveReactionCountNotification(Feed feed, Long reactionCount){
 		Notification notification = notificationRepository.findByFeedIdAndReactionCount(NotificationType.FEED_REACTION_COUNT,
 				feed.getId(), reactionCount)
@@ -93,10 +96,11 @@ public class NotificationUsecase {
 		User user = userGetService.findById(notification.getUserId());
 
 		UserSetting userSetting = userSettingGetService.findByUser(user);
-		reactionCountNotificationSaveService.save(feed, reactionCount, notification, userSetting);
+		reactionCountNotificationSaveService.save(reactionCount, notification, userSetting, user);
 
 	}
 
+	@Transactional
 	public void saveTagNotification(Feed feed, List<LinkedUser> linkedUsers){
 		tagNotificationSaveService.save(feed, linkedUsers);
 	}

@@ -9,9 +9,10 @@ import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMappe
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReaction;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReactionNotificationContent;
-import leets.leenk.domain.notification.domain.entity.event.FeedFirstReactionEvent;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
+import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.entity.UserSetting;
+import leets.leenk.global.sqs.application.mapper.SqsMessageEventMapper;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,9 +22,10 @@ public class FirstReactionNotificationSaveService {
 	private final ApplicationEventPublisher eventPublisher;
 	private final NotificationRepository notificationRepository;
 	private final FeedFirstReactionMapper feedFirstReactionMapper;
+	private final SqsMessageEventMapper sqsMessageEventMapper;
 
 	@Transactional
-	public void save(UserSetting userSetting, Notification notification, Reaction reaction) {
+	public void save(User user, UserSetting userSetting, Notification notification, Reaction reaction) {
 		FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
 
 		FeedFirstReactionNotificationContent content =
@@ -35,10 +37,8 @@ public class FirstReactionNotificationSaveService {
 		notification.markUnread();
 		notificationRepository.save(notification);
 
-		FeedFirstReactionEvent feedFirstReactionEvent = new FeedFirstReactionEvent(feedFirstReaction, notification.getDeviceToken());
-
 		// isNewReactionNotify 가 True인 사용자일 경우 푸시 알림
 		if(userSetting.isNewReactionNotify())
-			eventPublisher.publishEvent(feedFirstReactionEvent);
+			eventPublisher.publishEvent(sqsMessageEventMapper.fromFeedFirstReaction(feedFirstReaction, user.getFcmToken()));
 	}
 }

@@ -13,6 +13,7 @@ import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.repository.NotificationRepository;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.service.UserSettingGetService;
+import leets.leenk.global.sqs.application.mapper.SqsMessageEventMapper;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,6 +24,7 @@ public class NewFeedNotificationSaveService {
 	private final NotificationMapper notificationMapper;
 	private final ApplicationEventPublisher eventPublisher;
 	private final NotificationRepository notificationRepository;
+	private final SqsMessageEventMapper sqsMessageEventMapper;
 
 	@Transactional
 	public void save(List<User> users, Feed feed){
@@ -33,8 +35,8 @@ public class NewFeedNotificationSaveService {
 			user -> {
 				Notification notification = notificationMapper.toNewFeedNotification(feed, user);
 				notificationRepository.save(notification);
-				if(userSettingGetService.findByUser(user).isNewFeedNotify())
-					eventPublisher.publishEvent(notification);	// 알림을 허용한 유저
+				if(userSettingGetService.findByUser(user).isNewFeedNotify())// 알림을 허용한 유저
+					eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
 			}
 		);
 	}

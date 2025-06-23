@@ -22,8 +22,6 @@ public class Notification extends BaseEntity {
 
 	private Long userId;
 
-	private String deviceToken;
-
 	@Enumerated(EnumType.STRING)
 	private NotificationType notificationType;
 

@@ -76,6 +76,6 @@ public class UserUsecase {
         UserBackupInfo userBackupInfo = userBackupInfoMapper.toUserBackupInfo(user);
 
         userBackupInfoSaveService.save(userBackupInfo);
-        userDeleteService.delete(user);
+        userDeleteService.leave(user);
     }
 }

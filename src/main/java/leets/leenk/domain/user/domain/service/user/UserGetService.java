@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,5 +37,9 @@ public class UserGetService {
 
     public Slice<User> findAll(Pageable pageable) {
         return userRepository.findAllByDeleteDateIsNullOrderByName(pageable);
+    }
+
+    public List<User> findAllDeleteUser(LocalDateTime threshold) {
+        return userRepository.findByDeleteDateIsNotNullAndDeleteDateBefore(threshold);
     }
 }

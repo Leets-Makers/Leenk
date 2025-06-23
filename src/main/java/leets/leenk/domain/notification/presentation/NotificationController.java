@@ -58,13 +58,10 @@ public class NotificationController {
 		return null;
 	}
 
-	@Operation(summary = "최근 알림 조회 API [무한스크롤]", description = "사용자의 최근 알림 목록을 페이지 단위로 조회합니다. "
-		+ "pageNumber: 0부터 시작")
+	@Operation(summary = "최근 알림 조회 API [무한스크롤] / 사용자의 최근 알림 목록을 페이지 단위로 조회합니다. pageNumber: 0부터 시작")
 	@GetMapping()
-	public CommonResponse<NotificationListResponse> getNotifications(
-		@CurrentUserId Long userId,
-		@RequestParam("page") int pageNumber,
-		@RequestParam("size") int pageSize){
+	public CommonResponse<NotificationListResponse> getNotifications(@CurrentUserId Long userId,
+		@RequestParam("page") int pageNumber,@RequestParam("size") int pageSize){
 		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_READ_SUCCESS,
 			notificationUsecase.getNotifications(userId, pageNumber, pageSize));
 	}
@@ -76,7 +73,7 @@ public class NotificationController {
 			notificationUsecase.getNotificationCount(userId));
 	}
 
-	@Operation(summary = "알림 읽음 처리 API")
+	@Operation(summary = "단일 알림 읽음 처리 API")
 	@PatchMapping("/{notificationId}")
 	public CommonResponse<Void> markAsRead(@CurrentUserId long userId,
 		@PathVariable String notificationId){

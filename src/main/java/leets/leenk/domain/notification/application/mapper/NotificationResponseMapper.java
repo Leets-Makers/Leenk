@@ -34,7 +34,10 @@ public class NotificationResponseMapper {
 			)
 			.notificationType(notification.getNotificationType())
 			.isRead(notification.getIsRead())
-			.content(notification.getContent())
+			.contents(NotificationResponse.NotificationContentResponse.builder()
+				.content(notification.getContent())
+				.build()
+			)
 			.createDate(notification.getCreateDate())
 			.updateDate(notification.getUpdateDate())
 			.build();

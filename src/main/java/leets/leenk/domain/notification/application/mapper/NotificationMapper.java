@@ -62,6 +62,8 @@ public class NotificationMapper {
 	private FeedFirstReactionNotificationContent toFeedFirstReactionNotificationContent(Feed feed){
 		return FeedFirstReactionNotificationContent.builder()
 			.feedId(feed.getId())
+			.title(NotificationType.FEED_FIRST_REACTION.getTitle())
+			.body(NotificationType.FEED_FIRST_REACTION.getContent())
 			.build();
 	}
 
@@ -78,6 +80,8 @@ public class NotificationMapper {
 	private FeedReactionCountNotificationContent toFeedReactionCountNotificationContent(Feed feed){
 		return FeedReactionCountNotificationContent.builder()
 			.feedId(feed.getId())
+			.title(NotificationType.FEED_REACTION_COUNT.getTitle())
+			.body(NotificationType.FEED_REACTION_COUNT.getContent())
 			.build();
 	}
 }

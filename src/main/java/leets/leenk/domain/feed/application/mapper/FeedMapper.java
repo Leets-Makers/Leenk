@@ -17,7 +17,26 @@ import java.util.Map;
 public class FeedMapper {
 
     public FeedListResponse toFeedListResponse(Slice<Feed> slice, Map<Long, List<Media>> mediaMap) {
-        List<FeedResponse> responses = slice.getContent().stream()
+        List<FeedResponse> responses = toFeedListResponse(slice.getContent(), mediaMap);
+
+        return FeedListResponse.builder()
+                .feeds(responses)
+                .pageable(PageableMapperUtil.from(slice))
+                .build();
+    }
+
+    public FeedListResponse toFeedListResponse(User user, Slice<Feed> slice, Map<Long, List<Media>> mediaMap, boolean includeTotalReaction) {
+        List<FeedResponse> responses = toFeedListResponse(slice.getContent(), mediaMap);
+
+        return FeedListResponse.builder()
+                .totalReactionCount(includeTotalReaction ? user.getTotalReactionCount() : null)
+                .feeds(responses)
+                .pageable(PageableMapperUtil.from(slice))
+                .build();
+    }
+
+    private List<FeedResponse> toFeedListResponse(List<Feed> feeds, Map<Long, List<Media>> mediaMap) {
+        return feeds.stream()
                 .map(feed -> {
                     List<Media> medias = mediaMap.getOrDefault(feed.getId(), List.of());
                     Media thumbnail = medias.stream().findFirst().orElse(null);
@@ -25,11 +44,6 @@ public class FeedMapper {
                     return toFeedResponse(feed, thumbnail);
                 })
                 .toList();
-
-        return FeedListResponse.builder()
-                .feeds(responses)
-                .pageable(PageableMapperUtil.from(slice))
-                .build();
     }
 
     public FeedResponse toFeedResponse(Feed feed, Media thumbNeil) {

@@ -20,8 +20,6 @@ public class NotificationService {
 	// 해당 서비스는 테스트용으로 추후 머지 전에 삭제 예정
 
 	private final NotificationUsecase notificationUsecase;
-	private final ReactionCountNotificationSaveService reactionCountNotificationSaveService;
-	private final TagNotificationSaveService tagNotificationSaveService;
 	private final LinkedUserRepository linkedUserRepository;
 	private final FeedRepository feedRepository;
 	private final ReactionRepository reactionRepository;

@@ -26,5 +26,5 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 
 	Slice<Notification> findPageByUserId(Pageable pageable, Long userId);
 
-	Long countByUserIdAndIsReadFalse(Long id);
+	long countByUserIdAndIsReadFalse(Long id);
 }

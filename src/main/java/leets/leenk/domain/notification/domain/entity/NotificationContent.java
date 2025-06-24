@@ -7,7 +7,6 @@ import leets.leenk.domain.notification.domain.entity.content.FeedFirstReactionNo
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
 import leets.leenk.domain.notification.domain.entity.content.FeedTagNotificationContent;
 import leets.leenk.domain.notification.domain.entity.content.NewFeedNotificationContent;
-import leets.leenk.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 	@JsonSubTypes.Type(value = FeedReactionCountNotificationContent.class, name = "FEED_REACTION_COUNT"),
 	@JsonSubTypes.Type(value = NewFeedNotificationContent.class, name = "NEW_FEED")
 })
-public class NotificationContent extends BaseEntity {
+public class NotificationContent {
 
 	private String title;
 	private String body;

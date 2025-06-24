@@ -43,7 +43,7 @@ public class NotificationResponseMapper {
 			.build();
 	}
 
-	public NotificationCountResponse toCountResponse(Long notificationCount) {
+	public NotificationCountResponse toCountResponse(long notificationCount) {
 		return NotificationCountResponse.builder()
 			.notificationCount(notificationCount)
 			.build();

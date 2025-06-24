@@ -14,8 +14,6 @@ public class FeedReactionCountMapper {
 			.reactionCount(reactionCount)
 			.title(NotificationType.FEED_REACTION_COUNT.getTitle())
 			.body(NotificationType.FEED_REACTION_COUNT.getFormattedContent(reactionCount))
-			.createDate(LocalDateTime.now())
-			.updateDate(LocalDateTime.now())
 			.build();
 	}
 }

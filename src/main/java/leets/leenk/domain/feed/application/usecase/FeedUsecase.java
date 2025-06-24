@@ -138,6 +138,43 @@ public class FeedUsecase {
     }
 
     @Transactional(readOnly = true)
+    public FeedListResponse getMyFeeds(long userId, int pageNumber, int pageSize) {
+        return getFeedsByUser(userId, pageNumber, pageSize, true);
+    }
+
+    @Transactional(readOnly = true)
+    public FeedListResponse getOthersFeeds(long userId, int pageNumber, int pageSize) {
+        return getFeedsByUser(userId, pageNumber, pageSize, false);
+    }
+
+    private FeedListResponse getFeedsByUser(long userId, int pageNumber, int pageSize, boolean includeTotalReaction) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        User user = userGetService.findById(userId);
+
+        Slice<Feed> slice = feedGetService.findAllByUser(user, pageable);
+        List<Media> medias = mediaGetService.findAll(slice.getContent());
+
+        Map<Long, List<Media>> mediaMap = medias.stream()
+                .collect(Collectors.groupingBy(media -> media.getFeed().getId()));
+
+        return feedMapper.toFeedListResponse(user, slice, mediaMap, includeTotalReaction);
+    }
+
+    @Transactional(readOnly = true)
+    public FeedListResponse getLinkedFeeds(long userId, int pageNumber, int pageSize) {
+        User user = userGetService.findById(userId);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Slice<Feed> slice = linkedUserGetService.findAllByUser(user, pageable);
+        List<Media> medias = mediaGetService.findAll(slice.getContent());
+
+        Map<Long, List<Media>> mediaMap = medias.stream()
+                .collect(Collectors.groupingBy(media -> media.getFeed().getId()));
+
+        return feedMapper.toFeedListResponse(slice, mediaMap);
+    }
+
+    @Transactional(readOnly = true)
     public List<FeedUserResponse> getAllUser() {
         List<User> users = userGetService.findAll();
 

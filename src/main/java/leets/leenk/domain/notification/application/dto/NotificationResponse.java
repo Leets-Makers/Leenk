@@ -12,10 +12,11 @@ import lombok.Builder;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record NotificationResponse(
-	String id,
-	Long userId,
-	NotificationType notificationType,
-	Boolean isRead,
-	NotificationContent content,
-	LocalDateTime updateDate
-) {}
+        String id,
+        Long userId,
+        NotificationType notificationType,
+        Boolean isRead,
+        NotificationContent content,
+        LocalDateTime updateDate
+) {
+}

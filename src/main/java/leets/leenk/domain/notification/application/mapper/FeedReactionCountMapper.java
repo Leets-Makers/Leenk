@@ -9,11 +9,11 @@ import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
 
 @Component
 public class FeedReactionCountMapper {
-	public FeedReactionCount toFeedReactionCount(Long reactionCount) {
-		return FeedReactionCount.builder()
-			.reactionCount(reactionCount)
-			.title(NotificationType.FEED_REACTION_COUNT.getTitle())
-			.body(NotificationType.FEED_REACTION_COUNT.getFormattedContent(reactionCount))
-			.build();
-	}
+    public FeedReactionCount toFeedReactionCount(Long reactionCount) {
+        return FeedReactionCount.builder()
+                .reactionCount(reactionCount)
+                .title(NotificationType.FEED_REACTION_COUNT.getTitle())
+                .body(NotificationType.FEED_REACTION_COUNT.getFormattedContent(reactionCount))
+                .build();
+    }
 }

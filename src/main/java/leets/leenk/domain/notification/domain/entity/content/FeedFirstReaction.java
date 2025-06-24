@@ -10,8 +10,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class FeedFirstReaction extends NotificationContent {
 
-	private Long userId;
+    private Long userId;
 
-	private String name;
+    private String name;
 
 }

@@ -40,113 +40,113 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class NotificationUsecase {
-	private final NotificationGetService notificationGetService;
-	private final NotificationCountGetService notificationCountGetService;
+    private final NotificationGetService notificationGetService;
+    private final NotificationCountGetService notificationCountGetService;
 
-	private final NotificationMarkReadService notificationMarkReadService;
-	private final NotificationSaveService notificationSaveService;
-	private final UserSettingGetService userSettingGetService;
-	private final UserGetService userGetService;
-	private final NotificationDuplicateCheckService notificationDuplicateCheckService;
+    private final NotificationMarkReadService notificationMarkReadService;
+    private final NotificationSaveService notificationSaveService;
+    private final UserSettingGetService userSettingGetService;
+    private final UserGetService userGetService;
+    private final NotificationDuplicateCheckService notificationDuplicateCheckService;
 
-	private final NotificationResponseMapper notificationResponseMapper;
-	private final NotificationMapper notificationMapper;
-	private final FeedFirstReactionMapper feedFirstReactionMapper;
-	private final SqsMessageEventMapper sqsMessageEventMapper;
-	private final FeedReactionCountMapper feedReactionCountMapper;
+    private final NotificationResponseMapper notificationResponseMapper;
+    private final NotificationMapper notificationMapper;
+    private final FeedFirstReactionMapper feedFirstReactionMapper;
+    private final SqsMessageEventMapper sqsMessageEventMapper;
+    private final FeedReactionCountMapper feedReactionCountMapper;
 
-	private final ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
-	@Transactional(readOnly = true)
-	public NotificationListResponse getNotifications(Long userId, int pageNumber, int pageSize){
-		Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateDate"));
-		Slice<Notification> notifications = notificationGetService.findRecentNotifications(userId, pageable);
+    @Transactional(readOnly = true)
+    public NotificationListResponse getNotifications(Long userId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateDate"));
+        Slice<Notification> notifications = notificationGetService.findRecentNotifications(userId, pageable);
 
-		return notificationResponseMapper.toNotificationListResponse(notifications);
-	}
+        return notificationResponseMapper.toNotificationListResponse(notifications);
+    }
 
-	@Transactional(readOnly = true)
-	public NotificationCountResponse getNotificationCount(long userId) {
-		User user = userGetService.findById(userId);
-		return notificationResponseMapper.toCountResponse(notificationCountGetService.getNotificationCount(user));
-	}
+    @Transactional(readOnly = true)
+    public NotificationCountResponse getNotificationCount(long userId) {
+        User user = userGetService.findById(userId);
+        return notificationResponseMapper.toCountResponse(notificationCountGetService.getNotificationCount(user));
+    }
 
-	@Transactional
-	public void saveFirstReactionNotification(Reaction reaction){
-		if(notificationDuplicateCheckService.checkFirstReactionDuplicated(reaction)){
-			//  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
-			return ;
-		}
+    @Transactional
+    public void saveFirstReactionNotification(Reaction reaction) {
+        if (notificationDuplicateCheckService.checkFirstReactionDuplicated(reaction)) {
+            //  이미 해당 유저에 대한 알림이 존재하므로 중복 생성 방지
+            return;
+        }
 
-		Notification notification = notificationGetService.findOrCreateFirstReactionNotification(reaction);
-		User user = userGetService.findById(notification.getUserId());
-		FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
+        Notification notification = notificationGetService.findOrCreateFirstReactionNotification(reaction);
+        User user = userGetService.findById(notification.getUserId());
+        FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
 
-		if(!(notification.getContent() instanceof FeedFirstReactionNotificationContent content)){
-			throw new InvalidNotificationContentTypeException();
-		}
+        if (!(notification.getContent() instanceof FeedFirstReactionNotificationContent content)) {
+            throw new InvalidNotificationContentTypeException();
+        }
 
-		content.getFeedFirstReactions().add(feedFirstReaction);
+        content.getFeedFirstReactions().add(feedFirstReaction);
 
-		notificationSaveService.save(notification);
+        notificationSaveService.save(notification);
 
-		if(userSettingGetService.findByUser(user).isNewReactionNotify())
-			eventPublisher.publishEvent(sqsMessageEventMapper.fromFeedFirstReaction(feedFirstReaction, user.getFcmToken()));
-	}
+        if (userSettingGetService.findByUser(user).isNewReactionNotify())
+            eventPublisher.publishEvent(sqsMessageEventMapper.fromFeedFirstReaction(feedFirstReaction, user.getFcmToken()));
+    }
 
-	@Transactional
-	public void saveNewFeedNotification(Feed feed){
-		List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
-		users.stream()
-			.filter(user -> !Objects.equals(user.getId(), feed.getUser().getId()))
-			.forEach(
-				user -> {
-					Notification notification = notificationMapper.toNewFeedNotification(feed, user);
-					notificationSaveService.save(notification);
-					eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
-				}
-			);
+    @Transactional
+    public void saveNewFeedNotification(Feed feed) {
+        List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
+        users.stream()
+                .filter(user -> !Objects.equals(user.getId(), feed.getUser().getId()))
+                .forEach(
+                        user -> {
+                            Notification notification = notificationMapper.toNewFeedNotification(feed, user);
+                            notificationSaveService.save(notification);
+                            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
+                        }
+                );
 
-	}
+    }
 
-	@Transactional
-	public void saveReactionCountNotification(Feed feed, Long reactionCount){
-		if(notificationDuplicateCheckService.checkReactionCountDuplicated(reactionCount, feed)){
-			return ;	// 이미 해당 누적 공감에 대한 알림이 있는 경우 중복 생성 방지
-		}
-		
-		Notification notification = notificationGetService.findOrCreateReactionCountNotification(feed);
-		User user = userGetService.findById(notification.getUserId());
-		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
+    @Transactional
+    public void saveReactionCountNotification(Feed feed, Long reactionCount) {
+        if (notificationDuplicateCheckService.checkReactionCountDuplicated(reactionCount, feed)) {
+            return;    // 이미 해당 누적 공감에 대한 알림이 있는 경우 중복 생성 방지
+        }
 
-		if(!(notification.getContent() instanceof FeedReactionCountNotificationContent content)){
-			throw new InvalidNotificationContentTypeException();
-		}
+        Notification notification = notificationGetService.findOrCreateReactionCountNotification(feed);
+        User user = userGetService.findById(notification.getUserId());
+        FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
-		content.getFeedReactionCounts().add(feedReactionCount);
-		notification.markUnread();
+        if (!(notification.getContent() instanceof FeedReactionCountNotificationContent content)) {
+            throw new InvalidNotificationContentTypeException();
+        }
 
-		notificationSaveService.save(notification);
+        content.getFeedReactionCounts().add(feedReactionCount);
+        notification.markUnread();
 
-		if(userSettingGetService.findByUser(user).isNewReactionNotify())
-			eventPublisher.publishEvent(sqsMessageEventMapper.fromFeedReactionCount(feedReactionCount, user.getFcmToken()));
+        notificationSaveService.save(notification);
 
-	}
+        if (userSettingGetService.findByUser(user).isNewReactionNotify())
+            eventPublisher.publishEvent(sqsMessageEventMapper.fromFeedReactionCount(feedReactionCount, user.getFcmToken()));
 
-	@Transactional
-	public void saveTagNotification(Feed feed, List<LinkedUser> linkedUsers){
-		linkedUsers.forEach(linkedUser -> {
-			Notification notification = notificationMapper.toFeedTagNotification(feed, linkedUser);
-			String deviceToken = linkedUser.getUser().getFcmToken();
-			notificationSaveService.save(notification);
+    }
 
-			eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, deviceToken));
-		});
-	}
+    @Transactional
+    public void saveTagNotification(Feed feed, List<LinkedUser> linkedUsers) {
+        linkedUsers.forEach(linkedUser -> {
+            Notification notification = notificationMapper.toFeedTagNotification(feed, linkedUser);
+            String deviceToken = linkedUser.getUser().getFcmToken();
+            notificationSaveService.save(notification);
 
-	@Transactional
-	public void markNotificationAsRead(Long userId, String notificationId) {
-		User user = userGetService.findById(userId);
-		notificationMarkReadService.markReadNotification(user, notificationId);
-	}
+            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, deviceToken));
+        });
+    }
+
+    @Transactional
+    public void markNotificationAsRead(Long userId, String notificationId) {
+        User user = userGetService.findById(userId);
+        notificationMarkReadService.markReadNotification(user, notificationId);
+    }
 }

@@ -17,44 +17,44 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-	// 해당 서비스는 테스트용으로 추후 머지 전에 삭제 예정
+    // 해당 서비스는 테스트용으로 추후 머지 전에 삭제 예정
 
-	private final NotificationUsecase notificationUsecase;
-	private final LinkedUserRepository linkedUserRepository;
-	private final FeedRepository feedRepository;
-	private final ReactionRepository reactionRepository;
+    private final NotificationUsecase notificationUsecase;
+    private final LinkedUserRepository linkedUserRepository;
+    private final FeedRepository feedRepository;
+    private final ReactionRepository reactionRepository;
 
-	// 피드 태그 알림 테스트를 위한 메소드
-	@Transactional
-	public void temporaryTagNotification() {
-		Feed feed = feedRepository.findById(1L).orElseThrow();
-		List<LinkedUser> linkedUsers = linkedUserRepository.findAllByFeed(feed);
-		notificationUsecase.saveTagNotification(feed, linkedUsers);
-	}
+    // 피드 태그 알림 테스트를 위한 메소드
+    @Transactional
+    public void temporaryTagNotification() {
+        Feed feed = feedRepository.findById(1L).orElseThrow();
+        List<LinkedUser> linkedUsers = linkedUserRepository.findAllByFeed(feed);
+        notificationUsecase.saveTagNotification(feed, linkedUsers);
+    }
 
-	// 첫 리액션 알림 테스트를 위한 메소드
-	@Transactional
-	public void temporaryFeedFirstReactionNotification() {
-		Reaction reaction = reactionRepository.findById(1L).orElseThrow();
+    // 첫 리액션 알림 테스트를 위한 메소드
+    @Transactional
+    public void temporaryFeedFirstReactionNotification() {
+        Reaction reaction = reactionRepository.findById(1L).orElseThrow();
 
-		notificationUsecase.saveFirstReactionNotification(reaction);
-	}
+        notificationUsecase.saveFirstReactionNotification(reaction);
+    }
 
 
-	// 새로운 피드 알림 테스트를 위한 메소드
-	@Transactional
-	public void temporaryNewFeedNotification() {
-		Feed feed = feedRepository.findById(1L).orElseThrow();
-		notificationUsecase.saveNewFeedNotification(feed);
-	}
+    // 새로운 피드 알림 테스트를 위한 메소드
+    @Transactional
+    public void temporaryNewFeedNotification() {
+        Feed feed = feedRepository.findById(1L).orElseThrow();
+        notificationUsecase.saveNewFeedNotification(feed);
+    }
 
-	// 리액션 수 알림 테스트를 위한 메소드
-	@Transactional
-	public void temporaryReactionCountNotification() {
-		Feed feed = feedRepository.findById(1L).orElseThrow();
-		Long reactionCount = 50L;
+    // 리액션 수 알림 테스트를 위한 메소드
+    @Transactional
+    public void temporaryReactionCountNotification() {
+        Feed feed = feedRepository.findById(1L).orElseThrow();
+        Long reactionCount = 50L;
 
-		notificationUsecase.saveReactionCountNotification(feed, reactionCount);
-	}
+        notificationUsecase.saveReactionCountNotification(feed, reactionCount);
+    }
 
 }

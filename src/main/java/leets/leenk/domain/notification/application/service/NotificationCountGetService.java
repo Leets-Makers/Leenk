@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class NotificationCountGetService {
 
-	private final NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
-	public long getNotificationCount(User user) {
-		return notificationRepository.countByUserIdAndIsReadFalse(user.getId());
-	}
+    public long getNotificationCount(User user) {
+        return notificationRepository.countByUserIdAndIsReadFalse(user.getId());
+    }
 }

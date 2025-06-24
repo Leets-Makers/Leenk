@@ -11,14 +11,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class NotificationDuplicateCheckService {
-	private final NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
-	public boolean checkFirstReactionDuplicated(Reaction reaction) {
-		return notificationRepository.findByFeedIdAndUserIdInFirstReactions(
-			NotificationType.FEED_FIRST_REACTION, reaction.getFeed().getId(), reaction.getUser().getId()).isPresent();
-	}
+    public boolean checkFirstReactionDuplicated(Reaction reaction) {
+        return notificationRepository.findByFeedIdAndUserIdInFirstReactions(
+                NotificationType.FEED_FIRST_REACTION, reaction.getFeed().getId(), reaction.getUser().getId()).isPresent();
+    }
 
-	public boolean checkReactionCountDuplicated(Long reactionCount, Feed feed) {
-		return notificationRepository.findByFeedIdAndReactionCount(NotificationType.FEED_REACTION_COUNT,feed.getId(), reactionCount).isPresent();
-	}
+    public boolean checkReactionCountDuplicated(Long reactionCount, Feed feed) {
+        return notificationRepository.findByFeedIdAndReactionCount(NotificationType.FEED_REACTION_COUNT, feed.getId(), reactionCount).isPresent();
+    }
 }

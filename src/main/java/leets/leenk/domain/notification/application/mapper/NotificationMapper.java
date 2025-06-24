@@ -15,69 +15,69 @@ import leets.leenk.domain.user.domain.entity.User;
 @Component
 public class NotificationMapper {
 
-	public Notification toFeedTagNotification(Feed feed, LinkedUser linkedUser) {
-		return Notification.builder()
-			.userId(linkedUser.getUser().getId())
-			.notificationType(NotificationType.FEED_TAG)
-			.isRead(Boolean.FALSE)
-			.content(toFeedTagNotificationContent(feed))
-			.build();
-	}
+    public Notification toFeedTagNotification(Feed feed, LinkedUser linkedUser) {
+        return Notification.builder()
+                .userId(linkedUser.getUser().getId())
+                .notificationType(NotificationType.FEED_TAG)
+                .isRead(Boolean.FALSE)
+                .content(toFeedTagNotificationContent(feed))
+                .build();
+    }
 
-	public Notification toFirstReactionNotification(Feed feed) {
-		return Notification.builder()
-			.userId(feed.getUser().getId())
-			.notificationType(NotificationType.FEED_FIRST_REACTION)
-			.isRead(Boolean.FALSE)
-			.content(toFeedFirstReactionNotificationContent(feed))
-			.build();
-	}
+    public Notification toFirstReactionNotification(Feed feed) {
+        return Notification.builder()
+                .userId(feed.getUser().getId())
+                .notificationType(NotificationType.FEED_FIRST_REACTION)
+                .isRead(Boolean.FALSE)
+                .content(toFeedFirstReactionNotificationContent(feed))
+                .build();
+    }
 
-	public Notification toNewFeedNotification(Feed feed, User user){
-		return Notification.builder()
-			.userId(user.getId())
-			.notificationType(NotificationType.NEW_FEED)
-			.isRead(Boolean.FALSE)
-			.content(toNewFeedNotificationContent(feed))
-			.build();
-	}
+    public Notification toNewFeedNotification(Feed feed, User user) {
+        return Notification.builder()
+                .userId(user.getId())
+                .notificationType(NotificationType.NEW_FEED)
+                .isRead(Boolean.FALSE)
+                .content(toNewFeedNotificationContent(feed))
+                .build();
+    }
 
-	public Notification toReactionCountNotification(Feed feed) {
-		return Notification.builder()
-			.userId(feed.getUser().getId())
-			.notificationType(NotificationType.FEED_REACTION_COUNT)
-			.content(toFeedReactionCountNotificationContent(feed))
-			.build();
-	}
+    public Notification toReactionCountNotification(Feed feed) {
+        return Notification.builder()
+                .userId(feed.getUser().getId())
+                .notificationType(NotificationType.FEED_REACTION_COUNT)
+                .content(toFeedReactionCountNotificationContent(feed))
+                .build();
+    }
 
-	private FeedTagNotificationContent toFeedTagNotificationContent(Feed feed){
-		return FeedTagNotificationContent.builder()
-			.feedId(feed.getId())
-			.authorName(feed.getUser().getName())
-			.title(NotificationType.FEED_TAG.getTitle())
-			.body(NotificationType.FEED_TAG.getFormattedContent(feed.getUser().getName()))
-			.build();
-	}
+    private FeedTagNotificationContent toFeedTagNotificationContent(Feed feed) {
+        return FeedTagNotificationContent.builder()
+                .feedId(feed.getId())
+                .authorName(feed.getUser().getName())
+                .title(NotificationType.FEED_TAG.getTitle())
+                .body(NotificationType.FEED_TAG.getFormattedContent(feed.getUser().getName()))
+                .build();
+    }
 
-	private FeedFirstReactionNotificationContent toFeedFirstReactionNotificationContent(Feed feed){
-		return FeedFirstReactionNotificationContent.builder()
-			.feedId(feed.getId())
-			.build();
-	}
+    private FeedFirstReactionNotificationContent toFeedFirstReactionNotificationContent(Feed feed) {
+        return FeedFirstReactionNotificationContent.builder()
+                .feedId(feed.getId())
+                .build();
+    }
 
-	private NewFeedNotificationContent toNewFeedNotificationContent(Feed feed){
-		return NewFeedNotificationContent.builder()
-			.feedId(feed.getId())
-			.authorUserId(feed.getUser().getId())
-			.authorName(feed.getUser().getName())
-			.title(NotificationType.NEW_FEED.getTitle())
-			.body(NotificationType.NEW_FEED.getContent())
-			.build();
-	}
+    private NewFeedNotificationContent toNewFeedNotificationContent(Feed feed) {
+        return NewFeedNotificationContent.builder()
+                .feedId(feed.getId())
+                .authorUserId(feed.getUser().getId())
+                .authorName(feed.getUser().getName())
+                .title(NotificationType.NEW_FEED.getTitle())
+                .body(NotificationType.NEW_FEED.getContent())
+                .build();
+    }
 
-	private FeedReactionCountNotificationContent toFeedReactionCountNotificationContent(Feed feed){
-		return FeedReactionCountNotificationContent.builder()
-			.feedId(feed.getId())
-			.build();
-	}
+    private FeedReactionCountNotificationContent toFeedReactionCountNotificationContent(Feed feed) {
+        return FeedReactionCountNotificationContent.builder()
+                .feedId(feed.getId())
+                .build();
+    }
 }

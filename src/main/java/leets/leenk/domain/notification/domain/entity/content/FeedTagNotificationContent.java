@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class FeedTagNotificationContent extends NotificationContent {
 
-	private Long feedId;
+    private Long feedId;
 
-	private String authorName;
+    private String authorName;
 }

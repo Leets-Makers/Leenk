@@ -6,9 +6,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import leets.leenk.domain.notification.domain.entity.Notification;
 
-public interface NotificationRepository extends MongoRepository<Notification, String>, NotificationRepositoryCustom  {
+public interface NotificationRepository extends MongoRepository<Notification, String>, NotificationRepositoryCustom {
 
-	Slice<Notification> findPageByUserId(Pageable pageable, Long userId);
+    Slice<Notification> findPageByUserId(Pageable pageable, Long userId);
 
-	long countByUserIdAndIsReadFalse(Long id);
+    long countByUserIdAndIsReadFalse(Long id);
 }

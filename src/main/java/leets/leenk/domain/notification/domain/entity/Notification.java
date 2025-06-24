@@ -17,24 +17,24 @@ import lombok.experimental.SuperBuilder;
 @Document(collection = "notifications")
 public class Notification extends BaseEntity {
 
-	@Id
-	private String id;
+    @Id
+    private String id;
 
-	private Long userId;
+    private Long userId;
 
-	@Enumerated(EnumType.STRING)
-	private NotificationType notificationType;
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
-	private Boolean isRead;
+    private Boolean isRead;
 
-	private NotificationContent content;
+    private NotificationContent content;
 
-	public void markUnread(){
-		this.isRead = false;
-	}
+    public void markUnread() {
+        this.isRead = false;
+    }
 
-	public void markRead(){
-		this.isRead = true;
-	}
+    public void markRead() {
+        this.isRead = true;
+    }
 
 }

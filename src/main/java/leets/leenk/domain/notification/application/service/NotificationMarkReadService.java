@@ -12,18 +12,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class NotificationMarkReadService {
-	private final NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
-	public void markReadNotification(User user, String notificationId) {
-		Notification notification = notificationRepository.findById(notificationId)
-			.orElseThrow(NotificationNotFoundException::new);
+    public void markReadNotification(User user, String notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(NotificationNotFoundException::new);
 
-		if(!notification.getUserId().equals(user.getId())){
-			throw new InvalidNotificationAccessException();
-		}
+        if (!notification.getUserId().equals(user.getId())) {
+            throw new InvalidNotificationAccessException();
+        }
 
-		notification.markRead();
+        notification.markRead();
 
-		notificationRepository.save(notification);
-	}
+        notificationRepository.save(notification);
+    }
 }

@@ -16,10 +16,10 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class FeedFirstReactionNotificationContent extends NotificationContent {
 
-	@Field("feedId")
-	private Long feedId;
+    @Field("feedId")
+    private Long feedId;
 
-	@Builder.Default
-	private List<FeedFirstReaction> feedFirstReactions = new ArrayList<>();
+    @Builder.Default
+    private List<FeedFirstReaction> feedFirstReactions = new ArrayList<>();
 
 }

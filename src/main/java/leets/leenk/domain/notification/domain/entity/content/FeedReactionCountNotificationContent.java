@@ -14,9 +14,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class FeedReactionCountNotificationContent extends NotificationContent {
 
-	private Long feedId;
+    private Long feedId;
 
-	@Builder.Default
-	List<FeedReactionCount> feedReactionCounts = new ArrayList<>();
+    @Builder.Default
+    List<FeedReactionCount> feedReactionCounts = new ArrayList<>();
 
 }

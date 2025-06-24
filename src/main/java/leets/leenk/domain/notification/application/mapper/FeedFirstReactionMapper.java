@@ -11,12 +11,12 @@ import leets.leenk.domain.user.domain.entity.User;
 @Component
 public class FeedFirstReactionMapper {
 
-	public FeedFirstReaction toFeedFirstReaction(User user){
-		return FeedFirstReaction.builder()
-			.userId(user.getId())
-			.name(user.getName())
-			.title(NotificationType.FEED_FIRST_REACTION.getTitle())
-			.body(NotificationType.FEED_FIRST_REACTION.getContent())
-			.build();
-	}
+    public FeedFirstReaction toFeedFirstReaction(User user) {
+        return FeedFirstReaction.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .title(NotificationType.FEED_FIRST_REACTION.getTitle())
+                .body(NotificationType.FEED_FIRST_REACTION.getContent())
+                .build();
+    }
 }

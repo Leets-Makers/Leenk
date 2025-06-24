@@ -16,22 +16,22 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class NotificationGetService {
 
-	private final NotificationRepository notificationRepository;
-	private final NotificationMapper notificationMapper;
+    private final NotificationRepository notificationRepository;
+    private final NotificationMapper notificationMapper;
 
-	public Slice<Notification> findRecentNotifications(Long userId, Pageable pageable){
-		return notificationRepository.findPageByUserId(pageable, userId);
-	}
+    public Slice<Notification> findRecentNotifications(Long userId, Pageable pageable) {
+        return notificationRepository.findPageByUserId(pageable, userId);
+    }
 
-	public Notification findOrCreateFirstReactionNotification(Reaction reaction) {
-		return notificationRepository.findFeedFirstReactionByFeedId(NotificationType.FEED_FIRST_REACTION,
-				reaction.getFeed().getId())
-			.orElseGet(()->notificationMapper.toFirstReactionNotification(reaction.getFeed()));
-	}
+    public Notification findOrCreateFirstReactionNotification(Reaction reaction) {
+        return notificationRepository.findFeedFirstReactionByFeedId(NotificationType.FEED_FIRST_REACTION,
+                        reaction.getFeed().getId())
+                .orElseGet(() -> notificationMapper.toFirstReactionNotification(reaction.getFeed()));
+    }
 
-	public Notification findOrCreateReactionCountNotification(Feed feed) {
-		return notificationRepository.findByFeedId(NotificationType.FEED_REACTION_COUNT,
-				feed.getId())
-			.orElseGet(() -> notificationMapper.toReactionCountNotification(feed));
-	}
+    public Notification findOrCreateReactionCountNotification(Feed feed) {
+        return notificationRepository.findByFeedId(NotificationType.FEED_REACTION_COUNT,
+                        feed.getId())
+                .orElseGet(() -> notificationMapper.toReactionCountNotification(feed));
+    }
 }

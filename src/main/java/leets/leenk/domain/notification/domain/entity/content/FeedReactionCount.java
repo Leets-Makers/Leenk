@@ -10,6 +10,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class FeedReactionCount extends NotificationContent {
 
-	private Long reactionCount;
+    private Long reactionCount;
 
 }

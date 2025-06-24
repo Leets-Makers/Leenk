@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class NotificationSaveService {
-	private final NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
-	public void save(Notification notification) {
-		notificationRepository.save(notification);
-	}
+    public void save(Notification notification) {
+        notificationRepository.save(notification);
+    }
 }

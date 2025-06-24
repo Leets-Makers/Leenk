@@ -86,7 +86,7 @@ public class UserController {
     @DeleteMapping("/me")
     @Operation(summary = "회원 탈퇴 API")
     public CommonResponse<Void> deleteAccount(@Parameter(hidden = true) @CurrentUserId Long userId) {
-        userUsecase.deleteAccount(userId);
+        userUsecase.leave(userId);
 
         return CommonResponse.success(DELETE_USER);
     }

@@ -2,6 +2,7 @@ package leets.leenk.domain.user.application.usecase;
 
 import leets.leenk.domain.user.application.dto.request.*;
 import leets.leenk.domain.user.application.dto.response.UserInfoResponse;
+import leets.leenk.domain.user.application.exception.UserAlreadyLeaveException;
 import leets.leenk.domain.user.application.mapper.UserBackupInfoMapper;
 import leets.leenk.domain.user.application.mapper.UserMapper;
 import leets.leenk.domain.user.domain.entity.User;
@@ -71,8 +72,13 @@ public class UserUsecase {
     }
 
     @Transactional
-    public void deleteAccount(long userId) {
+    public void leave(long userId) {
         User user = userGetService.findById(userId);
+
+        if (userBackupInfoGetService.existsByUser(user)) {
+            throw new UserAlreadyLeaveException();
+        }
+
         UserBackupInfo userBackupInfo = userBackupInfoMapper.toUserBackupInfo(user);
 
         userBackupInfoSaveService.save(userBackupInfo);

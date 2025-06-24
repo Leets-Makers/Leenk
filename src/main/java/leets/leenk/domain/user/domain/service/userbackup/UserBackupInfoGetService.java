@@ -17,4 +17,8 @@ public class UserBackupInfoGetService {
         return userBackupInfoRepository.findByUser(user)
                 .orElseThrow(UserBackupInfoException::new);
     }
+
+    public boolean existsByUser(User user) {
+        return userBackupInfoRepository.findByUser(user).isPresent();
+    }
 }

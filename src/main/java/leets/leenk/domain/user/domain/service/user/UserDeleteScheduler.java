@@ -18,7 +18,7 @@ public class UserDeleteScheduler {
     private final UserDeleteService userDeleteService;
 
     @Transactional
-    @Scheduled(cron = "0 0 3 * * *") // 새벽 3시
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul" ) // 새벽 3시
     public void deleteExpiredUsers() {
         LocalDateTime threshold = LocalDateTime.now().minusDays(7);
         List<User> usersToDelete = userGetService.findAllDeleteUser(threshold);

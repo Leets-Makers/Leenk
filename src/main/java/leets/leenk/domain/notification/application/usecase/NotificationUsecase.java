@@ -3,6 +3,7 @@ package leets.leenk.domain.notification.application.usecase;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -31,7 +32,6 @@ import leets.leenk.domain.notification.domain.entity.content.FeedFirstReactionNo
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
 import leets.leenk.domain.user.domain.entity.User;
-import leets.leenk.domain.user.domain.entity.UserSetting;
 import leets.leenk.domain.user.domain.service.UserGetService;
 import leets.leenk.domain.user.domain.service.UserSettingGetService;
 import leets.leenk.global.sqs.application.mapper.SqsMessageEventMapper;
@@ -54,6 +54,8 @@ public class NotificationUsecase {
 	private final FeedFirstReactionMapper feedFirstReactionMapper;
 	private final SqsMessageEventMapper sqsMessageEventMapper;
 	private final FeedReactionCountMapper feedReactionCountMapper;
+
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional(readOnly = true)
 	public NotificationListResponse getNotifications(Long userId, int pageNumber, int pageSize){
@@ -78,7 +80,6 @@ public class NotificationUsecase {
 
 		Notification notification = notificationGetService.findOrCreateFirstReactionNotification(reaction);
 		User user = userGetService.findById(notification.getUserId());
-		UserSetting userSetting = userSettingGetService.findByUser(user);
 		FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
 
 		if(!(notification.getContent() instanceof FeedFirstReactionNotificationContent content)){
@@ -87,8 +88,10 @@ public class NotificationUsecase {
 
 		content.getFeedFirstReactions().add(feedFirstReaction);
 
-		notificationSaveService.save(notification, sqsMessageEventMapper.fromFeedFirstReaction(feedFirstReaction, user.getFcmToken()),
-			userSetting.isNewReactionNotify());
+		notificationSaveService.save(notification);
+
+		if(userSettingGetService.findByUser(user).isNewReactionNotify())
+			eventPublisher.publishEvent(sqsMessageEventMapper.fromFeedFirstReaction(feedFirstReaction, user.getFcmToken()));
 	}
 
 	@Transactional
@@ -99,8 +102,8 @@ public class NotificationUsecase {
 			.forEach(
 				user -> {
 					Notification notification = notificationMapper.toNewFeedNotification(feed, user);
-					notificationSaveService.save(notification, sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()),
-						userSettingGetService.findByUser(user).isNewFeedNotify());
+					notificationSaveService.save(notification);
+					eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
 				}
 			);
 
@@ -114,7 +117,6 @@ public class NotificationUsecase {
 		
 		Notification notification = notificationGetService.findOrCreateReactionCountNotification(feed);
 		User user = userGetService.findById(notification.getUserId());
-		UserSetting userSetting = userSettingGetService.findByUser(user);
 		FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
 		if(!(notification.getContent() instanceof FeedReactionCountNotificationContent content)){
@@ -124,8 +126,10 @@ public class NotificationUsecase {
 		content.getFeedReactionCounts().add(feedReactionCount);
 		notification.markUnread();
 
-		notificationSaveService.save(notification, sqsMessageEventMapper.fromFeedReactionCount(feedReactionCount, user.getFcmToken()),
-			userSetting.isNewReactionNotify());
+		notificationSaveService.save(notification);
+
+		if(userSettingGetService.findByUser(user).isNewReactionNotify())
+			eventPublisher.publishEvent(sqsMessageEventMapper.fromFeedReactionCount(feedReactionCount, user.getFcmToken()));
 
 	}
 
@@ -134,7 +138,9 @@ public class NotificationUsecase {
 		linkedUsers.forEach(linkedUser -> {
 			Notification notification = notificationMapper.toFeedTagNotification(feed, linkedUser);
 			String deviceToken = linkedUser.getUser().getFcmToken();
-			notificationSaveService.save(notification, sqsMessageEventMapper.toSqsMessageEvent(notification, deviceToken), true);
+			notificationSaveService.save(notification);
+
+			eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, deviceToken));
 		});
 	}
 

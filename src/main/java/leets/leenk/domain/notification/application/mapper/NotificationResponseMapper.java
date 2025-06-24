@@ -28,17 +28,10 @@ public class NotificationResponseMapper {
 	private NotificationResponse toResponse(Notification notification) {
 		return NotificationResponse.builder()
 			.id(notification.getId())
-			.userInfo(NotificationResponse.UserInfo.builder()
-				.userId(notification.getUserId())
-				.build()
-			)
+			.userId(notification.getUserId())
 			.notificationType(notification.getNotificationType())
 			.isRead(notification.getIsRead())
-			.contents(NotificationResponse.NotificationContentResponse.builder()
-				.content(notification.getContent())
-				.build()
-			)
-			.createDate(notification.getCreateDate())
+			.content(notification.getContent())
 			.updateDate(notification.getUpdateDate())
 			.build();
 	}

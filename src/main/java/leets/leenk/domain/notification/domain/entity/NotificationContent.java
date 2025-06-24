@@ -15,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Getter
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = FeedTagNotificationContent.class, name = "FEED_TAG"),
 	@JsonSubTypes.Type(value = FeedFirstReactionNotificationContent.class, name = "FEED_FIRST_REACTION"),

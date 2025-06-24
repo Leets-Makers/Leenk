@@ -13,22 +13,9 @@ import lombok.Builder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record NotificationResponse(
 	String id,
-	UserInfo userInfo,
+	Long userId,
 	NotificationType notificationType,
 	Boolean isRead,
-	NotificationContentResponse contents,
-	LocalDateTime createDate,
+	NotificationContent content,
 	LocalDateTime updateDate
-
-) {
-	@Builder
-	public record UserInfo(
-		Long userId
-	) {}
-
-	@Builder
-	public record NotificationContentResponse(
-		@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-		NotificationContent content
-	) {}
-}
+) {}

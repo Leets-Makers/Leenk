@@ -26,58 +26,59 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class NotificationController {
 
-	private final NotificationService notificationService;
-	private final NotificationUsecase notificationUsecase;
+    private final NotificationService notificationService;
+    private final NotificationUsecase notificationUsecase;
 
-	// 알림 생성을 위한 임시 컨트롤러. 추후 삭제 예정
-	@Operation(summary = "태그 알림 발행 API")
-	@PostMapping("/tag")
-	public CommonResponse<Void> TagNotification(){
-		notificationService.temporaryTagNotification();
-		return null;
-	}
+    // 알림 생성을 위한 임시 컨트롤러. 추후 삭제 예정
+    @Operation(summary = "태그 알림 발행 API")
+    @PostMapping("/tag")
+    public CommonResponse<Void> TagNotification() {
+        notificationService.temporaryTagNotification();
+        return null;
+    }
 
-	@Operation(summary = "임시 첫 좋아요 알림 발행 API")
-	@PostMapping("/first_reaction")
-	public CommonResponse<Void> FeedFirstReactionNotification(){
-		notificationService.temporaryFeedFirstReactionNotification();
-		return null;
-	}
+    @Operation(summary = "임시 첫 좋아요 알림 발행 API")
+    @PostMapping("/first_reaction")
+    public CommonResponse<Void> FeedFirstReactionNotification() {
+        notificationService.temporaryFeedFirstReactionNotification();
+        return null;
+    }
 
-	@Operation(summary = "임시 새로운 피드 알림 발행 API")
-	@PostMapping("/new_feed")
-	public CommonResponse<Void> NewFeedNotification(){
-		notificationService.temporaryNewFeedNotification();
-		return null;
-	}
+    @Operation(summary = "임시 새로운 피드 알림 발행 API")
+    @PostMapping("/new_feed")
+    public CommonResponse<Void> NewFeedNotification() {
+        notificationService.temporaryNewFeedNotification();
+        return null;
+    }
 
-	@Operation(summary = "임시 누적 공감 알림 발행 API")
-	@PostMapping("/reaction_count")
-	public CommonResponse<Void> ReactionCountNotification(){
-		notificationService.temporaryReactionCountNotification();
-		return null;
-	}
+    @Operation(summary = "임시 누적 공감 알림 발행 API")
+    @PostMapping("/reaction_count")
+    public CommonResponse<Void> ReactionCountNotification() {
+        notificationService.temporaryReactionCountNotification();
+        return null;
+    }
 
-	@Operation(summary = "최근 알림 조회 API [무한스크롤] / 사용자의 최근 알림 목록을 페이지 단위로 조회합니다. pageNumber: 0부터 시작")
-	@GetMapping()
-	public CommonResponse<NotificationListResponse> getNotifications(@CurrentUserId Long userId,
-		@RequestParam("page") int pageNumber,@RequestParam("size") int pageSize){
-		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_READ_SUCCESS,
-			notificationUsecase.getNotifications(userId, pageNumber, pageSize));
-	}
+    @Operation(summary = "최근 알림 조회 API [무한스크롤] / 사용자의 최근 알림 목록을 페이지 단위로 조회합니다. pageNumber: 0부터 시작")
+    @GetMapping()
+    public CommonResponse<NotificationListResponse> getNotifications(@CurrentUserId Long userId,
+                                                                     @RequestParam("page") int pageNumber,
+                                                                     @RequestParam("size") int pageSize) {
+        return CommonResponse.success(NotificationResponseCode.NOTIFICATION_READ_SUCCESS,
+                notificationUsecase.getNotifications(userId, pageNumber, pageSize));
+    }
 
-	@Operation(summary = "알림 개수 조회 API")
-	@GetMapping("/count")
-	public CommonResponse<NotificationCountResponse> getNotificationCount(@CurrentUserId long userId){
-		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_COUNT_READ_SUCCESS,
-			notificationUsecase.getNotificationCount(userId));
-	}
+    @Operation(summary = "알림 개수 조회 API")
+    @GetMapping("/count")
+    public CommonResponse<NotificationCountResponse> getNotificationCount(@CurrentUserId Long userId) {
+        return CommonResponse.success(NotificationResponseCode.NOTIFICATION_COUNT_READ_SUCCESS,
+                notificationUsecase.getNotificationCount(userId));
+    }
 
-	@Operation(summary = "단일 알림 읽음 처리 API")
-	@PatchMapping("/{notificationId}")
-	public CommonResponse<Void> markAsRead(@CurrentUserId long userId,
-		@PathVariable String notificationId){
-		notificationUsecase.markNotificationAsRead(userId, notificationId);
-		return CommonResponse.success(NotificationResponseCode.NOTIFICATION_MARK_AS_READ_SUCCESS);
-	}
+    @Operation(summary = "단일 알림 읽음 처리 API")
+    @PatchMapping("/{notificationId}")
+    public CommonResponse<Void> markAsRead(@CurrentUserId Long userId,
+                                           @PathVariable String notificationId) {
+        notificationUsecase.markNotificationAsRead(userId, notificationId);
+        return CommonResponse.success(NotificationResponseCode.NOTIFICATION_MARK_AS_READ_SUCCESS);
+    }
 }

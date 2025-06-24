@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
+    private static final String LEAVE_USER_NAME = "(알수없음)";
+
     @Id
     @Column(name = "user_id")
     private Long id;
@@ -89,19 +91,21 @@ public class User extends BaseEntity {
 
     public void leave() {
         this.leaveDate = LocalDateTime.now();
-        this.name = "(알수없음)";
+        this.name = LEAVE_USER_NAME;
         this.profileImage = null;
+        this.fcmToken = null;
     }
 
     public void delete() {
         this.deleteDate = LocalDateTime.now();
-        this.name = "(알수없음)";
+        this.name = LEAVE_USER_NAME;
         this.profileImage = null;
         this.cardinal = 0;
         this.mbti = null;
         this.introduction = null;
         this.kakaoTalkId = null;
         this.totalReactionCount = 0L;
+        this.fcmToken = null;
     }
 
     public boolean isLeave() {

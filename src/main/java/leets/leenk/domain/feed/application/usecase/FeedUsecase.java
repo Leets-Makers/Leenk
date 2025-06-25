@@ -4,6 +4,7 @@ import leets.leenk.domain.feed.application.dto.request.FeedUpdateRequest;
 import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
 import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
 import leets.leenk.domain.feed.application.dto.response.*;
+import leets.leenk.domain.feed.application.exception.FeedDeleteNotAllowedException;
 import leets.leenk.domain.feed.application.exception.SelfReactionNotAllowedException;
 import leets.leenk.domain.feed.application.mapper.FeedMapper;
 import leets.leenk.domain.feed.application.mapper.FeedUserMapper;
@@ -17,7 +18,7 @@ import leets.leenk.domain.media.domain.entity.Media;
 import leets.leenk.domain.media.domain.service.MediaGetService;
 import leets.leenk.domain.media.domain.service.MediaSaveService;
 import leets.leenk.domain.user.domain.entity.User;
-import leets.leenk.domain.user.domain.service.UserGetService;
+import leets.leenk.domain.user.domain.service.user.UserGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,7 @@ public class FeedUsecase {
     private final FeedGetService feedGetService;
     private final FeedSaveService feedSaveService;
     private final FeedUpdateService feedUpdateService;
+    private final FeedDeleteService feedDeleteService;
 
     private final MediaGetService mediaGetService;
     private final MediaSaveService mediaSaveService;
@@ -189,5 +191,17 @@ public class FeedUsecase {
         Slice<User> slice = userGetService.findAll(pageable);
 
         return feedUserMapper.toFeedUserListResponse(slice);
+    }
+
+    @Transactional
+    public void deleteFeed(long userId, long feedId) {
+        Feed feed = feedGetService.findById(feedId);
+        User user = userGetService.findById(userId);
+
+        if (!feed.getUser().equals(user)) {
+            throw new FeedDeleteNotAllowedException();
+        }
+
+        feedDeleteService.delete(feed);
     }
 }

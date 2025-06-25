@@ -3,10 +3,14 @@ package leets.leenk.global.auth.application.usecase;
 import leets.leenk.domain.user.application.mapper.UserMapper;
 import leets.leenk.domain.user.application.mapper.UserSettingMapper;
 import leets.leenk.domain.user.domain.entity.User;
+import leets.leenk.domain.user.domain.entity.UserBackupInfo;
 import leets.leenk.domain.user.domain.entity.UserSetting;
-import leets.leenk.domain.user.domain.service.UserGetService;
-import leets.leenk.domain.user.domain.service.UserSaveService;
-import leets.leenk.domain.user.domain.service.UserSettingSaveService;
+import leets.leenk.domain.user.domain.service.user.UserGetService;
+import leets.leenk.domain.user.domain.service.user.UserSaveService;
+import leets.leenk.domain.user.domain.service.userbackup.UserBackupInfoDeleteService;
+import leets.leenk.domain.user.domain.service.userbackup.UserBackupInfoGetService;
+import leets.leenk.domain.user.domain.service.usersetting.UserSettingSaveService;
+import leets.leenk.global.auth.application.dto.request.RefreshTokenRequest;
 import leets.leenk.global.auth.application.dto.response.LoginResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;
 import leets.leenk.global.auth.application.dto.response.OauthUserInfoResponse;
@@ -31,6 +35,9 @@ public class AuthUsecase {
     private final UserSettingSaveService userSettingSaveService;
     private final KakaoOauthApiService kakaoOauthApiService;
     private final OauthApiService oauthApiService;
+    private final UserBackupInfoGetService userBackupInfoGetService;
+    private final UserBackupInfoDeleteService userBackupInfoDeleteService;
+
     private final LoginMapper loginMapper;
     private final UserMapper userMapper;
     private final UserSettingMapper userSettingMapper;
@@ -45,6 +52,16 @@ public class AuthUsecase {
         Optional<User> optionalUser = userGetService.existById(userId);
 
         if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            if (user.isDeleted()) {
+                return reRegisterUser(user, response);
+            }
+
+            if (user.isLeft()) {
+                restoreLeavedUser(user);
+            }
+
             return loginMapper.toLoginResponse(response.access_token(), response.refresh_token());
         }
 
@@ -66,6 +83,26 @@ public class AuthUsecase {
         userSaveService.save(user);
         userSettingSaveService.save(userSetting);
 
-        return loginMapper.toLoginResponse(user, response.access_token(), response.refresh_token());
+        return loginMapper.toLoginResponse(user, userInfo, response.access_token(), response.refresh_token());
+    }
+
+    private void restoreLeavedUser(User user) {
+        UserBackupInfo backupInfo = userBackupInfoGetService.findByUser(user);
+
+        user.restore(backupInfo);
+        userBackupInfoDeleteService.delete(backupInfo);
+    }
+
+    private LoginResponse reRegisterUser(User user, OauthTokenResponse response) {
+        OauthUserInfoResponse userInfo = oauthApiService.getUserInfo(response.access_token());
+        user.reRegister(userInfo);
+
+        return loginMapper.toLoginResponse(user, userInfo, response.access_token(), response.refresh_token());
+    }
+
+    public LoginResponse reissueToken(RefreshTokenRequest request) {
+        OauthTokenResponse response = kakaoOauthApiService.reissueOauthToken(request.refreshToken());
+
+        return loginMapper.toLoginResponse(response.access_token(), response.refresh_token());
     }
 }

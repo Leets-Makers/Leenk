@@ -2,10 +2,16 @@ package leets.leenk.domain.user.application.usecase;
 
 import leets.leenk.domain.user.application.dto.request.*;
 import leets.leenk.domain.user.application.dto.response.UserInfoResponse;
+import leets.leenk.domain.user.application.exception.UserAlreadyLeaveException;
+import leets.leenk.domain.user.application.mapper.UserBackupInfoMapper;
 import leets.leenk.domain.user.application.mapper.UserMapper;
 import leets.leenk.domain.user.domain.entity.User;
-import leets.leenk.domain.user.domain.service.UserGetService;
-import leets.leenk.domain.user.domain.service.UserUpdateService;
+import leets.leenk.domain.user.domain.entity.UserBackupInfo;
+import leets.leenk.domain.user.domain.service.user.UserDeleteService;
+import leets.leenk.domain.user.domain.service.user.UserGetService;
+import leets.leenk.domain.user.domain.service.user.UserUpdateService;
+import leets.leenk.domain.user.domain.service.userbackup.UserBackupInfoGetService;
+import leets.leenk.domain.user.domain.service.userbackup.UserBackupInfoSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +23,11 @@ public class UserUsecase {
     private final UserMapper userMapper;
     private final UserGetService userGetService;
     private final UserUpdateService userUpdateService;
+    private final UserDeleteService userDeleteService;
+
+    private final UserBackupInfoMapper userBackupInfoMapper;
+    private final UserBackupInfoSaveService userBackupInfoSaveService;
+    private final UserBackupInfoGetService userBackupInfoGetService;
 
     @Transactional
     public void completeProfile(long userId, RegisterRequest request) {
@@ -58,5 +69,19 @@ public class UserUsecase {
         User user = userGetService.findById(userId);
 
         userUpdateService.updateMbti(user, request.mbti());
+    }
+
+    @Transactional
+    public void leave(long userId) {
+        User user = userGetService.findById(userId);
+
+        if (userBackupInfoGetService.existsByUser(user)) {
+            throw new UserAlreadyLeaveException();
+        }
+
+        UserBackupInfo userBackupInfo = userBackupInfoMapper.toUserBackupInfo(user);
+
+        userBackupInfoSaveService.save(userBackupInfo);
+        userDeleteService.leave(user);
     }
 }

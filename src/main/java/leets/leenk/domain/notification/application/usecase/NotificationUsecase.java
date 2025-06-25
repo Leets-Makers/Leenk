@@ -1,16 +1,5 @@
 package leets.leenk.domain.notification.application.usecase;
 
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
 import leets.leenk.domain.feed.domain.entity.Reaction;
@@ -21,21 +10,27 @@ import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMappe
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationResponseMapper;
-import leets.leenk.domain.notification.application.service.NotificationCountGetService;
-import leets.leenk.domain.notification.application.service.NotificationDuplicateCheckService;
-import leets.leenk.domain.notification.application.service.NotificationGetService;
-import leets.leenk.domain.notification.application.service.NotificationMarkReadService;
-import leets.leenk.domain.notification.application.service.NotificationSaveService;
+import leets.leenk.domain.notification.application.service.*;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReaction;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReactionNotificationContent;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
 import leets.leenk.domain.user.domain.entity.User;
-import leets.leenk.domain.user.domain.service.UserGetService;
-import leets.leenk.domain.user.domain.service.UserSettingGetService;
+import leets.leenk.domain.user.domain.service.user.UserGetService;
+import leets.leenk.domain.user.domain.service.usersetting.UserSettingGetService;
 import leets.leenk.global.sqs.application.mapper.SqsMessageEventMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

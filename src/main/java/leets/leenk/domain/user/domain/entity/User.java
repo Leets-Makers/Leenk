@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import leets.leenk.global.auth.application.dto.response.OauthUserInfoResponse;
 import leets.leenk.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 @Table(name="users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
+
+    private static final String LEAVE_USER_NAME = "(알수없음)";
 
     @Id
     @Column(name = "user_id")
@@ -49,6 +52,8 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private long totalReactionCount;
+
+    private LocalDateTime leaveDate;
 
     private LocalDateTime deleteDate;
 
@@ -82,5 +87,45 @@ public class User extends BaseEntity {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public void leave() {
+        this.leaveDate = LocalDateTime.now();
+        this.name = LEAVE_USER_NAME;
+        this.profileImage = null;
+        this.fcmToken = null;
+    }
+
+    public void delete() {
+        this.deleteDate = LocalDateTime.now();
+        this.name = LEAVE_USER_NAME;
+        this.profileImage = null;
+        this.cardinal = 0;
+        this.mbti = null;
+        this.introduction = null;
+        this.kakaoTalkId = null;
+        this.totalReactionCount = 0L;
+        this.fcmToken = null;
+    }
+
+    public boolean isLeft() {
+        return this.leaveDate != null;
+    }
+
+    public boolean isDeleted() {
+        return this.deleteDate != null;
+    }
+
+    public void restore(UserBackupInfo userBackupInfo) {
+        this.leaveDate = null;
+        this.name = userBackupInfo.getName();
+        this.profileImage = userBackupInfo.getProfileImage();
+    }
+
+    public void reRegister(OauthUserInfoResponse userInfo) {
+        this.leaveDate = null;
+        this.deleteDate = null;
+        this.name = userInfo.name();
+        this.cardinal = userInfo.cardinal();
     }
 }

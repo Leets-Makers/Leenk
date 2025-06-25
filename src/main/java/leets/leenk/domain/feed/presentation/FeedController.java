@@ -141,4 +141,13 @@ public class FeedController {
 
         return CommonResponse.success(ResponseCode.GET_ALL_USERS, response);
     }
+
+    @DeleteMapping("/{feedId}")
+    @Operation(summary = "피드 삭제 API")
+    public CommonResponse<Void> deleteFeed(@Parameter(hidden = true) @CurrentUserId Long userId,
+                                           @PathVariable @Positive long feedId) {
+        feedUsecase.deleteFeed(userId, feedId);
+
+        return CommonResponse.success(ResponseCode.DELETE_FEED);
+    }
 }

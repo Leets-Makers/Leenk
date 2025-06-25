@@ -1,4 +1,4 @@
-package leets.leenk.domain.user.domain.service;
+package leets.leenk.domain.user.domain.service.user;
 
 import leets.leenk.domain.user.application.dto.request.RegisterRequest;
 import leets.leenk.domain.user.domain.entity.User;

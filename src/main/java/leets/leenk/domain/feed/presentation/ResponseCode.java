@@ -20,8 +20,7 @@ public enum ResponseCode implements ResponseCodeInterface {
     GET_LINKED_FEEDS(1207, HttpStatus.OK, "내가 링크된 피드 조회에 성공했습니다."),
     GET_OTHER_FEEDS(1208, HttpStatus.OK, "다른 사용자의 피드 조회에 성공했습니다."),
     GET_OTHER_LINKED_FEEDS(1209, HttpStatus.OK, "다른 사용자가 링크된 피드 조회에 성공했습니다."),
-    GET_ALL_USERS(1210, HttpStatus.OK, "함께한 유저 추가를 위한 사용자 조회에 성공했습니다.");
-    GET_ALL_USERS(1206, HttpStatus.OK, "함께한 유저 추가를 위한 사용자 조회에 성공했습니다."),
+    GET_ALL_USERS(1210, HttpStatus.OK, "함께한 유저 추가를 위한 사용자 조회에 성공했습니다."),
 
     DELETE_FEED(1211, HttpStatus.OK, "피드 삭제에 성공했습니다.");
 

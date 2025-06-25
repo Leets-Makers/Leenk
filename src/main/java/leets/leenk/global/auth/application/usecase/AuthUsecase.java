@@ -10,6 +10,7 @@ import leets.leenk.domain.user.domain.service.user.UserSaveService;
 import leets.leenk.domain.user.domain.service.userbackup.UserBackupInfoDeleteService;
 import leets.leenk.domain.user.domain.service.userbackup.UserBackupInfoGetService;
 import leets.leenk.domain.user.domain.service.usersetting.UserSettingSaveService;
+import leets.leenk.global.auth.application.dto.request.RefreshTokenRequest;
 import leets.leenk.global.auth.application.dto.response.LoginResponse;
 import leets.leenk.global.auth.application.dto.response.OauthTokenResponse;
 import leets.leenk.global.auth.application.dto.response.OauthUserInfoResponse;
@@ -99,8 +100,8 @@ public class AuthUsecase {
         return loginMapper.toLoginResponse(user, userInfo, response.access_token(), response.refresh_token());
     }
 
-    public LoginResponse reissueToken(String refreshToken) {
-        OauthTokenResponse response = kakaoOauthApiService.reissueOauthToken(refreshToken);
+    public LoginResponse reissueToken(RefreshTokenRequest request) {
+        OauthTokenResponse response = kakaoOauthApiService.reissueOauthToken(request.refreshToken());
 
         return loginMapper.toLoginResponse(response.access_token(), response.refresh_token());
     }

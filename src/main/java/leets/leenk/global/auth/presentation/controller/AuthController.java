@@ -2,11 +2,14 @@ package leets.leenk.global.auth.presentation.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import leets.leenk.global.auth.application.dto.request.RefreshTokenRequest;
 import leets.leenk.global.auth.application.dto.response.LoginResponse;
 import leets.leenk.global.auth.application.usecase.AuthUsecase;
 import leets.leenk.global.common.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,8 +33,8 @@ public class AuthController {
 
     @PostMapping("/refresh")
     @Operation(summary = "토큰 재발급 API")
-    public CommonResponse<LoginResponse> reissueToken(@RequestHeader("Authorization_refresh") String refreshToken) {
-        LoginResponse response = authUsecase.reissueToken(refreshToken);
+    public CommonResponse<LoginResponse> reissueToken(@RequestBody @Valid RefreshTokenRequest request) {
+        LoginResponse response = authUsecase.reissueToken(request);
 
         return CommonResponse.success(ResponseCode.REFRESH_TOKEN_SUCCESS, response);
     }

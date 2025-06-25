@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class UserDeleteService {
 
     public void leave(User user) {
-        if (user.isLeave()) {
+        if (user.isLeft()) {
             throw new UserAlreadyLeaveException();
         }
 

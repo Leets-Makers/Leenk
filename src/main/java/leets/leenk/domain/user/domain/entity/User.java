@@ -108,11 +108,11 @@ public class User extends BaseEntity {
         this.fcmToken = null;
     }
 
-    public boolean isLeave() {
+    public boolean isLeft() {
         return this.leaveDate != null;
     }
 
-    public boolean isDelete() {
+    public boolean isDeleted() {
         return this.deleteDate != null;
     }
 

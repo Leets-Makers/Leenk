@@ -54,11 +54,11 @@ public class AuthUsecase {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            if (user.isDelete()) {
+            if (user.isDeleted()) {
                 return reRegisterUser(user, response);
             }
 
-            if (user.isLeave()) {
+            if (user.isLeft()) {
                 restoreLeavedUser(user);
             }
 

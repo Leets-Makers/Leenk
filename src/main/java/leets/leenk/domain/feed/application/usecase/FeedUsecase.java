@@ -19,8 +19,10 @@ import leets.leenk.domain.media.domain.entity.Media;
 import leets.leenk.domain.media.domain.service.MediaGetService;
 import leets.leenk.domain.media.domain.service.MediaSaveService;
 import leets.leenk.domain.user.domain.entity.User;
+import leets.leenk.domain.user.domain.entity.UserBlock;
 import leets.leenk.domain.user.domain.service.NotionDatabaseService;
 import leets.leenk.domain.user.domain.service.SlackWebhookService;
+import leets.leenk.domain.user.domain.service.blockuser.UserBlockService;
 import leets.leenk.domain.user.domain.service.user.UserGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +42,7 @@ import java.util.stream.Collectors;
 public class FeedUsecase {
 
     private final UserGetService userGetService;
+    private final UserBlockService userBlockService;
     private final SlackWebhookService slackWebhookService;
     private final NotionDatabaseService notionDatabaseService;
 
@@ -63,9 +66,12 @@ public class FeedUsecase {
     private final ReactionMapper reactionMapper;
 
     @Transactional(readOnly = true)
-    public FeedListResponse getFeeds(int pageNumber, int pageSize) {
+    public FeedListResponse getFeeds(long userId, int pageNumber, int pageSize) {
+        User user = userGetService.findById(userId);
+        List<UserBlock> blockedUsers = userBlockService.findAllByBlocker(user);
+
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Slice<Feed> slice = feedGetService.findAll(pageable);
+        Slice<Feed> slice = feedGetService.findAll(pageable, blockedUsers);
 
         List<Feed> feeds = slice.getContent();
         List<Media> medias = mediaGetService.findAll(feeds);

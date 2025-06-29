@@ -83,6 +83,15 @@ public class UserController {
         return CommonResponse.success(UPDATE_MBTI);
     }
 
+    @PostMapping("/{userId}/block")
+    @Operation(summary = "유저 차단하기 API")
+    public CommonResponse<Void> blockUser(@Parameter(hidden = true) @CurrentUserId Long userId,
+                                          @PathVariable long blockedUserId) {
+        userUsecase.blockUser(userId, blockedUserId);
+
+        return CommonResponse.success(BLOCK_USER);
+    }
+
     @DeleteMapping("/me")
     @Operation(summary = "회원 탈퇴 API")
     public CommonResponse<Void> deleteAccount(@Parameter(hidden = true) @CurrentUserId Long userId) {

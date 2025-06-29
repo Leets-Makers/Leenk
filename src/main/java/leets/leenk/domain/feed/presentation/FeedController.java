@@ -28,9 +28,10 @@ public class FeedController {
 
     @GetMapping
     @Operation(summary = "피드 조회 API - 무한 스크롤")
-    public CommonResponse<FeedListResponse> getFeeds(@RequestParam int pageNumber,
+    public CommonResponse<FeedListResponse> getFeeds(@Parameter(hidden = true) @CurrentUserId Long userId,
+                                                     @RequestParam int pageNumber,
                                                      @RequestParam int pageSize) {
-        FeedListResponse response = feedUsecase.getFeeds(pageNumber, pageSize);
+        FeedListResponse response = feedUsecase.getFeeds(userId, pageNumber, pageSize);
 
         return CommonResponse.success(ResponseCode.GET_ALL_FEED, response);
     }

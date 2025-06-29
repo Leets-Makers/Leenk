@@ -1,5 +1,6 @@
 package leets.leenk.domain.feed.application.usecase;
 
+import leets.leenk.domain.feed.application.dto.request.FeedReportRequest;
 import leets.leenk.domain.feed.application.dto.request.FeedUpdateRequest;
 import leets.leenk.domain.feed.application.dto.request.FeedUploadRequest;
 import leets.leenk.domain.feed.application.dto.request.ReactionRequest;
@@ -18,6 +19,8 @@ import leets.leenk.domain.media.domain.entity.Media;
 import leets.leenk.domain.media.domain.service.MediaGetService;
 import leets.leenk.domain.media.domain.service.MediaSaveService;
 import leets.leenk.domain.user.domain.entity.User;
+import leets.leenk.domain.user.domain.service.NotionDatabaseService;
+import leets.leenk.domain.user.domain.service.SlackWebhookService;
 import leets.leenk.domain.user.domain.service.user.UserGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +40,8 @@ import java.util.stream.Collectors;
 public class FeedUsecase {
 
     private final UserGetService userGetService;
+    private final SlackWebhookService slackWebhookService;
+    private final NotionDatabaseService notionDatabaseService;
 
     private final FeedGetService feedGetService;
     private final FeedSaveService feedSaveService;
@@ -203,5 +208,14 @@ public class FeedUsecase {
         }
 
         feedDeleteService.delete(feed);
+    }
+
+    @Transactional(readOnly = true)
+    public void reportFeed(long userId, long feedId, FeedReportRequest request) {
+        User user = userGetService.findById(userId);
+        Feed feed = feedGetService.findById(feedId);
+
+        notionDatabaseService.sendFeedReport(request.report(), user.getId(), feed.getId());
+        slackWebhookService.sendFeedReport(request.report());
     }
 }

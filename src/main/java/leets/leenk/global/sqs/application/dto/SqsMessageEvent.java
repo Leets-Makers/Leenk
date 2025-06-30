@@ -9,18 +9,18 @@ public class SqsMessageEvent {
 
 	private final String title;
 	private final String content;
-	private final String deviceToken;
+	private final String fcmToken;
 
 	@Builder
-	private SqsMessageEvent(String title, String content, String deviceToken) {
+	private SqsMessageEvent(String title, String content, String fcmToken) {
 		this.title = title;
 		this.content = content;
-		this.deviceToken = deviceToken;
+		this.fcmToken = fcmToken;
 		validateSqsMessageEvent();
 	}
 
 	private void validateSqsMessageEvent(){
-		if(isEmptyString(content) || isEmptyString(title) || isEmptyString(deviceToken)){
+		if(isEmptyString(content) || isEmptyString(title) || isEmptyString(fcmToken)){
 			throw new InvalidNotificationRequestException();
 		}
 	}

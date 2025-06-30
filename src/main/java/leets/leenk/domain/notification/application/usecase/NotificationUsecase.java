@@ -127,10 +127,10 @@ public class NotificationUsecase {
     public void saveTagNotification(Feed feed, List<LinkedUser> linkedUsers) {
         linkedUsers.forEach(linkedUser -> {
             Notification notification = notificationMapper.toFeedTagNotification(feed, linkedUser);
-            String deviceToken = linkedUser.getUser().getFcmToken();
+            String fcmToken = linkedUser.getUser().getFcmToken();
             notificationSaveService.save(notification);
 
-            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, deviceToken));
+            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, fcmToken));
         });
     }
 

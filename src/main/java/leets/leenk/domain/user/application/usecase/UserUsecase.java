@@ -2,13 +2,15 @@ package leets.leenk.domain.user.application.usecase;
 
 import leets.leenk.domain.user.application.dto.request.*;
 import leets.leenk.domain.user.application.dto.response.UserInfoResponse;
+import leets.leenk.domain.user.application.exception.SelfBlockNotAllowedException;
+import leets.leenk.domain.user.application.exception.UserAlreadyBlockedException;
 import leets.leenk.domain.user.application.exception.UserAlreadyLeaveException;
 import leets.leenk.domain.user.application.mapper.UserBackupInfoMapper;
 import leets.leenk.domain.user.application.mapper.UserBlockMapper;
 import leets.leenk.domain.user.application.mapper.UserMapper;
-import leets.leenk.domain.user.domain.entity.UserBlock;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.entity.UserBackupInfo;
+import leets.leenk.domain.user.domain.entity.UserBlock;
 import leets.leenk.domain.user.domain.service.blockuser.UserBlockService;
 import leets.leenk.domain.user.domain.service.user.UserDeleteService;
 import leets.leenk.domain.user.domain.service.user.UserGetService;
@@ -93,8 +95,16 @@ public class UserUsecase {
 
     @Transactional
     public void blockUser(long userId, long blockedUserId) {
+        if (userId == blockedUserId) {
+            throw new SelfBlockNotAllowedException();
+        }
+
         User user = userGetService.findById(userId);
         User blockedUser = userGetService.findById(blockedUserId);
+
+        if (userBlockService.isAlreadyBlocked(user, blockedUser)) {
+            throw new UserAlreadyBlockedException();
+        }
 
         UserBlock blockUser = userBlockMapper.toUserBlock(user, blockedUser);
         userBlockService.blockUser(blockUser);

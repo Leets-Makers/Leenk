@@ -21,4 +21,8 @@ public class UserBlockService {
     public List<UserBlock> findAllByBlocker(User blocker) {
         return blockedUserRepository.findAllByBlocker(blocker);
     }
+
+    public boolean isAlreadyBlocked(User user, User blockedUser) {
+        return blockedUserRepository.findAllByBlockerAndBlocked(user, blockedUser).isPresent();
+    }
 }

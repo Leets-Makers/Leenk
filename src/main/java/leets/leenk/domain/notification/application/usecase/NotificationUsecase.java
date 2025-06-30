@@ -91,17 +91,12 @@ public class NotificationUsecase {
 
     @Transactional
     public void saveNewFeedNotification(Feed feed) {
-        List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
-        users.stream()
-                .filter(user -> !Objects.equals(user.getId(), feed.getUser().getId()))
-                .forEach(
-                        user -> {
-                            Notification notification = notificationMapper.toNewFeedNotification(feed, user);
-                            notificationSaveService.save(notification);
-                            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
-                        }
-                );
-
+        List<User> users = userSettingGetService.getUsersToNotifyNewFeed(feed.getUser().getId());
+        users.forEach(user -> {
+            Notification notification = notificationMapper.toNewFeedNotification(feed, user);
+            notificationSaveService.save(notification);
+            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
+        });
     }
 
     @Transactional

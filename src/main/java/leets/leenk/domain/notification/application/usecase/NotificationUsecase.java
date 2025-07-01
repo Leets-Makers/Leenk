@@ -3,8 +3,8 @@ package leets.leenk.domain.notification.application.usecase;
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
 import leets.leenk.domain.feed.domain.entity.Reaction;
-import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
-import leets.leenk.domain.notification.application.dto.NotificationListResponse;
+import leets.leenk.domain.notification.application.dto.response.NotificationCountResponse;
+import leets.leenk.domain.notification.application.dto.response.NotificationListResponse;
 import leets.leenk.domain.notification.application.exception.InvalidNotificationContentTypeException;
 import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

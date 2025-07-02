@@ -23,6 +23,6 @@ public class UserBlockService {
     }
 
     public boolean isAlreadyBlocked(User user, User blockedUser) {
-        return blockedUserRepository.findAllByBlockerAndBlocked(user, blockedUser).isPresent();
+        return blockedUserRepository.findByBlockerAndBlocked(user, blockedUser).isPresent();
     }
 }

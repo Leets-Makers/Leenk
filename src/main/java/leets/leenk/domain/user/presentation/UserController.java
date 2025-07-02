@@ -86,7 +86,7 @@ public class UserController {
     @PostMapping("/{userId}/block")
     @Operation(summary = "유저 차단하기 API")
     public CommonResponse<Void> blockUser(@Parameter(hidden = true) @CurrentUserId Long userId,
-                                          @PathVariable long blockedUserId) {
+                                          @PathVariable("userId") long blockedUserId) {
         userUsecase.blockUser(userId, blockedUserId);
 
         return CommonResponse.success(BLOCK_USER);

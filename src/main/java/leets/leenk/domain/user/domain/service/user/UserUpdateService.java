@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserUpdateService {
 
-    public void initialAgreement(User user, AgreementRequest request) {
+    public void updateAgreement(User user, AgreementRequest request) {
         user.updateAgreement(request.termsService(), request.privacyPolicy());
     }
 

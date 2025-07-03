@@ -38,7 +38,7 @@ public class UserUsecase {
     public void initialAgreement(long userId, AgreementRequest request) {
         User user = userGetService.findById(userId);
 
-        userUpdateService.initialAgreement(user, request);
+        userUpdateService.updateAgreement(user, request);
     }
 
     @Transactional

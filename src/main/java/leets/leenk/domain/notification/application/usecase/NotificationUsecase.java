@@ -20,6 +20,7 @@ import leets.leenk.domain.user.domain.service.user.UserGetService;
 import leets.leenk.domain.user.domain.service.usersetting.UserSettingGetService;
 import leets.leenk.global.sqs.application.mapper.SqsMessageEventMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationUsecase {
@@ -49,6 +51,8 @@ public class NotificationUsecase {
     private final FeedReactionCountMapper feedReactionCountMapper;
 
     private final ApplicationEventPublisher eventPublisher;
+
+    private static final String FCM_TOKEN_MISSING = "[알림 생략] FCM 토큰이 없어 푸시 알림을 전송하지 않음. userId = {}";
 
     @Transactional(readOnly = true)
     public NotificationListResponse getNotifications(Long userId, int pageNumber, int pageSize) {
@@ -72,9 +76,14 @@ public class NotificationUsecase {
         }
 
         Notification notification = notificationGetService.findOrCreateFirstReactionNotification(reaction);
-        User user = userGetService.findById(notification.getUserId());
-        FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
 
+        User user = userGetService.findById(notification.getUserId());
+        if(user.getFcmToken() == null){
+            log.info(FCM_TOKEN_MISSING, user.getId());
+            return;
+        }
+
+        FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
         if (!(notification.getContent() instanceof FeedFirstReactionNotificationContent content)) {
             return;
         }
@@ -91,6 +100,10 @@ public class NotificationUsecase {
     public void saveNewFeedNotification(Feed feed) {
         List<User> users = userSettingGetService.getUsersToNotifyNewFeed(feed.getUser().getId());
         users.forEach(user -> {
+            if(user.getFcmToken()==null){
+                log.info(FCM_TOKEN_MISSING, user.getId());
+                return;
+            }
             Notification notification = notificationMapper.toNewFeedNotification(feed, user);
             notificationSaveService.save(notification);
             eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
@@ -104,9 +117,14 @@ public class NotificationUsecase {
         }
 
         Notification notification = notificationGetService.findOrCreateReactionCountNotification(feed);
-        User user = userGetService.findById(notification.getUserId());
-        FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
+        User user = userGetService.findById(notification.getUserId());
+        if(user.getFcmToken() == null){
+            log.info(FCM_TOKEN_MISSING, user.getId());
+            return;
+        }
+
+        FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
         if (!(notification.getContent() instanceof FeedReactionCountNotificationContent content)) {
             return;
         }
@@ -126,6 +144,10 @@ public class NotificationUsecase {
         linkedUsers.forEach(linkedUser -> {
             Notification notification = notificationMapper.toFeedTagNotification(feed, linkedUser);
             String fcmToken = linkedUser.getUser().getFcmToken();
+            if(fcmToken==null){
+                log.info(FCM_TOKEN_MISSING, linkedUser.getId());
+                return;
+            }
             notificationSaveService.save(notification);
 
             eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, fcmToken));

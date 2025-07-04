@@ -5,7 +5,6 @@ import leets.leenk.domain.feed.domain.entity.LinkedUser;
 import leets.leenk.domain.feed.domain.entity.Reaction;
 import leets.leenk.domain.notification.application.dto.response.NotificationCountResponse;
 import leets.leenk.domain.notification.application.dto.response.NotificationListResponse;
-import leets.leenk.domain.notification.application.exception.InvalidNotificationContentTypeException;
 import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
@@ -77,7 +76,7 @@ public class NotificationUsecase {
         FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
 
         if (!(notification.getContent() instanceof FeedFirstReactionNotificationContent content)) {
-            throw new InvalidNotificationContentTypeException();
+            return;
         }
 
         content.getFeedFirstReactions().add(feedFirstReaction);
@@ -109,7 +108,7 @@ public class NotificationUsecase {
         FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
         if (!(notification.getContent() instanceof FeedReactionCountNotificationContent content)) {
-            throw new InvalidNotificationContentTypeException();
+            return;
         }
 
         content.getFeedReactionCounts().add(feedReactionCount);

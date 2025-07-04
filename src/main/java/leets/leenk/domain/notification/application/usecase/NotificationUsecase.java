@@ -3,24 +3,24 @@ package leets.leenk.domain.notification.application.usecase;
 import leets.leenk.domain.feed.domain.entity.Feed;
 import leets.leenk.domain.feed.domain.entity.LinkedUser;
 import leets.leenk.domain.feed.domain.entity.Reaction;
-import leets.leenk.domain.notification.application.dto.NotificationCountResponse;
-import leets.leenk.domain.notification.application.dto.NotificationListResponse;
-import leets.leenk.domain.notification.application.exception.InvalidNotificationContentTypeException;
+import leets.leenk.domain.notification.application.dto.response.NotificationCountResponse;
+import leets.leenk.domain.notification.application.dto.response.NotificationListResponse;
 import leets.leenk.domain.notification.application.mapper.FeedFirstReactionMapper;
 import leets.leenk.domain.notification.application.mapper.FeedReactionCountMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationMapper;
 import leets.leenk.domain.notification.application.mapper.NotificationResponseMapper;
-import leets.leenk.domain.notification.application.service.*;
 import leets.leenk.domain.notification.domain.entity.Notification;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReaction;
 import leets.leenk.domain.notification.domain.entity.content.FeedFirstReactionNotificationContent;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCount;
 import leets.leenk.domain.notification.domain.entity.content.FeedReactionCountNotificationContent;
+import leets.leenk.domain.notification.domain.service.*;
 import leets.leenk.domain.user.domain.entity.User;
 import leets.leenk.domain.user.domain.service.user.UserGetService;
 import leets.leenk.domain.user.domain.service.usersetting.UserSettingGetService;
 import leets.leenk.global.sqs.application.mapper.SqsMessageEventMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationUsecase {
@@ -51,6 +51,8 @@ public class NotificationUsecase {
     private final FeedReactionCountMapper feedReactionCountMapper;
 
     private final ApplicationEventPublisher eventPublisher;
+
+    private static final String FCM_TOKEN_MISSING = "[알림 생략] FCM 토큰이 없어 푸시 알림을 전송하지 않음. userId = {}";
 
     @Transactional(readOnly = true)
     public NotificationListResponse getNotifications(Long userId, int pageNumber, int pageSize) {
@@ -74,11 +76,16 @@ public class NotificationUsecase {
         }
 
         Notification notification = notificationGetService.findOrCreateFirstReactionNotification(reaction);
-        User user = userGetService.findById(notification.getUserId());
-        FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
 
+        User user = userGetService.findById(notification.getUserId());
+        if(user.getFcmToken() == null){
+            log.info(FCM_TOKEN_MISSING, user.getId());
+            return;
+        }
+
+        FeedFirstReaction feedFirstReaction = feedFirstReactionMapper.toFeedFirstReaction(reaction.getUser());
         if (!(notification.getContent() instanceof FeedFirstReactionNotificationContent content)) {
-            throw new InvalidNotificationContentTypeException();
+            return;
         }
 
         content.getFeedFirstReactions().add(feedFirstReaction);
@@ -91,17 +98,16 @@ public class NotificationUsecase {
 
     @Transactional
     public void saveNewFeedNotification(Feed feed) {
-        List<User> users = userSettingGetService.getUsersToNotifyNewFeed();
-        users.stream()
-                .filter(user -> !Objects.equals(user.getId(), feed.getUser().getId()))
-                .forEach(
-                        user -> {
-                            Notification notification = notificationMapper.toNewFeedNotification(feed, user);
-                            notificationSaveService.save(notification);
-                            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
-                        }
-                );
-
+        List<User> users = userSettingGetService.getUsersToNotifyNewFeed(feed.getUser().getId());
+        users.forEach(user -> {
+            if(user.getFcmToken()==null){
+                log.info(FCM_TOKEN_MISSING, user.getId());
+                return;
+            }
+            Notification notification = notificationMapper.toNewFeedNotification(feed, user);
+            notificationSaveService.save(notification);
+            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, user.getFcmToken()));
+        });
     }
 
     @Transactional
@@ -111,11 +117,16 @@ public class NotificationUsecase {
         }
 
         Notification notification = notificationGetService.findOrCreateReactionCountNotification(feed);
-        User user = userGetService.findById(notification.getUserId());
-        FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
 
+        User user = userGetService.findById(notification.getUserId());
+        if(user.getFcmToken() == null){
+            log.info(FCM_TOKEN_MISSING, user.getId());
+            return;
+        }
+
+        FeedReactionCount feedReactionCount = feedReactionCountMapper.toFeedReactionCount(reactionCount);
         if (!(notification.getContent() instanceof FeedReactionCountNotificationContent content)) {
-            throw new InvalidNotificationContentTypeException();
+            return;
         }
 
         content.getFeedReactionCounts().add(feedReactionCount);
@@ -132,10 +143,14 @@ public class NotificationUsecase {
     public void saveTagNotification(Feed feed, List<LinkedUser> linkedUsers) {
         linkedUsers.forEach(linkedUser -> {
             Notification notification = notificationMapper.toFeedTagNotification(feed, linkedUser);
-            String deviceToken = linkedUser.getUser().getFcmToken();
+            String fcmToken = linkedUser.getUser().getFcmToken();
+            if(fcmToken==null){
+                log.info(FCM_TOKEN_MISSING, linkedUser.getId());
+                return;
+            }
             notificationSaveService.save(notification);
 
-            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, deviceToken));
+            eventPublisher.publishEvent(sqsMessageEventMapper.toSqsMessageEvent(notification, fcmToken));
         });
     }
 
